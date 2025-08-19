@@ -588,22 +588,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                         foreach (var meterValueJSON in meterValuesArray)
                         {
-                            if (WattHour.TryParse(meterValueJSON.ToString(), out var meterValue))
+                            if (WattHour.TryParseKWh(meterValueJSON.ToString(), out var meterValue))
                                 MeterValuesInBetween.Add(meterValue);
                         }
 
                     }
-
-                    //if (MeterValuesInBetweenJSON.ParseOptionalJSONArray("meterValues",
-                    //                                                    "meter values",
-                    //                                                    //(String input, out WattHour number) => WattHour.TryParseKWh(input, NumberStyles.Any, CultureInfo.InvariantCulture, out number),
-                    //                                                    WattHour.TryParseKWh,
-                    //                                                    out MeterValuesInBetween,
-                    //                                                    out ErrorResponse))
-                    //{
-                    //    if (ErrorResponse is not null)
-                    //        return false;
-                    //}
 
                 }
 

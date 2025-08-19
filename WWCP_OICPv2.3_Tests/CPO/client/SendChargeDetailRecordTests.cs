@@ -29,7 +29,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
 {
 
     /// <summary>
-    /// CPO sending charge detail records tests.
+    /// CPO Sending ChargeDetailRecord tests.
     /// </summary>
     [TestFixture]
     public class SendChargeDetailRecordTests : ACPOClientAPITests
@@ -51,6 +51,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
             var request = new ChargeDetailRecordRequest(
 
                               new ChargeDetailRecord(
+
                                   SessionId:                       Session_Id.Parse("4cfe3192-87ec-4757-9560-a6ce896bb88b"),
                                   EVSEId:                          EVSE_Id.Parse("DE*GEF*E1234567*A*1"),
                                   Identification:                  Identification.FromUID(UID.Parse("AABBCCDD")),
@@ -95,12 +96,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
                                   HubOperatorId:                   Operator_Id.Parse("DE*GEF"),
                                   HubProviderId:                   Provider_Id.Parse("DE-GDF"),
 
-                                  CustomData:                      null,
-                                  InternalData:                    null
+                                  CustomData:                      null
+
                               ),
 
-                              OperatorId:   Operator_Id.Parse("DE*GEF"),
-                              CustomData:   null);
+                              OperatorId:   Operator_Id.Parse("DE*GEF")
+
+                          );
 
             ClassicAssert.IsNotNull(request);
 

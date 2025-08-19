@@ -18,7 +18,10 @@
 #region Usings
 
 using NUnit.Framework;
-using NUnit.Framework.Legacy;
+
+using Newtonsoft.Json.Linq;
+
+using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 #endregion
 
@@ -26,11 +29,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
 {
 
     /// <summary>
-    /// CPO sending AuthorizeStarts/-Stops tests.
+    /// CPO sending AuthorizeStart/-Stop tests.
     /// </summary>
     [TestFixture]
     public class AuthorizeStartStopTests : ACPOClientAPITests
     {
+
+        private readonly CPOPartnerSession_Id cpoPartnerSessionId  = CPOPartnerSession_Id.Parse("9b217a90-9924-4229-a217-3d67a4de00da");
 
         #region AuthorizeStart_Test1()
 
@@ -38,61 +43,172 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
         public async Task AuthorizeStart_Test1()
         {
 
-            if (cpoClientAPI is null ||
-                cpoClient    is null)
+            if (cpoClientAPI is null)
             {
-                Assert.Fail("cpoClientAPI or cpoClient is null!");
+                Assert.Fail("cpoClientAPI must not be null!");
                 return;
             }
 
+            if (cpoClient is null)
+            {
+                Assert.Fail("cpoClient must not be null!");
+                return;
+            }
+
+            var clientRequestLogging   = 0;
+            var clientResponseLogging  = 0;
+            var serverRequestLogging   = 0;
+            var serverResponseLogging  = 0;
+
             var request = new AuthorizeStartRequest(
-                              OperatorId:           Operator_Id.         Parse("DE*GEF"),
-                              Identification:       Identification.FromUID(
-                                                                     UID.Parse("11223344")
-                                                    ),
-                              EVSEId:               EVSE_Id.             Parse("DE*GEF*E1234567*A*1"),
+
+                              OperatorId:           Operator_Id.Parse("DE*GEF"),
+                              Identification:       Identification.FromUID(UID.Parse("11223344")),
+                              EVSEId:               EVSE_Id.Parse("DE*GEF*E1234567*A*1"),
                               PartnerProductId:     PartnerProduct_Id.AC1,
-                              CPOPartnerSessionId:  CPOPartnerSession_Id.Parse("9b217a90-9924-4229-a217-3d67a4de00da"),
-                              CustomData:           null
+                              CPOPartnerSessionId:  cpoPartnerSessionId,
+                              CustomData:           new JObject(
+                                                        new JProperty("hello", "MifareClassic Start world!")
+                                                    ),
+
+                              RequestTimeout:       TimeSpan.FromSeconds(10)
+
                           );
 
-            ClassicAssert.IsNotNull(request);
+            Assert.That(request,                                                                      Is.Not.Null);
 
-            ClassicAssert.AreEqual(0, cpoClient.   Counters.AuthorizeStart.Requests_OK);
-            ClassicAssert.AreEqual(0, cpoClient.   Counters.AuthorizeStart.Requests_Error);
-            ClassicAssert.AreEqual(0, cpoClient.   Counters.AuthorizeStart.Responses_OK);
-            ClassicAssert.AreEqual(0, cpoClient.   Counters.AuthorizeStart.Responses_Error);
+            Assert.That(cpoClient.   Counters.AuthorizeStart.Requests_OK,                             Is.EqualTo(0));
+            Assert.That(cpoClient.   Counters.AuthorizeStart.Requests_Error,                          Is.EqualTo(0));
+            Assert.That(cpoClient.   Counters.AuthorizeStart.Responses_OK,                            Is.EqualTo(0));
+            Assert.That(cpoClient.   Counters.AuthorizeStart.Responses_Error,                         Is.EqualTo(0));
 
-            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.AuthorizeStart.Requests_OK);
-            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.AuthorizeStart.Requests_Error);
-            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.AuthorizeStart.Responses_OK);
-            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.AuthorizeStart.Responses_Error);
+            Assert.That(cpoClientAPI.Counters.AuthorizeStart.Requests_OK,                             Is.EqualTo(0));
+            Assert.That(cpoClientAPI.Counters.AuthorizeStart.Requests_Error,                          Is.EqualTo(0));
+            Assert.That(cpoClientAPI.Counters.AuthorizeStart.Responses_OK,                            Is.EqualTo(0));
+            Assert.That(cpoClientAPI.Counters.AuthorizeStart.Responses_Error,                         Is.EqualTo(0));
 
-            var oicpResult  = await cpoClient.AuthorizeStart(request);
+            cpoClient.   OnAuthorizeStartRequest  += (timestamp, cpoClient,    authorizeStartRequest) => {
 
-            ClassicAssert.IsNotNull(oicpResult);
-            ClassicAssert.IsNotNull(oicpResult.Response);
-            ClassicAssert.IsTrue   (oicpResult.IsSuccessful);
-            ClassicAssert.AreEqual (StatusCodes.Success,                                                  oicpResult.Response?.StatusCode?.Code);
-            ClassicAssert.AreEqual (AuthorizationStatusTypes.Authorized,                                  oicpResult.Response?.AuthorizationStatus);
-            ClassicAssert.AreEqual (Session_Id.          Parse("f8c7c2bf-10dc-46a1-929b-a2bf52bcfaff"),   oicpResult.Response?.SessionId);
-            ClassicAssert.AreEqual (CPOPartnerSession_Id.Parse("9b217a90-9924-4229-a217-3d67a4de00da"),   oicpResult.Response?.CPOPartnerSessionId);
-            ClassicAssert.AreEqual (EMPPartnerSession_Id.Parse("bce77f78-6966-48f4-9abd-007f04862d6c"),   oicpResult.Response?.EMPPartnerSessionId);
-            ClassicAssert.AreEqual (Provider_Id.         Parse("DE-GDF"),                                 oicpResult.Response?.ProviderId);
+                Assert.That(authorizeStartRequest.OperatorId.         ToString(),                     Is.EqualTo("DE*GEF"));
+                Assert.That(authorizeStartRequest.Identification.     ToString(),                     Is.EqualTo("11223344"));
+                Assert.That(authorizeStartRequest.EVSEId.             ToString(),                     Is.EqualTo("DE*GEF*E1234567*A*1"));
+                Assert.That(authorizeStartRequest.PartnerProductId.   ToString(),                     Is.EqualTo("AC1"));
+                Assert.That(authorizeStartRequest.SessionId?.         ToString(),                     Is.Null);
+                Assert.That(authorizeStartRequest.CPOPartnerSessionId,                                Is.EqualTo(cpoPartnerSessionId));
+                Assert.That(authorizeStartRequest.EMPPartnerSessionId?.ToString(),                    Is.Null);
+                Assert.That(authorizeStartRequest.CustomData?.Count,                                  Is.EqualTo(1));
+                Assert.That(authorizeStartRequest.CustomData?["hello"]?.Value<String>(),              Is.EqualTo("MifareClassic Start world!"));
 
-            ClassicAssert.AreEqual (2,                                                                    oicpResult.Response?.AuthorizationStopIdentifications?.Count());
-            ClassicAssert.AreEqual (UID.Parse("11223344"),                                                oicpResult.Response?.AuthorizationStopIdentifications?.ElementAt(0).RFIDId);
-            ClassicAssert.AreEqual (UID.Parse("55667788"),                                                oicpResult.Response?.AuthorizationStopIdentifications?.ElementAt(1).RFIDId);
+                clientRequestLogging++;
 
-            ClassicAssert.AreEqual(1, cpoClient.   Counters.AuthorizeStart.Requests_OK);
-            ClassicAssert.AreEqual(0, cpoClient.   Counters.AuthorizeStart.Requests_Error);
-            ClassicAssert.AreEqual(1, cpoClient.   Counters.AuthorizeStart.Responses_OK);
-            ClassicAssert.AreEqual(0, cpoClient.   Counters.AuthorizeStart.Responses_Error);
+                return Task.CompletedTask;
 
-            ClassicAssert.AreEqual(1, cpoClientAPI.Counters.AuthorizeStart.Requests_OK);
-            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.AuthorizeStart.Requests_Error);
-            ClassicAssert.AreEqual(1, cpoClientAPI.Counters.AuthorizeStart.Responses_OK);
-            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.AuthorizeStart.Responses_Error);
+            };
+
+            cpoClient.   OnAuthorizeStartResponse += (timestamp, cpoClient,    authorizeStartRequest, oicpResponse, runtime) => {
+
+                var authorizeStartResponse = oicpResponse.Response;
+
+                Assert.That(authorizeStartResponse,                                                   Is.Not.Null);
+                Assert.That(authorizeStartResponse?.AuthorizationStatus,                              Is.EqualTo(AuthorizationStatusTypes.Authorized));
+                Assert.That(authorizeStartResponse?.StatusCode.Code,                                  Is.EqualTo(StatusCodes.Success));
+
+                Assert.That(authorizeStartResponse?.SessionId?.          ToString(),                  Is.EqualTo("f8c7c2bf-10dc-46a1-929b-a2bf52bcfaff"));
+                Assert.That(authorizeStartResponse?.EMPPartnerSessionId?.ToString(),                  Is.EqualTo("bce77f78-6966-48f4-9abd-007f04862d6c"));
+
+                clientResponseLogging++;
+
+                return Task.CompletedTask;
+
+            };
+
+            cpoClientAPI.OnAuthorizeStartRequest  += (timestamp, cpoClientAPI, authorizeStartRequest) => {
+
+                Assert.That(authorizeStartRequest.OperatorId.         ToString(),                     Is.EqualTo("DE*GEF"));
+                Assert.That(authorizeStartRequest.Identification.     ToString(),                     Is.EqualTo("11223344"));
+                Assert.That(authorizeStartRequest.EVSEId.             ToString(),                     Is.EqualTo("DE*GEF*E1234567*A*1"));
+                Assert.That(authorizeStartRequest.PartnerProductId.   ToString(),                     Is.EqualTo("AC1"));
+                Assert.That(authorizeStartRequest.SessionId?.         ToString(),                     Is.Null);
+                Assert.That(authorizeStartRequest.CPOPartnerSessionId,                                Is.EqualTo(cpoPartnerSessionId));
+                Assert.That(authorizeStartRequest.EMPPartnerSessionId?.ToString(),                    Is.Null);
+                Assert.That(authorizeStartRequest.CustomData?.Count,                                  Is.EqualTo(1));
+                Assert.That(authorizeStartRequest.CustomData?["hello"]?.Value<String>(),              Is.EqualTo("MifareClassic Start world!"));
+
+                serverRequestLogging++;
+
+                return Task.CompletedTask;
+
+            };
+
+            cpoClientAPI.OnAuthorizeStartResponse += (timestamp, cpoClientAPI, authorizeStartRequest, oicpResponse, runtime) => {
+
+                var authorizeStartResponse = oicpResponse.Response;
+
+                Assert.That(authorizeStartResponse,                                                   Is.Not.Null);
+                Assert.That(authorizeStartResponse?.AuthorizationStatus,                              Is.EqualTo(AuthorizationStatusTypes.Authorized));
+                Assert.That(authorizeStartResponse?.StatusCode.Code,                                  Is.EqualTo(StatusCodes.Success));
+
+                Assert.That(authorizeStartResponse?.SessionId?.          ToString(),                  Is.EqualTo("f8c7c2bf-10dc-46a1-929b-a2bf52bcfaff"));
+                Assert.That(authorizeStartResponse?.EMPPartnerSessionId?.ToString(),                  Is.EqualTo("bce77f78-6966-48f4-9abd-007f04862d6c"));
+
+                serverResponseLogging++;
+
+                return Task.CompletedTask;
+
+            };
+
+            var oicpResult     = await cpoClient.AuthorizeStart(request);
+
+            var remoteSocket1  = oicpResult.Response?.HTTPResponse?.RemoteSocket;
+
+            Assert.That(oicpResult,                                                                   Is.Not.Null);
+            Assert.That(oicpResult.IsSuccessful,                                                      Is.True);
+            Assert.That(oicpResult.Response?.AuthorizationStatus,                                     Is.EqualTo(AuthorizationStatusTypes.Authorized));
+            Assert.That(oicpResult.Response?.StatusCode.Code,                                         Is.EqualTo(StatusCodes.Success));
+
+            Assert.That(oicpResult.Response?.SessionId,                                               Is.EqualTo(Session_Id.Parse("f8c7c2bf-10dc-46a1-929b-a2bf52bcfaff")));
+            Assert.That(oicpResult.Response?.CPOPartnerSessionId,                                     Is.EqualTo(cpoPartnerSessionId));
+            Assert.That(oicpResult.Response?.EMPPartnerSessionId,                                     Is.EqualTo(EMPPartnerSession_Id.Parse("bce77f78-6966-48f4-9abd-007f04862d6c")));
+            Assert.That(oicpResult.Response?.ProviderId,                                              Is.EqualTo(Provider_Id.Parse("DE-GDF")));
+            Assert.That(oicpResult.Response?.AuthorizationStopIdentifications?.Count(),               Is.EqualTo(2));
+            Assert.That(oicpResult.Response?.AuthorizationStopIdentifications?.ElementAt(0).RFIDId,   Is.EqualTo(UID.Parse("11223344")));
+            Assert.That(oicpResult.Response?.AuthorizationStopIdentifications?.ElementAt(1).RFIDId,   Is.EqualTo(UID.Parse("55667788")));
+
+            Assert.That(cpoClient.   Counters.AuthorizeStart.Requests_OK,                             Is.EqualTo(1));
+            Assert.That(cpoClient.   Counters.AuthorizeStart.Requests_Error,                          Is.EqualTo(0));
+            Assert.That(cpoClient.   Counters.AuthorizeStart.Responses_OK,                            Is.EqualTo(1));
+            Assert.That(cpoClient.   Counters.AuthorizeStart.Responses_Error,                         Is.EqualTo(0));
+
+            Assert.That(cpoClientAPI.Counters.AuthorizeStart.Requests_OK,                             Is.EqualTo(1));
+            Assert.That(cpoClientAPI.Counters.AuthorizeStart.Requests_Error,                          Is.EqualTo(0));
+            Assert.That(cpoClientAPI.Counters.AuthorizeStart.Responses_OK,                            Is.EqualTo(1));
+            Assert.That(cpoClientAPI.Counters.AuthorizeStart.Responses_Error,                         Is.EqualTo(0));
+
+            Assert.That(clientRequestLogging,                                                         Is.EqualTo(1));
+            Assert.That(clientResponseLogging,                                                        Is.EqualTo(1));
+            Assert.That(serverRequestLogging,                                                         Is.EqualTo(1));
+            Assert.That(serverResponseLogging,                                                        Is.EqualTo(1));
+
+
+            //// ---------------------------------------------------------------------------------------------------------------------------
+            //// Validate HTTP Keep-Alives
+            //// ---------------------------------------------------------------------------------------------------------------------------
+
+            //Assert.That(oicpResult.Response?.HTTPResponse?.Connection,                           Is.EqualTo(ConnectionType.KeepAlive));
+
+            //var sessionId2             = Session_Id.          NewRandom();
+            //var empPartnerSessionId2   = EMPPartnerSession_Id.NewRandom();
+
+            //var oicpResult2            = await cpoClient.AuthorizeStart(request);
+            //var remoteSocket2          = oicpResult.Response?.HTTPResponse?.RemoteSocket;
+
+
+            //Assert.That(oicpResult2,                                                             Is.Not.Null);
+            //Assert.That(oicpResult2.IsSuccessful,                                                Is.True);
+            //Assert.That(oicpResult2.Response?.AuthorizationStatus,                               Is.EqualTo(AuthorizationStatusTypes.Authorized));
+            //Assert.That(oicpResult2.Response?.StatusCode.Code,                                   Is.EqualTo(StatusCodes.Success));
+
+            //Assert.That(remoteSocket1,                                                           Is.EqualTo(remoteSocket2), "HTTP Keep-Alives do not work as expected!");
 
         }
 
@@ -105,58 +221,145 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
         public async Task AuthorizeStop_Test1()
         {
 
-            if (cpoClientAPI is null ||
-                cpoClient    is null)
+            if (cpoClientAPI is null)
             {
-                Assert.Fail("cpoClientAPI or cpoClient is null!");
+                Assert.Fail("cpoClientAPI must not be null!");
                 return;
             }
 
-            var request = new AuthorizeStopRequest(
-                              OperatorId:           Operator_Id.         Parse("DE*GEF"),
-                              SessionId:            Session_Id.          Parse("f8c7c2bf-10dc-46a1-929b-a2bf52bcfaff"),
-                              Identification:       Identification.FromUID(
-                                                                     UID.Parse("11223344")
-                                                    ),
-                              EVSEId:               EVSE_Id.             Parse("DE*GEF*E1234567*A*1"),
-                              CPOPartnerSessionId:  CPOPartnerSession_Id.Parse("9b217a90-9924-4229-a217-3d67a4de00da"),
-                              EMPPartnerSessionId:  EMPPartnerSession_Id.Parse("bce77f78-6966-48f4-9abd-007f04862d6c"),
-                              CustomData:           null
-                          );
+            if (cpoClient is null)
+            {
+                Assert.Fail("cpoClient must not be null!");
+                return;
+            }
 
-            ClassicAssert.IsNotNull(request);
+            var clientRequestLogging   = 0;
+            var clientResponseLogging  = 0;
+            var serverRequestLogging   = 0;
+            var serverResponseLogging  = 0;
 
-            ClassicAssert.AreEqual(0, cpoClient.   Counters.AuthorizeStop.Requests_OK);
-            ClassicAssert.AreEqual(0, cpoClient.   Counters.AuthorizeStop.Requests_Error);
-            ClassicAssert.AreEqual(0, cpoClient.   Counters.AuthorizeStop.Responses_OK);
-            ClassicAssert.AreEqual(0, cpoClient.   Counters.AuthorizeStop.Responses_Error);
+            var request                = new AuthorizeStopRequest(
 
-            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.AuthorizeStop.Requests_OK);
-            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.AuthorizeStop.Requests_Error);
-            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.AuthorizeStop.Responses_OK);
-            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.AuthorizeStop.Responses_Error);
+                                             OperatorId:           Operator_Id.Parse("DE*GEF"),
+                                             SessionId:            Session_Id.Parse("f8c7c2bf-10dc-46a1-929b-a2bf52bcfaff"),
+                                             Identification:       Identification.FromUID(UID.Parse("11223344")),
+                                             EVSEId:               EVSE_Id.Parse("DE*GEF*E1234567*A*1"),
+                                             CPOPartnerSessionId:  cpoPartnerSessionId,
+                                             EMPPartnerSessionId:  EMPPartnerSession_Id.Parse("bce77f78-6966-48f4-9abd-007f04862d6c"),
+                                             CustomData:           new JObject(
+                                                                       new JProperty("hello", "MifareClassic Stop world!")
+                                                                   ),
+
+                                             RequestTimeout:       TimeSpan.FromSeconds(10)
+
+                                         );
+
+            Assert.That(request,                                                          Is.Not.Null);
+
+            Assert.That(cpoClient.   Counters.AuthorizeStop.Requests_OK,                  Is.EqualTo(0));
+            Assert.That(cpoClient.   Counters.AuthorizeStop.Requests_Error,               Is.EqualTo(0));
+            Assert.That(cpoClient.   Counters.AuthorizeStop.Responses_OK,                 Is.EqualTo(0));
+            Assert.That(cpoClient.   Counters.AuthorizeStop.Responses_Error,              Is.EqualTo(0));
+
+            Assert.That(cpoClientAPI.Counters.AuthorizeStop.Requests_OK,                  Is.EqualTo(0));
+            Assert.That(cpoClientAPI.Counters.AuthorizeStop.Requests_Error,               Is.EqualTo(0));
+            Assert.That(cpoClientAPI.Counters.AuthorizeStop.Responses_OK,                 Is.EqualTo(0));
+            Assert.That(cpoClientAPI.Counters.AuthorizeStop.Responses_Error,              Is.EqualTo(0));
+
+            cpoClient.   OnAuthorizeStopRequest  += (timestamp, cpoClient,    authorizeStopRequest) => {
+
+                Assert.That(authorizeStopRequest.OperatorId.          ToString(),         Is.EqualTo("DE*GEF"));
+                Assert.That(authorizeStopRequest.SessionId.           ToString(),         Is.EqualTo("f8c7c2bf-10dc-46a1-929b-a2bf52bcfaff"));
+                Assert.That(authorizeStopRequest.Identification.      ToString(),         Is.EqualTo("11223344"));
+                Assert.That(authorizeStopRequest.EVSEId.              ToString(),         Is.EqualTo("DE*GEF*E1234567*A*1"));
+                Assert.That(authorizeStopRequest.CPOPartnerSessionId,                     Is.EqualTo(cpoPartnerSessionId));
+                Assert.That(authorizeStopRequest.EMPPartnerSessionId?.ToString(),         Is.EqualTo("bce77f78-6966-48f4-9abd-007f04862d6c"));
+                Assert.That(authorizeStopRequest.CustomData?.Count,                       Is.EqualTo(1));
+                Assert.That(authorizeStopRequest.CustomData?["hello"]?.Value<String>(),   Is.EqualTo("MifareClassic Stop world!"));
+
+                clientRequestLogging++;
+
+                return Task.CompletedTask;
+
+            };
+
+            cpoClient.   OnAuthorizeStopResponse += (timestamp, cpoClient,    authorizeStopRequest, oicpResponse, runtime) => {
+
+                var authorizeStopResponse = oicpResponse.Response;
+
+                Assert.That(authorizeStopResponse,                                        Is.Not.Null);
+                Assert.That(authorizeStopResponse?.AuthorizationStatus,                   Is.EqualTo(AuthorizationStatusTypes.Authorized));
+                Assert.That(authorizeStopResponse?.StatusCode.Code,                       Is.EqualTo(StatusCodes.Success));
+
+                Assert.That(authorizeStopResponse?.SessionId?.          ToString(),       Is.EqualTo("f8c7c2bf-10dc-46a1-929b-a2bf52bcfaff"));
+                Assert.That(authorizeStopResponse?.EMPPartnerSessionId?.ToString(),       Is.EqualTo("bce77f78-6966-48f4-9abd-007f04862d6c"));
+
+                clientResponseLogging++;
+
+                return Task.CompletedTask;
+
+            };
+
+            cpoClientAPI.OnAuthorizeStopRequest  += (timestamp, cpoClientAPI, authorizeStopRequest) => {
+
+                Assert.That(authorizeStopRequest.OperatorId.          ToString(),         Is.EqualTo("DE*GEF"));
+                Assert.That(authorizeStopRequest.SessionId.           ToString(),         Is.EqualTo("f8c7c2bf-10dc-46a1-929b-a2bf52bcfaff"));
+                Assert.That(authorizeStopRequest.Identification.      ToString(),         Is.EqualTo("11223344"));
+                Assert.That(authorizeStopRequest.EVSEId.              ToString(),         Is.EqualTo("DE*GEF*E1234567*A*1"));
+                Assert.That(authorizeStopRequest.CPOPartnerSessionId,                     Is.EqualTo(cpoPartnerSessionId));
+                Assert.That(authorizeStopRequest.EMPPartnerSessionId?.ToString(),         Is.EqualTo("bce77f78-6966-48f4-9abd-007f04862d6c"));
+                Assert.That(authorizeStopRequest.CustomData?.Count,                       Is.EqualTo(1));
+                Assert.That(authorizeStopRequest.CustomData?["hello"]?.Value<String>(),   Is.EqualTo("MifareClassic Stop world!"));
+
+                serverRequestLogging++;
+
+                return Task.CompletedTask;
+
+            };
+
+            cpoClientAPI.OnAuthorizeStopResponse += (timestamp, cpoClientAPI, authorizeStopRequest, oicpResponse, runtime) => {
+
+                var authorizeStopResponse = oicpResponse.Response;
+
+                Assert.That(authorizeStopResponse,                                        Is.Not.Null);
+                Assert.That(authorizeStopResponse?.AuthorizationStatus,                   Is.EqualTo(AuthorizationStatusTypes.Authorized));
+                Assert.That(authorizeStopResponse?.StatusCode.Code,                       Is.EqualTo(StatusCodes.Success));
+
+                Assert.That(authorizeStopResponse?.SessionId?.          ToString(),       Is.EqualTo("f8c7c2bf-10dc-46a1-929b-a2bf52bcfaff"));
+                Assert.That(authorizeStopResponse?.EMPPartnerSessionId?.ToString(),       Is.EqualTo("bce77f78-6966-48f4-9abd-007f04862d6c"));
+
+                serverResponseLogging++;
+
+                return Task.CompletedTask;
+
+            };
 
             var oicpResult  = await cpoClient.AuthorizeStop(request);
 
-            ClassicAssert.IsNotNull(oicpResult);
-            ClassicAssert.IsNotNull(oicpResult.Response);
-            ClassicAssert.IsTrue   (oicpResult.IsSuccessful);
-            ClassicAssert.AreEqual (StatusCodes.Success,                                                  oicpResult.Response?.StatusCode?.Code);
-            ClassicAssert.AreEqual (AuthorizationStatusTypes.Authorized,                                  oicpResult.Response?.AuthorizationStatus);
-            ClassicAssert.AreEqual (Session_Id.          Parse("f8c7c2bf-10dc-46a1-929b-a2bf52bcfaff"),   oicpResult.Response?.SessionId);
-            ClassicAssert.AreEqual (CPOPartnerSession_Id.Parse("9b217a90-9924-4229-a217-3d67a4de00da"),   oicpResult.Response?.CPOPartnerSessionId);
-            ClassicAssert.AreEqual (EMPPartnerSession_Id.Parse("bce77f78-6966-48f4-9abd-007f04862d6c"),   oicpResult.Response?.EMPPartnerSessionId);
-            ClassicAssert.AreEqual (Provider_Id.         Parse("DE-GDF"),                                 oicpResult.Response?.ProviderId);
+            Assert.That(oicpResult,                                                       Is.Not.Null);
+            Assert.That(oicpResult.IsSuccessful,                                          Is.True);
+            Assert.That(oicpResult.Response?.AuthorizationStatus,                         Is.EqualTo(AuthorizationStatusTypes.Authorized));
+            Assert.That(oicpResult.Response?.StatusCode.Code,                             Is.EqualTo(StatusCodes.Success));
 
-            ClassicAssert.AreEqual(1, cpoClient.   Counters.AuthorizeStop.Requests_OK);
-            ClassicAssert.AreEqual(0, cpoClient.   Counters.AuthorizeStop.Requests_Error);
-            ClassicAssert.AreEqual(1, cpoClient.   Counters.AuthorizeStop.Responses_OK);
-            ClassicAssert.AreEqual(0, cpoClient.   Counters.AuthorizeStop.Responses_Error);
+            Assert.That(oicpResult.Response?.SessionId,                                   Is.EqualTo(Session_Id.Parse("f8c7c2bf-10dc-46a1-929b-a2bf52bcfaff")));
+            Assert.That(oicpResult.Response?.CPOPartnerSessionId,                         Is.EqualTo(cpoPartnerSessionId));
+            Assert.That(oicpResult.Response?.EMPPartnerSessionId,                         Is.EqualTo(EMPPartnerSession_Id.Parse("bce77f78-6966-48f4-9abd-007f04862d6c")));
+            Assert.That(oicpResult.Response?.ProviderId,                                  Is.EqualTo(Provider_Id.Parse("DE-GDF")));
 
-            ClassicAssert.AreEqual(1, cpoClientAPI.Counters.AuthorizeStop.Requests_OK);
-            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.AuthorizeStop.Requests_Error);
-            ClassicAssert.AreEqual(1, cpoClientAPI.Counters.AuthorizeStop.Responses_OK);
-            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.AuthorizeStop.Responses_Error);
+            Assert.That(cpoClient.   Counters.AuthorizeStop.Requests_OK,                  Is.EqualTo(1));
+            Assert.That(cpoClient.   Counters.AuthorizeStop.Requests_Error,               Is.EqualTo(0));
+            Assert.That(cpoClient.   Counters.AuthorizeStop.Responses_OK,                 Is.EqualTo(1));
+            Assert.That(cpoClient.   Counters.AuthorizeStop.Responses_Error,              Is.EqualTo(0));
+
+            Assert.That(cpoClientAPI.Counters.AuthorizeStop.Requests_OK,                  Is.EqualTo(1));
+            Assert.That(cpoClientAPI.Counters.AuthorizeStop.Requests_Error,               Is.EqualTo(0));
+            Assert.That(cpoClientAPI.Counters.AuthorizeStop.Responses_OK,                 Is.EqualTo(1));
+            Assert.That(cpoClientAPI.Counters.AuthorizeStop.Responses_Error,              Is.EqualTo(0));
+
+            Assert.That(clientRequestLogging,                                             Is.EqualTo(1));
+            Assert.That(clientResponseLogging,                                            Is.EqualTo(1));
+            Assert.That(serverRequestLogging,                                             Is.EqualTo(1));
+            Assert.That(serverResponseLogging,                                            Is.EqualTo(1));
 
         }
 

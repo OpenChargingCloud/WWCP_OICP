@@ -601,7 +601,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                            CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
                                            EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
                                            DateTimeOffset?        SessionStart          = null,
-                                           Decimal?               MeterValueStart       = null,
+                                           WattHour?              MeterValueStart       = null,
                                            Operator_Id?           OperatorId            = null,
                                            PartnerProduct_Id?     PartnerProductId      = null,
                                            JObject?               CustomData            = null,
@@ -667,28 +667,28 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         public static Task<OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>>
 
-            SendChargingNotificationsProgress(this ICPOClient        CPOClient,
-                                              Session_Id             SessionId,
-                                              Identification         Identification,
-                                              EVSE_Id                EVSEId,
-                                              DateTime               ChargingStart,
-                                              DateTime               EventOcurred,
+            SendChargingNotificationsProgress(this ICPOClient         CPOClient,
+                                              Session_Id              SessionId,
+                                              Identification          Identification,
+                                              EVSE_Id                 EVSEId,
+                                              DateTime                ChargingStart,
+                                              DateTime                EventOcurred,
 
-                                              CPOPartnerSession_Id?  CPOPartnerSessionId      = null,
-                                              EMPPartnerSession_Id?  EMPPartnerSessionId      = null,
-                                              TimeSpan?              ChargingDuration         = null,
-                                              DateTimeOffset?        SessionStart             = null,
-                                              Decimal?               ConsumedEnergyProgress   = null,
-                                              Decimal?               MeterValueStart          = null,
-                                              IEnumerable<Decimal>?  MeterValuesInBetween     = null,
-                                              Operator_Id?           OperatorId               = null,
-                                              PartnerProduct_Id?     PartnerProductId         = null,
-                                              JObject?               CustomData               = null,
+                                              CPOPartnerSession_Id?   CPOPartnerSessionId      = null,
+                                              EMPPartnerSession_Id?   EMPPartnerSessionId      = null,
+                                              TimeSpan?               ChargingDuration         = null,
+                                              DateTimeOffset?         SessionStart             = null,
+                                              WattHour?               ConsumedEnergyProgress   = null,
+                                              WattHour?               MeterValueStart          = null,
+                                              IEnumerable<WattHour>?  MeterValuesInBetween     = null,
+                                              Operator_Id?            OperatorId               = null,
+                                              PartnerProduct_Id?      PartnerProductId         = null,
+                                              JObject?                CustomData               = null,
 
-                                              DateTimeOffset?        Timestamp                = null,
-                                              EventTracking_Id?      EventTrackingId          = null,
-                                              TimeSpan?              RequestTimeout           = null,
-                                              CancellationToken      CancellationToken        = default)
+                                              DateTimeOffset?         Timestamp                = null,
+                                              EventTracking_Id?       EventTrackingId          = null,
+                                              TimeSpan?               RequestTimeout           = null,
+                                              CancellationToken       CancellationToken        = default)
 
 
                 => CPOClient.SendChargingProgressNotification(
@@ -759,23 +759,23 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                          DateTime                ChargingStart,
                                          DateTime                ChargingEnd,
 
-                                         CPOPartnerSession_Id?   CPOPartnerSessionId      = null,
-                                         EMPPartnerSession_Id?   EMPPartnerSessionId      = null,
-                                         DateTimeOffset?         SessionStart             = null,
-                                         DateTimeOffset?         SessionEnd               = null,
-                                         Decimal?                ConsumedEnergy           = null,
-                                         Decimal?                MeterValueStart          = null,
-                                         Decimal?                MeterValueEnd            = null,
-                                         IEnumerable<Decimal>?   MeterValuesInBetween     = null,
-                                         Operator_Id?            OperatorId               = null,
-                                         PartnerProduct_Id?      PartnerProductId         = null,
-                                         DateTimeOffset?         PenaltyTimeStart         = null,
-                                         JObject?                CustomData               = null,
+                                         CPOPartnerSession_Id?   CPOPartnerSessionId    = null,
+                                         EMPPartnerSession_Id?   EMPPartnerSessionId    = null,
+                                         DateTimeOffset?         SessionStart           = null,
+                                         DateTimeOffset?         SessionEnd             = null,
+                                         WattHour?               ConsumedEnergy         = null,
+                                         WattHour?               MeterValueStart        = null,
+                                         WattHour?               MeterValueEnd          = null,
+                                         IEnumerable<WattHour>?  MeterValuesInBetween   = null,
+                                         Operator_Id?            OperatorId             = null,
+                                         PartnerProduct_Id?      PartnerProductId       = null,
+                                         DateTimeOffset?         PenaltyTimeStart       = null,
+                                         JObject?                CustomData             = null,
 
-                                         DateTimeOffset?         Timestamp                = null,
-                                         EventTracking_Id?       EventTrackingId          = null,
-                                         TimeSpan?               RequestTimeout           = null,
-                                         CancellationToken       CancellationToken        = default)
+                                         DateTimeOffset?         Timestamp              = null,
+                                         EventTracking_Id?       EventTrackingId        = null,
+                                         TimeSpan?               RequestTimeout         = null,
+                                         CancellationToken       CancellationToken      = default)
 
 
                 => CPOClient.SendChargingEndNotification(
@@ -884,7 +884,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// 
         /// <param name="ChargeDetailRecord">A charge detail record.</param>
         /// <param name="OperatorId">The unique identification of the operator sending the given charge detail record (not the suboperator or the operator of the EVSE).</param>
-        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
@@ -895,7 +894,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             SendChargeDetailRecord(this ICPOClient     CPOClient,
                                    ChargeDetailRecord  ChargeDetailRecord,
                                    Operator_Id         OperatorId,
-                                   JObject?            CustomData         = null,
 
                                    DateTimeOffset?     Timestamp          = null,
                                    EventTracking_Id?   EventTrackingId    = null,
@@ -908,7 +906,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            ChargeDetailRecord,
                            OperatorId,
                            null,
-                           CustomData,
 
                            Timestamp,
                            EventTrackingId,

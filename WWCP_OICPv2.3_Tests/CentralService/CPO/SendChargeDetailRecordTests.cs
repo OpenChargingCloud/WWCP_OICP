@@ -99,8 +99,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService.CPO
                                   InternalData:                    null
                               ),
 
-                              OperatorId:   Operator_Id.Parse("DE*GEF"),
-                              CustomData:   null);
+                              OperatorId:   Operator_Id.Parse("DE*GEF")
+
+                          );
 
             ClassicAssert.IsNotNull(request);
 

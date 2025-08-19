@@ -19,8 +19,6 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-using System.Globalization;
-
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -102,25 +100,25 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The optional consumed energy.
         /// </summary>
         [Optional]
-        public Decimal?                          ConsumedEnergy                     { get; }
+        public WattHour?                         ConsumedEnergy                     { get; }
 
         /// <summary>
         /// The optional starting value of the energy meter [kWh].
         /// </summary>
         [Optional]
-        public Decimal?                          MeterValueStart                    { get; }
+        public WattHour?                         MeterValueStart                    { get; }
 
         /// <summary>
         /// The optional ending value of the energy meter [kWh].
         /// </summary>
         [Optional]
-        public Decimal?                          MeterValueEnd                      { get; }
+        public WattHour?                         MeterValueEnd                      { get; }
 
         /// <summary>
         /// The optional enumeration of meter values during the charging session.
         /// </summary>
         [Optional]
-        public IEnumerable<Decimal>?             MeterValuesInBetween               { get; }
+        public IEnumerable<WattHour>?            MeterValuesInBetween               { get; }
 
         /// <summary>
         /// The optional operator identification.
@@ -170,30 +168,30 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
-        public ChargingEndNotificationRequest(Session_Id             SessionId,
-                                              Identification         Identification,
-                                              EVSE_Id                EVSEId,
-                                              DateTimeOffset         ChargingStart,
-                                              DateTimeOffset         ChargingEnd,
+        public ChargingEndNotificationRequest(Session_Id              SessionId,
+                                              Identification          Identification,
+                                              EVSE_Id                 EVSEId,
+                                              DateTimeOffset          ChargingStart,
+                                              DateTimeOffset          ChargingEnd,
 
-                                              CPOPartnerSession_Id?  CPOPartnerSessionId    = null,
-                                              EMPPartnerSession_Id?  EMPPartnerSessionId    = null,
-                                              DateTimeOffset?        SessionStart           = null,
-                                              DateTimeOffset?        SessionEnd             = null,
-                                              Decimal?               ConsumedEnergy         = null,
-                                              Decimal?               MeterValueStart        = null,
-                                              Decimal?               MeterValueEnd          = null,
-                                              IEnumerable<Decimal>?  MeterValuesInBetween   = null,
-                                              Operator_Id?           OperatorId             = null,
-                                              PartnerProduct_Id?     PartnerProductId       = null,
-                                              DateTimeOffset?        PenaltyTimeStart       = null,
-                                              Process_Id?            ProcessId              = null,
-                                              JObject?               CustomData             = null,
+                                              CPOPartnerSession_Id?   CPOPartnerSessionId    = null,
+                                              EMPPartnerSession_Id?   EMPPartnerSessionId    = null,
+                                              DateTimeOffset?         SessionStart           = null,
+                                              DateTimeOffset?         SessionEnd             = null,
+                                              WattHour?               ConsumedEnergy         = null,
+                                              WattHour?               MeterValueStart        = null,
+                                              WattHour?               MeterValueEnd          = null,
+                                              IEnumerable<WattHour>?  MeterValuesInBetween   = null,
+                                              Operator_Id?            OperatorId             = null,
+                                              PartnerProduct_Id?      PartnerProductId       = null,
+                                              DateTimeOffset?         PenaltyTimeStart       = null,
+                                              Process_Id?             ProcessId              = null,
+                                              JObject?                CustomData             = null,
 
-                                              DateTimeOffset?        Timestamp              = null,
-                                              EventTracking_Id?      EventTrackingId        = null,
-                                              TimeSpan?              RequestTimeout         = null,
-                                              CancellationToken      CancellationToken      = default)
+                                              DateTimeOffset?         Timestamp              = null,
+                                              EventTracking_Id?       EventTrackingId        = null,
+                                              TimeSpan?               RequestTimeout         = null,
+                                              CancellationToken       CancellationToken      = default)
 
             : base(ProcessId,
                    CustomData,
@@ -495,7 +493,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (JSON.ParseOptional("ConsumedEnergy",
                                        "consumed energy",
-                                       out Decimal? ConsumedEnergy,
+                                       WattHour.TryParseKWh,
+                                       out WattHour? ConsumedEnergy,
                                        out ErrorResponse))
                 {
                     if (ErrorResponse is not null)
@@ -508,7 +507,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (JSON.ParseOptional("MeterValueStart",
                                        "meter value start",
-                                       out Decimal? MeterValueStart,
+                                       WattHour.TryParseKWh,
+                                       out WattHour? MeterValueStart,
                                        out ErrorResponse))
                 {
                     if (ErrorResponse is not null)
@@ -521,7 +521,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (JSON.ParseOptional("MeterValueEnd",
                                        "meter value end",
-                                       out Decimal? MeterValueEnd,
+                                       WattHour.TryParseKWh,
+                                       out WattHour? MeterValueEnd,
                                        out ErrorResponse))
                 {
                     if (ErrorResponse is not null)
@@ -532,7 +533,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse MeterValuesInBetween      [optional]
 
-                IEnumerable<Decimal>? MeterValuesInBetween = null;
+                List<WattHour>? MeterValuesInBetween = null;
 
                 if (JSON.ParseOptional("MeterValueInBetween",
                                        "meter values in between",
@@ -543,14 +544,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     if (ErrorResponse is not null)
                         return false;
 
-                    if (MeterValuesInBetweenJSON.ParseOptionalJSON("meterValues",
-                                                                   "meter values",
-                                                                   (String input, out Decimal number) => Decimal.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out number),
-                                                                   out MeterValuesInBetween,
-                                                                   out ErrorResponse))
+                    if (MeterValuesInBetweenJSON["meterValues"] is JArray meterValuesArray)
                     {
-                        if (ErrorResponse is not null)
-                            return false;
+
+                        MeterValuesInBetween = [];
+
+                        foreach (var meterValueJSON in meterValuesArray)
+                        {
+                            if (WattHour.TryParseKWh(meterValueJSON.ToString(), out var meterValue))
+                                MeterValuesInBetween.Add(meterValue);
+                        }
+
                     }
 
                 }
@@ -606,6 +610,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
                 ChargingEndNotificationRequest = new ChargingEndNotificationRequest(
+
                                                      SessionId,
                                                      Identification,
                                                      EVSEId,
@@ -630,6 +635,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                      EventTrackingId,
                                                      RequestTimeout,
                                                      CancellationToken
+
                                                  );
 
                 if (CustomChargingEndNotificationRequestParser is not null)
@@ -686,22 +692,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                : null,
 
                            ConsumedEnergy.HasValue
-                               ? new JProperty("ConsumedEnergy",        String.Format("{0:0.###}", ConsumedEnergy. Value).Replace(",", "."))
+                               ? new JProperty("ConsumedEnergy",        String.Format("{0:0.###}", ConsumedEnergy. Value.kWh).Replace(",", "."))
                                : null,
 
                            MeterValueStart.    HasValue
-                               ? new JProperty("MeterValueStart",       String.Format("{0:0.###}", MeterValueStart.Value).Replace(",", "."))
+                               ? new JProperty("MeterValueStart",       String.Format("{0:0.###}", MeterValueStart.Value.kWh).Replace(",", "."))
                                : null,
 
                            MeterValueEnd.      HasValue
-                               ? new JProperty("MeterValueEnd",         String.Format("{0:0.###}", MeterValueEnd.  Value).Replace(",", "."))
+                               ? new JProperty("MeterValueEnd",         String.Format("{0:0.###}", MeterValueEnd.  Value.kWh).Replace(",", "."))
                                : null,
 
                            MeterValuesInBetween is not null && MeterValuesInBetween.Any()
                                ? new JProperty("MeterValueInBetween",
                                      new JObject(  // OICP is crazy!
                                          new JProperty("meterValues",   new JArray(MeterValuesInBetween.
-                                                                                       Select(meterValue => String.Format("{0:0.###}", meterValue).Replace(",", ".")))
+                                                                                       Select(meterValue => String.Format("{0:0.###}", meterValue.kWh).Replace(",", ".")))
                                          )
                                      )
                                  )
@@ -752,10 +758,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                    EMPPartnerSessionId?. Clone(),
                    SessionStart,
                    SessionEnd,
-                   ConsumedEnergy,
-                   MeterValueStart,
-                   MeterValueEnd,
-                   MeterValuesInBetween?.ToArray(),
+                   ConsumedEnergy?.      Clone(),
+                   MeterValueStart?.     Clone(),
+                   MeterValueEnd?.       Clone(),
+                   MeterValuesInBetween?.Select(meterValueInBetween => meterValueInBetween.Clone()),
                    OperatorId?.          Clone(),
                    PartnerProductId?.    Clone(),
                    PenaltyTimeStart,

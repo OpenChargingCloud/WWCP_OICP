@@ -20,6 +20,8 @@
 using NUnit.Framework;
 using NUnit.Framework.Legacy;
 
+using org.GraphDefined.Vanaheimr.Illias;
+
 using cloud.charging.open.protocols.OICPv2_3.CPO;
 
 #endregion
@@ -48,9 +50,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.CPO
             }
 
             var request = new ChargingStartNotificationRequest(
+
                               SessionId:             Session_Id.Parse("f8c7c2bf-10dc-46a1-929b-a2bf52bcfaff"),
                               Identification:        Identification.FromUID(
-                                                                      UID.Parse("11223344")
+                                                         UID.Parse("11223344")
                                                      ),
                               EVSEId:                EVSE_Id.Parse("DE*GEF*E1234567*A*1"),
                               ChargingStart:         DateTime.Parse("2022-08-09T10:20:25.229Z"),
@@ -58,10 +61,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.CPO
                               CPOPartnerSessionId:   CPOPartnerSession_Id.Parse("9b217a90-9924-4229-a217-3d67a4de00da"),
                               EMPPartnerSessionId:   EMPPartnerSession_Id.Parse("bce77f78-6966-48f4-9abd-007f04862d6c"),
                               SessionStart:          DateTime.Parse("2022-08-09T10:18:25.229Z"),
-                              MeterValueStart:       3,
+                              MeterValueStart:       WattHour.ParseKWh(3),
                               OperatorId:            Operator_Id.Parse("DE*GEF"),
                               PartnerProductId:      PartnerProduct_Id.AC1,
-                              CustomData:            null);
+                              CustomData:            null
+
+                          );
 
             ClassicAssert.IsNotNull(request);
 
@@ -120,6 +125,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.CPO
             }
 
             var request = new ChargingProgressNotificationRequest(
+
                               SessionId:                Session_Id.Parse("f8c7c2bf-10dc-46a1-929b-a2bf52bcfaff"),
                               Identification:           Identification.FromUID(
                                                             UID.Parse("11223344")
@@ -132,12 +138,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.CPO
                               EMPPartnerSessionId:      EMPPartnerSession_Id.Parse("bce77f78-6966-48f4-9abd-007f04862d6c"),
                               ChargingDuration:         TimeSpan.FromSeconds(48),
                               SessionStart:             DateTime.Parse("2022-08-09T10:18:25.229Z"),
-                              ConsumedEnergyProgress:   5,
-                              MeterValueStart:          3,
-                              MeterValuesInBetween:     new Decimal[] { 4, 5 },
+                              ConsumedEnergyProgress:   WattHour.ParseKWh(5),
+                              MeterValueStart:          WattHour.ParseKWh(3),
+                              MeterValuesInBetween:     [ WattHour.ParseKWh(4), WattHour.ParseKWh(5) ],
                               OperatorId:               Operator_Id.Parse("DE*GEF"),
                               PartnerProductId:         PartnerProduct_Id.AC1,
-                              CustomData:               null);
+                              CustomData:               null
+
+                          );
 
             ClassicAssert.IsNotNull(request);
 
@@ -196,6 +204,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.CPO
             }
 
             var request = new ChargingEndNotificationRequest(
+
                               SessionId:              Session_Id.Parse("f8c7c2bf-10dc-46a1-929b-a2bf52bcfaff"),
                               Identification:         Identification.FromUID(
                                                           UID.Parse("11223344")
@@ -208,17 +217,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.CPO
                               EMPPartnerSessionId:    EMPPartnerSession_Id.Parse("bce77f78-6966-48f4-9abd-007f04862d6c"),
                               SessionStart:           DateTime.Parse("2022-08-09T10:18:25.229Z"),
                               SessionEnd:             DateTime.Parse("2022-08-09T11:18:25.229Z"),
-                              ConsumedEnergy:         35,
-                              MeterValueStart:        3,
-                              MeterValueEnd:          38,
-                              MeterValuesInBetween:   new Decimal[] {
-                                                          4, 5 ,6
-                                                      },
+                              ConsumedEnergy:         WattHour.ParseKWh(35),
+                              MeterValueStart:        WattHour.ParseKWh( 3),
+                              MeterValueEnd:          WattHour.ParseKWh(38),
+                              MeterValuesInBetween:   [ WattHour.ParseKWh(4), WattHour.ParseKWh(5), WattHour.ParseKWh(6) ],
                               OperatorId:             Operator_Id.Parse("DE*GEF"),
                               PartnerProductId:       PartnerProduct_Id.AC1,
                               PenaltyTimeStart:       DateTime.Parse("2022-08-09T11:19:00.000Z"),
 
-                              CustomData:             null);
+                              CustomData:             null
+
+                          );
 
             ClassicAssert.IsNotNull(request);
 
@@ -277,6 +286,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.CPO
             }
 
             var request = new ChargingErrorNotificationRequest(
+
                               SessionId:             Session_Id.Parse("f8c7c2bf-10dc-46a1-929b-a2bf52bcfaff"),
                               Identification:        Identification.FromUID(
                                                          UID.Parse("11223344")
@@ -289,7 +299,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.CPO
                               EMPPartnerSessionId:   EMPPartnerSession_Id.Parse("bce77f78-6966-48f4-9abd-007f04862d6c"),
                               ErrorAdditionalInfo:   "Something wicked happend!",
 
-                              CustomData:            null);
+                              CustomData:            null
+
+                          );
 
             ClassicAssert.IsNotNull(request);
 

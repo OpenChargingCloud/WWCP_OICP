@@ -19,6 +19,8 @@
 
 using NUnit.Framework;
 
+using Newtonsoft.Json.Linq;
+
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 #endregion
@@ -27,7 +29,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
 {
 
     /// <summary>
-    /// CPO authorize remote start/stop tests.
+    /// CPO AuthorizeRemote[Start/Stop] tests.
     /// </summary>
     [TestFixture]
     public class AuthorizeRemoteStartStopTests : ACPOTests
@@ -60,6 +62,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
             var empPartnerSessionId    = EMPPartnerSession_Id.NewRandom();
 
             var request                = new AuthorizeRemoteStartRequest(
+
                                              ProviderId:           Provider_Id.   Parse("DE-GDF"),
                                              Identification:       Identification.FromRemoteIdentification(EVCO_Id.Parse("DE-GDF-C12345678X")),
                                              EVSEId:               EVSE_Id.       Parse("DE*GEF*E1234567*A*1"),
@@ -67,33 +70,37 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
                                              SessionId:            sessionId,
                                              CPOPartnerSessionId:  null,
                                              EMPPartnerSessionId:  empPartnerSessionId,
+                                             CustomData:           new JObject(
+                                                                       new JProperty("hello", "app world!")
+                                                                   ),
 
-                                             CustomData:           null,
                                              RequestTimeout:       TimeSpan.FromSeconds(10)
+
                                          );
 
-            Assert.That(request,                                                            Is.Not.Null);
+            Assert.That(request,                                                                 Is.Not.Null);
 
-            Assert.That(cpoServerAPIClient.Counters.AuthorizeRemoteStart.Requests_OK,       Is.EqualTo(0));
-            Assert.That(cpoServerAPIClient.Counters.AuthorizeRemoteStart.Requests_Error,    Is.EqualTo(0));
-            Assert.That(cpoServerAPIClient.Counters.AuthorizeRemoteStart.Responses_OK,      Is.EqualTo(0));
-            Assert.That(cpoServerAPIClient.Counters.AuthorizeRemoteStart.Responses_Error,   Is.EqualTo(0));
+            Assert.That(cpoServerAPIClient.Counters.AuthorizeRemoteStart.Requests_OK,            Is.EqualTo(0));
+            Assert.That(cpoServerAPIClient.Counters.AuthorizeRemoteStart.Requests_Error,         Is.EqualTo(0));
+            Assert.That(cpoServerAPIClient.Counters.AuthorizeRemoteStart.Responses_OK,           Is.EqualTo(0));
+            Assert.That(cpoServerAPIClient.Counters.AuthorizeRemoteStart.Responses_Error,        Is.EqualTo(0));
 
-            Assert.That(cpoServerAPI.Counters.AuthorizeRemoteStart.Requests_OK,             Is.EqualTo(0));
-            Assert.That(cpoServerAPI.Counters.AuthorizeRemoteStart.Requests_Error,          Is.EqualTo(0));
-            Assert.That(cpoServerAPI.Counters.AuthorizeRemoteStart.Responses_OK,            Is.EqualTo(0));
-            Assert.That(cpoServerAPI.Counters.AuthorizeRemoteStart.Responses_Error,         Is.EqualTo(0));
+            Assert.That(cpoServerAPI.Counters.AuthorizeRemoteStart.Requests_OK,                  Is.EqualTo(0));
+            Assert.That(cpoServerAPI.Counters.AuthorizeRemoteStart.Requests_Error,               Is.EqualTo(0));
+            Assert.That(cpoServerAPI.Counters.AuthorizeRemoteStart.Responses_OK,                 Is.EqualTo(0));
+            Assert.That(cpoServerAPI.Counters.AuthorizeRemoteStart.Responses_Error,              Is.EqualTo(0));
 
             cpoServerAPIClient.OnAuthorizeRemoteStartRequest  += (timestamp, cpoServerAPIClient, authorizeRemoteStartRequest) => {
 
-                Assert.That(authorizeRemoteStartRequest.ProviderId.      ToString(),        Is.EqualTo("DE-GDF"));
-                Assert.That(authorizeRemoteStartRequest.Identification.  ToString(),        Is.EqualTo("DE-GDF-C12345678X"));
-                Assert.That(authorizeRemoteStartRequest.EVSEId.          ToString(),        Is.EqualTo("DE*GEF*E1234567*A*1"));
-                Assert.That(authorizeRemoteStartRequest.PartnerProductId.ToString(),        Is.EqualTo("AC3"));
-                Assert.That(authorizeRemoteStartRequest.SessionId,                          Is.EqualTo(sessionId));
-                Assert.That(authorizeRemoteStartRequest.CPOPartnerSessionId,                Is.Null);
-                Assert.That(authorizeRemoteStartRequest.EMPPartnerSessionId,                Is.EqualTo(empPartnerSessionId));
-                Assert.That(authorizeRemoteStartRequest.CustomData,                         Is.Null);
+                Assert.That(authorizeRemoteStartRequest.ProviderId.      ToString(),             Is.EqualTo("DE-GDF"));
+                Assert.That(authorizeRemoteStartRequest.Identification.  ToString(),             Is.EqualTo("DE-GDF-C12345678X"));
+                Assert.That(authorizeRemoteStartRequest.EVSEId.          ToString(),             Is.EqualTo("DE*GEF*E1234567*A*1"));
+                Assert.That(authorizeRemoteStartRequest.PartnerProductId.ToString(),             Is.EqualTo("AC3"));
+                Assert.That(authorizeRemoteStartRequest.SessionId,                               Is.EqualTo(sessionId));
+                Assert.That(authorizeRemoteStartRequest.CPOPartnerSessionId,                     Is.Null);
+                Assert.That(authorizeRemoteStartRequest.EMPPartnerSessionId,                     Is.EqualTo(empPartnerSessionId));
+                Assert.That(authorizeRemoteStartRequest.CustomData?.Count,                       Is.EqualTo(1));
+                Assert.That(authorizeRemoteStartRequest.CustomData?["hello"]?.Value<String>(),   Is.EqualTo("app world!"));
 
                 clientRequestLogging++;
 
@@ -105,9 +112,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
 
                 var authorizeRemoteStartResponse = oicpResponse.Response;
 
-                Assert.That(authorizeRemoteStartResponse,                                   Is.Not.Null);
-                Assert.That(authorizeRemoteStartResponse?.Result,                           Is.EqualTo(true));
-                Assert.That(authorizeRemoteStartResponse?.StatusCode.Code,                  Is.EqualTo(StatusCodes.Success));
+                Assert.That(authorizeRemoteStartResponse,                                        Is.Not.Null);
+                Assert.That(authorizeRemoteStartResponse?.Result,                                Is.True);
+                Assert.That(authorizeRemoteStartResponse?.StatusCode.Code,                       Is.EqualTo(StatusCodes.Success));
 
                 clientResponseLogging++;
 
@@ -115,16 +122,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
 
             };
 
-            cpoServerAPI.OnAuthorizeRemoteStartRequest        += (timestamp, cpoServerAPI,       authorizeRemoteStartRequest) => {
+            cpoServerAPI.      OnAuthorizeRemoteStartRequest  += (timestamp, cpoServerAPI,       authorizeRemoteStartRequest) => {
 
-                Assert.That(authorizeRemoteStartRequest.ProviderId.      ToString(),        Is.EqualTo("DE-GDF"));
-                Assert.That(authorizeRemoteStartRequest.Identification.  ToString(),        Is.EqualTo("DE-GDF-C12345678X"));
-                Assert.That(authorizeRemoteStartRequest.EVSEId.          ToString(),        Is.EqualTo("DE*GEF*E1234567*A*1"));
-                Assert.That(authorizeRemoteStartRequest.PartnerProductId.ToString(),        Is.EqualTo("AC3"));
-                Assert.That(authorizeRemoteStartRequest.SessionId,                          Is.EqualTo(sessionId));
-                Assert.That(authorizeRemoteStartRequest.CPOPartnerSessionId,                Is.Null);
-                Assert.That(authorizeRemoteStartRequest.EMPPartnerSessionId,                Is.EqualTo(empPartnerSessionId));
-                Assert.That(authorizeRemoteStartRequest.CustomData,                         Is.Null);
+                Assert.That(authorizeRemoteStartRequest.ProviderId.      ToString(),             Is.EqualTo("DE-GDF"));
+                Assert.That(authorizeRemoteStartRequest.Identification.  ToString(),             Is.EqualTo("DE-GDF-C12345678X"));
+                Assert.That(authorizeRemoteStartRequest.EVSEId.          ToString(),             Is.EqualTo("DE*GEF*E1234567*A*1"));
+                Assert.That(authorizeRemoteStartRequest.PartnerProductId.ToString(),             Is.EqualTo("AC3"));
+                Assert.That(authorizeRemoteStartRequest.SessionId,                               Is.EqualTo(sessionId));
+                Assert.That(authorizeRemoteStartRequest.CPOPartnerSessionId,                     Is.Null);
+                Assert.That(authorizeRemoteStartRequest.EMPPartnerSessionId,                     Is.EqualTo(empPartnerSessionId));
+                Assert.That(authorizeRemoteStartRequest.CustomData?.Count,                       Is.EqualTo(1));
+                Assert.That(authorizeRemoteStartRequest.CustomData?["hello"]?.Value<String>(),   Is.EqualTo("app world!"));
 
                 serverRequestLogging++;
 
@@ -132,10 +140,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
 
             };
 
-            cpoServerAPI.OnAuthorizeRemoteStartResponse       += (timestamp, cpoServerAPI,       authorizeRemoteStartRequest, authorizeRemoteStartResponse, runtime) => {
+            cpoServerAPI.      OnAuthorizeRemoteStartResponse += (timestamp, cpoServerAPI,       authorizeRemoteStartRequest, authorizeRemoteStartResponse, runtime) => {
 
-                Assert.That(authorizeRemoteStartResponse.Result,                            Is.EqualTo(true));
-                Assert.That(authorizeRemoteStartResponse.StatusCode.Code,                   Is.EqualTo(StatusCodes.Success));
+                Assert.That(authorizeRemoteStartResponse.Result,                                 Is.True);
+                Assert.That(authorizeRemoteStartResponse.StatusCode.Code,                        Is.EqualTo(StatusCodes.Success));
 
                 serverResponseLogging++;
 
@@ -147,34 +155,38 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
 
             var remoteSocket1  = oicpResult.Response?.HTTPResponse?.RemoteSocket;
 
-            Assert.That(oicpResult,                                                         Is.Not.Null);
-            Assert.That(oicpResult.IsSuccessful,                                            Is.True);
-            Assert.That(oicpResult.Response?.Result,                                        Is.EqualTo(true));
-            Assert.That(oicpResult.Response?.StatusCode.Code,                               Is.EqualTo(StatusCodes.Success));
+            Assert.That(oicpResult,                                                              Is.Not.Null);
+            Assert.That(oicpResult.IsSuccessful,                                                 Is.True);
+            Assert.That(oicpResult.Response?.Result,                                             Is.True);
+            Assert.That(oicpResult.Response?.StatusCode.Code,                                    Is.EqualTo(StatusCodes.Success));
 
-            Assert.That(cpoServerAPIClient.Counters.AuthorizeRemoteStart.Requests_OK,       Is.EqualTo(1));
-            Assert.That(cpoServerAPIClient.Counters.AuthorizeRemoteStart.Requests_Error,    Is.EqualTo(0));
-            Assert.That(cpoServerAPIClient.Counters.AuthorizeRemoteStart.Responses_OK,      Is.EqualTo(1));
-            Assert.That(cpoServerAPIClient.Counters.AuthorizeRemoteStart.Responses_Error,   Is.EqualTo(0));
+            Assert.That(cpoServerAPIClient.Counters.AuthorizeRemoteStart.Requests_OK,            Is.EqualTo(1));
+            Assert.That(cpoServerAPIClient.Counters.AuthorizeRemoteStart.Requests_Error,         Is.EqualTo(0));
+            Assert.That(cpoServerAPIClient.Counters.AuthorizeRemoteStart.Responses_OK,           Is.EqualTo(1));
+            Assert.That(cpoServerAPIClient.Counters.AuthorizeRemoteStart.Responses_Error,        Is.EqualTo(0));
 
-            Assert.That(cpoServerAPI.Counters.AuthorizeRemoteStart.Requests_OK,             Is.EqualTo(1));
-            Assert.That(cpoServerAPI.Counters.AuthorizeRemoteStart.Requests_Error,          Is.EqualTo(0));
-            Assert.That(cpoServerAPI.Counters.AuthorizeRemoteStart.Responses_OK,            Is.EqualTo(1));
-            Assert.That(cpoServerAPI.Counters.AuthorizeRemoteStart.Responses_Error,         Is.EqualTo(0));
+            Assert.That(cpoServerAPI.Counters.AuthorizeRemoteStart.Requests_OK,                  Is.EqualTo(1));
+            Assert.That(cpoServerAPI.Counters.AuthorizeRemoteStart.Requests_Error,               Is.EqualTo(0));
+            Assert.That(cpoServerAPI.Counters.AuthorizeRemoteStart.Responses_OK,                 Is.EqualTo(1));
+            Assert.That(cpoServerAPI.Counters.AuthorizeRemoteStart.Responses_Error,              Is.EqualTo(0));
 
-            Assert.That(clientRequestLogging,                                               Is.EqualTo(1));
-            Assert.That(clientResponseLogging,                                              Is.EqualTo(1));
-            Assert.That(serverRequestLogging,                                               Is.EqualTo(1));
-            Assert.That(serverResponseLogging,                                              Is.EqualTo(1));
+            Assert.That(clientRequestLogging,                                                    Is.EqualTo(1));
+            Assert.That(clientResponseLogging,                                                   Is.EqualTo(1));
+            Assert.That(serverRequestLogging,                                                    Is.EqualTo(1));
+            Assert.That(serverResponseLogging,                                                   Is.EqualTo(1));
+
 
             // ---------------------------------------------------------------------------------------------------------------------------
+            // Validate HTTP Keep-Alives
+            // ---------------------------------------------------------------------------------------------------------------------------
 
-            Assert.That(oicpResult.Response?.HTTPResponse?.Connection,                      Is.EqualTo(ConnectionType.KeepAlive));
+            Assert.That(oicpResult.Response?.HTTPResponse?.Connection,                           Is.EqualTo(ConnectionType.KeepAlive));
 
             var sessionId2             = Session_Id.          NewRandom();
             var empPartnerSessionId2   = EMPPartnerSession_Id.NewRandom();
 
             var request2               = new AuthorizeRemoteStartRequest(
+
                                              ProviderId:           Provider_Id.   Parse("DE-GDF"),
                                              Identification:       Identification.FromRemoteIdentification(EVCO_Id.Parse("DE-GDF-C23456789X")),
                                              EVSEId:               EVSE_Id.       Parse("DE*GEF*E1234567*A*1"),
@@ -182,21 +194,24 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
                                              SessionId:            sessionId2,
                                              CPOPartnerSessionId:  null,
                                              EMPPartnerSessionId:  empPartnerSessionId2,
+                                             CustomData:           new JObject(
+                                                                       new JProperty("hello", "app world (2)!")
+                                                                   ),
 
-                                             CustomData:           null,
                                              RequestTimeout:       TimeSpan.FromSeconds(10)
+
                                          );
 
             var oicpResult2            = await cpoServerAPIClient.AuthorizeRemoteStart(request);
             var remoteSocket2          = oicpResult.Response?.HTTPResponse?.RemoteSocket;
 
 
-            Assert.That(oicpResult2,                                                        Is.Not.Null);
-            Assert.That(oicpResult2.IsSuccessful,                                           Is.True);
-            Assert.That(oicpResult2.Response?.Result,                                       Is.EqualTo(true));
-            Assert.That(oicpResult2.Response?.StatusCode.Code,                              Is.EqualTo(StatusCodes.Success));
+            Assert.That(oicpResult2,                                                             Is.Not.Null);
+            Assert.That(oicpResult2.IsSuccessful,                                                Is.True);
+            Assert.That(oicpResult2.Response?.Result,                                            Is.True);
+            Assert.That(oicpResult2.Response?.StatusCode.Code,                                   Is.EqualTo(StatusCodes.Success));
 
-            Assert.That(remoteSocket1,                                                      Is.EqualTo(remoteSocket2), "HTTP Keep-Alives do not work as expected!");
+            Assert.That(remoteSocket1,                                                           Is.EqualTo(remoteSocket2), "HTTP Keep-Alives do not work as expected!");
 
         }
 
@@ -228,18 +243,20 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
             var sessionId              = Session_Id.          NewRandom();
             var empPartnerSessionId    = EMPPartnerSession_Id.NewRandom();
 
-            var request = new AuthorizeRemoteStartRequest(
-                              ProviderId:           Provider_Id.Parse("DE-GDF"),
-                              Identification:       Identification.FromRemoteIdentification(EVCO_Id.Parse("DE-GDF-C22222222X")),
-                              EVSEId:               EVSE_Id.Parse("DE*GEF*E1234567*A*2"),
-                              PartnerProductId:     PartnerProduct_Id.Parse("AC3"),
-                              SessionId:            sessionId,
-                              CPOPartnerSessionId:  null,
-                              EMPPartnerSessionId:  empPartnerSessionId,
+            var request                = new AuthorizeRemoteStartRequest(
 
-                              CustomData:           null,
-                              RequestTimeout:       TimeSpan.FromSeconds(10)
-                          );
+                                             ProviderId:           Provider_Id.Parse("DE-GDF"),
+                                             Identification:       Identification.FromRemoteIdentification(EVCO_Id.Parse("DE-GDF-C22222222X")),
+                                             EVSEId:               EVSE_Id.Parse("DE*GEF*E1234567*A*2"),
+                                             PartnerProductId:     PartnerProduct_Id.Parse("AC3"),
+                                             SessionId:            sessionId,
+                                             CPOPartnerSessionId:  null,
+                                             EMPPartnerSessionId:  empPartnerSessionId,
+                                             CustomData:           null,
+
+                                             RequestTimeout:       TimeSpan.FromSeconds(10)
+
+                                         );
 
             Assert.That(request,                                                            Is.Not.Null);
 
@@ -275,7 +292,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
                 var authorizeRemoteStartResponse = oicpResponse.Response;
 
                 Assert.That(authorizeRemoteStartResponse,                                   Is.Not.Null);
-                Assert.That(authorizeRemoteStartResponse?.Result,                           Is.EqualTo(false));
+                Assert.That(authorizeRemoteStartResponse?.Result,                           Is.False);
                 Assert.That(authorizeRemoteStartResponse?.StatusCode.Code,                  Is.EqualTo(StatusCodes.CommunicationToEVSEFailed));
 
                 clientResponseLogging++;
@@ -284,7 +301,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
 
             };
 
-            cpoServerAPI.OnAuthorizeRemoteStartRequest        += (timestamp, cpoServerAPI,       authorizeRemoteStartRequest) => {
+            cpoServerAPI.      OnAuthorizeRemoteStartRequest  += (timestamp, cpoServerAPI,       authorizeRemoteStartRequest) => {
 
                 Assert.That(authorizeRemoteStartRequest.ProviderId.      ToString(),        Is.EqualTo("DE-GDF"));
                 Assert.That(authorizeRemoteStartRequest.Identification.  ToString(),        Is.EqualTo("DE-GDF-C22222222X"));
@@ -301,9 +318,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
 
             };
 
-            cpoServerAPI.OnAuthorizeRemoteStartResponse       += (timestamp, cpoServerAPI,       authorizeRemoteStartRequest, authorizeRemoteStartResponse, runtime) => {
+            cpoServerAPI.      OnAuthorizeRemoteStartResponse += (timestamp, cpoServerAPI,       authorizeRemoteStartRequest, authorizeRemoteStartResponse, runtime) => {
 
-                Assert.That(authorizeRemoteStartResponse.Result,                            Is.EqualTo(false));
+                Assert.That(authorizeRemoteStartResponse.Result,                            Is.False);
                 Assert.That(authorizeRemoteStartResponse.StatusCode.Code,                   Is.EqualTo(StatusCodes.CommunicationToEVSEFailed));
 
                 serverResponseLogging++;
@@ -316,7 +333,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
 
             Assert.That(oicpResult,                                                         Is.Not.Null);
             Assert.That(oicpResult.IsSuccessful,                                            Is.True);
-            Assert.That(oicpResult.Response?.Result,                                        Is.EqualTo(false));
+            Assert.That(oicpResult.Response?.Result,                                        Is.False);
             Assert.That(oicpResult.Response?.StatusCode.Code,                               Is.EqualTo(StatusCodes.CommunicationToEVSEFailed));
 
             Assert.That(cpoServerAPIClient.Counters.AuthorizeRemoteStart.Requests_OK,       Is.EqualTo(1));
@@ -366,37 +383,42 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
             var cpoPartnerSessionId    = CPOPartnerSession_Id.NewRandom();
             var empPartnerSessionId    = EMPPartnerSession_Id.NewRandom();
 
-            var request = new AuthorizeRemoteStopRequest(
-                              ProviderId:           Provider_Id.Parse("DE-GDF"),
-                              EVSEId:               EVSE_Id.    Parse("DE*GEF*E1234567*A*1"),
-                              SessionId:            sessionId,
-                              CPOPartnerSessionId:  cpoPartnerSessionId,
-                              EMPPartnerSessionId:  empPartnerSessionId,
-                              CustomData:           null,
+            var request                = new AuthorizeRemoteStopRequest(
 
-                              RequestTimeout:       TimeSpan.FromSeconds(10)
-                          );
+                                             ProviderId:           Provider_Id.Parse("DE-GDF"),
+                                             EVSEId:               EVSE_Id.    Parse("DE*GEF*E1234567*A*1"),
+                                             SessionId:            sessionId,
+                                             CPOPartnerSessionId:  cpoPartnerSessionId,
+                                             EMPPartnerSessionId:  empPartnerSessionId,
+                                             CustomData:           new JObject(
+                                                                       new JProperty("hello", "app world!")
+                                                                   ),
 
-            Assert.That(request,                                                           Is.Not.Null);
+                                             RequestTimeout:       TimeSpan.FromSeconds(10)
 
-            Assert.That(cpoServerAPIClient.Counters.AuthorizeRemoteStop.Requests_OK,       Is.EqualTo(0));
-            Assert.That(cpoServerAPIClient.Counters.AuthorizeRemoteStop.Requests_Error,    Is.EqualTo(0));
-            Assert.That(cpoServerAPIClient.Counters.AuthorizeRemoteStop.Responses_OK,      Is.EqualTo(0));
-            Assert.That(cpoServerAPIClient.Counters.AuthorizeRemoteStop.Responses_Error,   Is.EqualTo(0));
+                                         );
 
-            Assert.That(cpoServerAPI.Counters.AuthorizeRemoteStop.Requests_OK,             Is.EqualTo(0));
-            Assert.That(cpoServerAPI.Counters.AuthorizeRemoteStop.Requests_Error,          Is.EqualTo(0));
-            Assert.That(cpoServerAPI.Counters.AuthorizeRemoteStop.Responses_OK,            Is.EqualTo(0));
-            Assert.That(cpoServerAPI.Counters.AuthorizeRemoteStop.Responses_Error,         Is.EqualTo(0));
+            Assert.That(request,                                                                Is.Not.Null);
+
+            Assert.That(cpoServerAPIClient.Counters.AuthorizeRemoteStop.Requests_OK,            Is.EqualTo(0));
+            Assert.That(cpoServerAPIClient.Counters.AuthorizeRemoteStop.Requests_Error,         Is.EqualTo(0));
+            Assert.That(cpoServerAPIClient.Counters.AuthorizeRemoteStop.Responses_OK,           Is.EqualTo(0));
+            Assert.That(cpoServerAPIClient.Counters.AuthorizeRemoteStop.Responses_Error,        Is.EqualTo(0));
+
+            Assert.That(cpoServerAPI.Counters.AuthorizeRemoteStop.Requests_OK,                  Is.EqualTo(0));
+            Assert.That(cpoServerAPI.Counters.AuthorizeRemoteStop.Requests_Error,               Is.EqualTo(0));
+            Assert.That(cpoServerAPI.Counters.AuthorizeRemoteStop.Responses_OK,                 Is.EqualTo(0));
+            Assert.That(cpoServerAPI.Counters.AuthorizeRemoteStop.Responses_Error,              Is.EqualTo(0));
 
             cpoServerAPIClient.OnAuthorizeRemoteStopRequest  += (timestamp, cpoServerAPIClient, authorizeRemoteStopRequest) => {
 
-                Assert.That(authorizeRemoteStopRequest.ProviderId.ToString(),              Is.EqualTo("DE-GDF"));
-                Assert.That(authorizeRemoteStopRequest.EVSEId.    ToString(),              Is.EqualTo("DE*GEF*E1234567*A*1"));
-                Assert.That(authorizeRemoteStopRequest.SessionId,                          Is.EqualTo(sessionId));
-                Assert.That(authorizeRemoteStopRequest.CPOPartnerSessionId,                Is.EqualTo(cpoPartnerSessionId));
-                Assert.That(authorizeRemoteStopRequest.EMPPartnerSessionId,                Is.EqualTo(empPartnerSessionId));
-                Assert.That(authorizeRemoteStopRequest.CustomData,                         Is.Null);
+                Assert.That(authorizeRemoteStopRequest.ProviderId.ToString(),                   Is.EqualTo("DE-GDF"));
+                Assert.That(authorizeRemoteStopRequest.EVSEId.    ToString(),                   Is.EqualTo("DE*GEF*E1234567*A*1"));
+                Assert.That(authorizeRemoteStopRequest.SessionId,                               Is.EqualTo(sessionId));
+                Assert.That(authorizeRemoteStopRequest.CPOPartnerSessionId,                     Is.EqualTo(cpoPartnerSessionId));
+                Assert.That(authorizeRemoteStopRequest.EMPPartnerSessionId,                     Is.EqualTo(empPartnerSessionId));
+                Assert.That(authorizeRemoteStopRequest.CustomData?.Count,                       Is.EqualTo(1));
+                Assert.That(authorizeRemoteStopRequest.CustomData?["hello"]?.Value<String>(),   Is.EqualTo("app world!"));
 
                 clientRequestLogging++;
 
@@ -408,9 +430,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
 
                 var authorizeRemoteStopResponse = oicpResponse.Response;
 
-                Assert.That(authorizeRemoteStopResponse,                                   Is.Not.Null);
-                Assert.That(authorizeRemoteStopResponse?.Result,                           Is.EqualTo(true));
-                Assert.That(authorizeRemoteStopResponse?.StatusCode.Code,                  Is.EqualTo(StatusCodes.Success));
+                Assert.That(authorizeRemoteStopResponse,                                        Is.Not.Null);
+                Assert.That(authorizeRemoteStopResponse?.Result,                                Is.True);
+                Assert.That(authorizeRemoteStopResponse?.StatusCode.Code,                       Is.EqualTo(StatusCodes.Success));
 
                 clientResponseLogging++;
 
@@ -418,14 +440,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
 
             };
 
-            cpoServerAPI.OnAuthorizeRemoteStopRequest        += (timestamp, cpoServerAPI,      authorizeRemoteStopRequest) => {
+            cpoServerAPI.      OnAuthorizeRemoteStopRequest  += (timestamp, cpoServerAPI,      authorizeRemoteStopRequest) => {
 
-                Assert.That(authorizeRemoteStopRequest.ProviderId.ToString(),              Is.EqualTo("DE-GDF"));
-                Assert.That(authorizeRemoteStopRequest.EVSEId.    ToString(),              Is.EqualTo("DE*GEF*E1234567*A*1"));
-                Assert.That(authorizeRemoteStopRequest.SessionId,                          Is.EqualTo(sessionId));
-                Assert.That(authorizeRemoteStopRequest.CPOPartnerSessionId,                Is.EqualTo(cpoPartnerSessionId));
-                Assert.That(authorizeRemoteStopRequest.EMPPartnerSessionId,                Is.EqualTo(empPartnerSessionId));
-                Assert.That(authorizeRemoteStopRequest.CustomData,                         Is.Null);
+                Assert.That(authorizeRemoteStopRequest.ProviderId.ToString(),                   Is.EqualTo("DE-GDF"));
+                Assert.That(authorizeRemoteStopRequest.EVSEId.    ToString(),                   Is.EqualTo("DE*GEF*E1234567*A*1"));
+                Assert.That(authorizeRemoteStopRequest.SessionId,                               Is.EqualTo(sessionId));
+                Assert.That(authorizeRemoteStopRequest.CPOPartnerSessionId,                     Is.EqualTo(cpoPartnerSessionId));
+                Assert.That(authorizeRemoteStopRequest.EMPPartnerSessionId,                     Is.EqualTo(empPartnerSessionId));
+                Assert.That(authorizeRemoteStopRequest.CustomData?.Count,                       Is.EqualTo(1));
+                Assert.That(authorizeRemoteStopRequest.CustomData?["hello"]?.Value<String>(),   Is.EqualTo("app world!"));
 
                 serverRequestLogging++;
 
@@ -433,10 +456,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
 
             };
 
-            cpoServerAPI.OnAuthorizeRemoteStopResponse       += (timestamp, cpoServerAPI,      authorizeRemoteStopRequest, authorizeRemoteStopResponse, runtime) => {
+            cpoServerAPI.      OnAuthorizeRemoteStopResponse += (timestamp, cpoServerAPI,      authorizeRemoteStopRequest, authorizeRemoteStopResponse, runtime) => {
 
-                Assert.That(authorizeRemoteStopResponse.Result,                            Is.EqualTo(true));
-                Assert.That(authorizeRemoteStopResponse.StatusCode.Code,                   Is.EqualTo(StatusCodes.Success));
+                Assert.That(authorizeRemoteStopResponse.Result,                                 Is.True);
+                Assert.That(authorizeRemoteStopResponse.StatusCode.Code,                        Is.EqualTo(StatusCodes.Success));
 
                 serverResponseLogging++;
 
@@ -446,25 +469,25 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
 
             var oicpResult = await cpoServerAPIClient.AuthorizeRemoteStop(request);
 
-            Assert.That(oicpResult,                                                        Is.Not.Null);
-            Assert.That(oicpResult.IsSuccessful,                                           Is.True);
-            Assert.That(oicpResult.Response?.Result,                                       Is.EqualTo(true));
-            Assert.That(oicpResult.Response?.StatusCode.Code,                              Is.EqualTo(StatusCodes.Success));
+            Assert.That(oicpResult,                                                             Is.Not.Null);
+            Assert.That(oicpResult.IsSuccessful,                                                Is.True);
+            Assert.That(oicpResult.Response?.Result,                                            Is.True);
+            Assert.That(oicpResult.Response?.StatusCode.Code,                                   Is.EqualTo(StatusCodes.Success));
 
-            Assert.That(cpoServerAPIClient.Counters.AuthorizeRemoteStop.Requests_OK,       Is.EqualTo(1));
-            Assert.That(cpoServerAPIClient.Counters.AuthorizeRemoteStop.Requests_Error,    Is.EqualTo(0));
-            Assert.That(cpoServerAPIClient.Counters.AuthorizeRemoteStop.Responses_OK,      Is.EqualTo(1));
-            Assert.That(cpoServerAPIClient.Counters.AuthorizeRemoteStop.Responses_Error,   Is.EqualTo(0));
+            Assert.That(cpoServerAPIClient.Counters.AuthorizeRemoteStop.Requests_OK,            Is.EqualTo(1));
+            Assert.That(cpoServerAPIClient.Counters.AuthorizeRemoteStop.Requests_Error,         Is.EqualTo(0));
+            Assert.That(cpoServerAPIClient.Counters.AuthorizeRemoteStop.Responses_OK,           Is.EqualTo(1));
+            Assert.That(cpoServerAPIClient.Counters.AuthorizeRemoteStop.Responses_Error,        Is.EqualTo(0));
 
-            Assert.That(cpoServerAPI.Counters.AuthorizeRemoteStop.Requests_OK,             Is.EqualTo(1));
-            Assert.That(cpoServerAPI.Counters.AuthorizeRemoteStop.Requests_Error,          Is.EqualTo(0));
-            Assert.That(cpoServerAPI.Counters.AuthorizeRemoteStop.Responses_OK,            Is.EqualTo(1));
-            Assert.That(cpoServerAPI.Counters.AuthorizeRemoteStop.Responses_Error,         Is.EqualTo(0));
+            Assert.That(cpoServerAPI.Counters.AuthorizeRemoteStop.Requests_OK,                  Is.EqualTo(1));
+            Assert.That(cpoServerAPI.Counters.AuthorizeRemoteStop.Requests_Error,               Is.EqualTo(0));
+            Assert.That(cpoServerAPI.Counters.AuthorizeRemoteStop.Responses_OK,                 Is.EqualTo(1));
+            Assert.That(cpoServerAPI.Counters.AuthorizeRemoteStop.Responses_Error,              Is.EqualTo(0));
 
-            Assert.That(clientRequestLogging,                                              Is.EqualTo(1));
-            Assert.That(clientResponseLogging,                                             Is.EqualTo(1));
-            Assert.That(serverRequestLogging,                                              Is.EqualTo(1));
-            Assert.That(serverResponseLogging,                                             Is.EqualTo(1));
+            Assert.That(clientRequestLogging,                                                   Is.EqualTo(1));
+            Assert.That(clientResponseLogging,                                                  Is.EqualTo(1));
+            Assert.That(serverRequestLogging,                                                   Is.EqualTo(1));
+            Assert.That(serverResponseLogging,                                                  Is.EqualTo(1));
 
         }
 
@@ -497,16 +520,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
             var cpoPartnerSessionId    = CPOPartnerSession_Id.NewRandom();
             var empPartnerSessionId    = EMPPartnerSession_Id.NewRandom();
 
-            var request = new AuthorizeRemoteStopRequest(
-                              ProviderId:           Provider_Id.Parse("DE-GDF"),
-                              EVSEId:               EVSE_Id.Parse("DE*GEF*E1234567*A*2"),
-                              SessionId:            sessionId,
-                              CPOPartnerSessionId:  cpoPartnerSessionId,
-                              EMPPartnerSessionId:  empPartnerSessionId,
-                              CustomData:           null,
+            var request                = new AuthorizeRemoteStopRequest(
 
-                              RequestTimeout:       TimeSpan.FromSeconds(10)
-                          );
+                                             ProviderId:           Provider_Id.Parse("DE-GDF"),
+                                             EVSEId:               EVSE_Id.Parse("DE*GEF*E1234567*A*2"),
+                                             SessionId:            sessionId,
+                                             CPOPartnerSessionId:  cpoPartnerSessionId,
+                                             EMPPartnerSessionId:  empPartnerSessionId,
+                                             CustomData:           null,
+
+                                             RequestTimeout:       TimeSpan.FromSeconds(10)
+
+                                         );
 
             Assert.That(request,                                                           Is.Not.Null);
 
@@ -540,7 +565,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
                 var authorizeRemoteStopResponse = oicpResponse.Response;
 
                 Assert.That(authorizeRemoteStopResponse,                                   Is.Not.Null);
-                Assert.That(authorizeRemoteStopResponse?.Result,                           Is.EqualTo(false));
+                Assert.That(authorizeRemoteStopResponse?.Result,                           Is.False);
                 Assert.That(authorizeRemoteStopResponse?.StatusCode.Code,                  Is.EqualTo(StatusCodes.CommunicationToEVSEFailed));
 
                 clientResponseLogging++;
@@ -549,7 +574,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
 
             };
 
-            cpoServerAPI.OnAuthorizeRemoteStopRequest        += (timestamp, cpoServerAPI,      authorizeRemoteStopRequest) => {
+            cpoServerAPI.      OnAuthorizeRemoteStopRequest  += (timestamp, cpoServerAPI,      authorizeRemoteStopRequest) => {
 
                 Assert.That(authorizeRemoteStopRequest.ProviderId.ToString(),              Is.EqualTo("DE-GDF"));
                 Assert.That(authorizeRemoteStopRequest.EVSEId.    ToString(),              Is.EqualTo("DE*GEF*E1234567*A*2"));
@@ -564,9 +589,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
 
             };
 
-            cpoServerAPI.OnAuthorizeRemoteStopResponse       += (timestamp, cpoServerAPI,      authorizeRemoteStopRequest, authorizeRemoteStopResponse, runtime) => {
+            cpoServerAPI.      OnAuthorizeRemoteStopResponse += (timestamp, cpoServerAPI,      authorizeRemoteStopRequest, authorizeRemoteStopResponse, runtime) => {
 
-                Assert.That(authorizeRemoteStopResponse.Result,                            Is.EqualTo(false));
+                Assert.That(authorizeRemoteStopResponse.Result,                            Is.False);
                 Assert.That(authorizeRemoteStopResponse.StatusCode.Code,                   Is.EqualTo(StatusCodes.CommunicationToEVSEFailed));
 
                 serverResponseLogging++;
@@ -579,7 +604,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
 
             Assert.That(oicpResult,                                                        Is.Not.Null);
             Assert.That(oicpResult.IsSuccessful,                                           Is.True);
-            Assert.That(oicpResult.Response?.Result,                                       Is.EqualTo(false));
+            Assert.That(oicpResult.Response?.Result,                                       Is.False);
             Assert.That(oicpResult.Response?.StatusCode.Code,                              Is.EqualTo(StatusCodes.CommunicationToEVSEFailed));
 
             Assert.That(cpoServerAPIClient.Counters.AuthorizeRemoteStop.Requests_OK,       Is.EqualTo(1));

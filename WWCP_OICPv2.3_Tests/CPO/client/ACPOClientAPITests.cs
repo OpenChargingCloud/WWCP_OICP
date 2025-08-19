@@ -174,9 +174,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
                                 pullAuthenticationDataRequest.EventTrackingId ?? EventTracking_Id.New,
                                 Process_Id.NewRandom(),
                                 Timestamp.Now - pullAuthenticationDataRequest.Timestamp,
-                                new ProviderAuthenticationData[] {
+                                [
                                     new ProviderAuthenticationData(
-                                        new Identification[] {
+                                        [
 
                                             Identification.FromUID(
                                                 UID.Parse("11223344")
@@ -215,10 +215,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
                                                 CustomData:  null
                                             )
 
-                                        },
+                                        ],
                                         Provider_Id.Parse("DE-GDF")
                                     )
-                                },
+                                ],
                                 pullAuthenticationDataRequest,
                                 StatusCode: new StatusCode(
                                                 StatusCodes.Success
@@ -261,10 +261,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
                             Provider_Id.Parse("DE-GDF"),
                             "Nice to see you!",
                             "Hello world!",
-                            new Identification[] {
+                            [
                                 Identification.FromUID(UID.Parse("11223344")),
                                 Identification.FromUID(UID.Parse("55667788"))
-                            }
+                            ]
                         )
                     )
                 );
@@ -404,8 +404,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
 
 
 
-            cpoClient = new CPOClient(URL.Parse("http://127.0.0.1:9500"),
-                                      RequestTimeout: TimeSpan.FromSeconds(10));
+            cpoClient = new CPOClient(
+                            URL.Parse("http://127.0.0.1:9500"),
+                            RequestTimeout: TimeSpan.FromSeconds(10)
+                        );
 
             ClassicAssert.IsNotNull(cpoClient);
 

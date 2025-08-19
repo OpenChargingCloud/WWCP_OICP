@@ -88,7 +88,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The optional starting value of the energy meter [kWh].
         /// </summary>
         [Optional]
-        public Decimal?                          MeterValueStart                    { get; }
+        public WattHour?                         MeterValueStart                    { get; }
 
         /// <summary>
         /// The optional operator identification.
@@ -134,7 +134,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                 CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
                                                 EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
                                                 DateTimeOffset?        SessionStart          = null,
-                                                Decimal?               MeterValueStart       = null,
+                                                WattHour?              MeterValueStart       = null,
                                                 Operator_Id?           OperatorId            = null,
                                                 PartnerProduct_Id?     PartnerProductId      = null,
                                                 Process_Id?            ProcessId             = null,
@@ -384,7 +384,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (JSON.ParseOptional("MeterValueStart",
                                        "meter value start",
-                                       out Decimal? MeterValueStart,
+                                       WattHour.TryParseKWh,
+                                       out WattHour? MeterValueStart,
                                        out ErrorResponse))
                 {
                     if (ErrorResponse is not null)
@@ -429,6 +430,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
                 ChargingStartNotificationRequest = new ChargingStartNotificationRequest(
+
                                                        SessionId,
                                                        Identification,
                                                        EVSEId,
@@ -447,6 +449,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                        EventTrackingId,
                                                        RequestTimeout,
                                                        CancellationToken
+
                                                    );
 
                 if (CustomChargingStartNotificationRequestParser is not null)
@@ -479,6 +482,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             var json = JSONObject.Create(
+
                            new JProperty("Type",                       Type.                     AsString()),
                            new JProperty("SessionID",                  SessionId.                ToString()),
                            new JProperty("EvseID",                     EVSEId.                   ToString()),
@@ -498,7 +502,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                : null,
 
                            MeterValueStart.    HasValue
-                               ? new JProperty("MeterValueStart",      String.Format("{0:0.###}", MeterValueStart.Value).Replace(",", "."))
+                               ? new JProperty("MeterValueStart",      String.Format("{0:0.###}", MeterValueStart.Value.kWh).Replace(",", "."))
                                : null,
 
                            OperatorId.         HasValue
@@ -540,7 +544,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                    CPOPartnerSessionId?.Clone(),
                    EMPPartnerSessionId?.Clone(),
                    SessionStart,
-                   MeterValueStart,
+                   MeterValueStart?.    Clone(),
                    OperatorId?.         Clone(),
                    PartnerProductId?.   Clone(),
                    ProcessId?.          Clone(),

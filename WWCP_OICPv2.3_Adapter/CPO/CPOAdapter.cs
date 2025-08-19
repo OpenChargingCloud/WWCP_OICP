@@ -4042,7 +4042,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     response = await CPORoaming.SendChargeDetailRecord(
                                                          chargeDetailRecord.ToOICP(WWCPChargeDetailRecord2OICPChargeDetailRecord),
                                                          DefaultOperator.Id.ToOICP().Value,
-                                                         null,
 
                                                          Timestamp,
                                                          EventTrackingId,
@@ -4549,7 +4548,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     var response  = await CPORoaming.SendChargeDetailRecord(
                                               chargeDetailRecord,
                                               DefaultOperator.Id.ToOICP().Value,
-                                              null,
 
                                               Timestamp.Now,
                                               EventTracking_Id.New,

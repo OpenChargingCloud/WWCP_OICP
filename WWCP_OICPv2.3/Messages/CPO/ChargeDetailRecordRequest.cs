@@ -60,7 +60,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ChargeDetailRecord">A charge detail record to send.</param>
         /// <param name="OperatorId">The unique identification of the operator sending the given charge detail record (not the suboperator or the operator of the EVSE).</param>
-        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers. This means: Not the sub operator or the operator of the EVSE!</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
@@ -69,7 +68,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public ChargeDetailRecordRequest(ChargeDetailRecord  ChargeDetailRecord,
                                          Operator_Id         OperatorId,
                                          Process_Id?         ProcessId           = null,
-                                         JObject?            CustomData          = null,
 
                                          DateTimeOffset?     Timestamp           = null,
                                          EventTracking_Id?   EventTrackingId     = null,
@@ -77,7 +75,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                          CancellationToken   CancellationToken   = default)
 
             : base(ProcessId,
-                   CustomData,
+                   ChargeDetailRecord.CustomData,
                    Timestamp,
                    EventTrackingId,
                    RequestTimeout,
@@ -249,27 +247,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse ChargeDetailRecord     [mandatory]
 
-                if (!OICPv2_3.ChargeDetailRecord.TryParse(JSON,
-                                                          out var ChargeDetailRecord,
-                                                          out ErrorResponse))
+                if (!ChargeDetailRecord.TryParse(JSON,
+                                                 out var chargeDetailRecord,
+                                                 out ErrorResponse))
                 {
                     return false;
                 }
 
                 #endregion
 
-                #region Parse CustomData             [optional]
-
-                var customData = JSON[nameof(CustomData)] as JObject;
-
-                #endregion
-
 
                 ChargeDetailRecordRequest = new ChargeDetailRecordRequest(
-                                                ChargeDetailRecord,
+                                                chargeDetailRecord,
                                                 OperatorIdURL,
                                                 ProcessId,
-                                                customData,
 
                                                 Timestamp,
                                                 EventTrackingId,

@@ -1166,7 +1166,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse ClearingHouseId                   [optional]
 
-                if (JSON.ParseOptional("ClearingHouseID",
+                if (JSON.ParseOptional("ClearinghouseID",
                                        "clearing house identification",
                                        ClearingHouse_Id.TryParse,
                                        out ClearingHouse_Id? ClearingHouseId,
@@ -1284,13 +1284,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
                            new JProperty("ChargingStationNames",                    ChargingStationName.               ToJSON()),
                            new JProperty("Address",                                 Address.                           ToJSON(CustomAddressSerializer)),
                            new JProperty("GeoCoordinates",                          GeoCoordinates.                    ToJSON(CustomGeoCoordinatesSerializer)),
-                           new JProperty("Plugs",                                   new JArray(PlugTypes.          SafeSelect(plugType           => plugType.          AsString()))),
-                           new JProperty("ChargingFacilities",                      new JArray(ChargingFacilities. SafeSelect(chargingFacility   => chargingFacility.  ToJSON(CustomChargingFacilitySerializer)))),
+                           new JProperty("Plugs",                                   new JArray(PlugTypes.          Select(plugType           => plugType.          AsString()))),
+                           new JProperty("ChargingFacilities",                      new JArray(ChargingFacilities. Select(chargingFacility   => chargingFacility.  ToJSON(CustomChargingFacilitySerializer)))),
                            new JProperty("RenewableEnergy",                         RenewableEnergy),
                            new JProperty("CalibrationLawDataAvailability",          CalibrationLawDataAvailability.    AsString()),
-                           new JProperty("AuthenticationModes",                     new JArray(AuthenticationModes.SafeSelect(authenticationMode => authenticationMode.AsString()))),
-                           new JProperty("PaymentOptions",                          new JArray(PaymentOptions.     SafeSelect(paymentOption      => paymentOption.     AsString()))),
-                           new JProperty("ValueAddedServices",                      new JArray(ValueAddedServices. SafeSelect(valueAddedService  => valueAddedService. AsString()))),
+                           new JProperty("AuthenticationModes",                     new JArray(AuthenticationModes.Select(authenticationMode => authenticationMode.AsString()))),
+                           new JProperty("PaymentOptions",                          new JArray(PaymentOptions.     Select(paymentOption      => paymentOption.     AsString()))),
+                           new JProperty("ValueAddedServices",                      new JArray(ValueAddedServices. Select(valueAddedService  => valueAddedService. AsString()))),
                            new JProperty("Accessibility",                           Accessibility.                     AsString()),
                            new JProperty("HotlinePhoneNumber",                      HotlinePhoneNumber?.               ToString()),
                            new JProperty("IsOpen24Hours",                           IsOpen24Hours),
