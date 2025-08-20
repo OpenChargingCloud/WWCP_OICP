@@ -18,11 +18,11 @@
 #region Usings
 
 using NUnit.Framework;
-using NUnit.Framework.Legacy;
+
+using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
-using Newtonsoft.Json.Linq;
 
 #endregion
 
@@ -908,12 +908,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
         public async Task PushEVSEStatus_Test1()
         {
 
-            if (cpoClientAPI is null ||
-                cpoClient    is null)
+            if (cpoClientAPI is null)
             {
-                Assert.Fail("cpoClientAPI or cpoClient is null!");
+                Assert.Fail("cpoClientAPI must not be null!");
                 return;
             }
+
+            if (cpoClient is null)
+            {
+                Assert.Fail("cpoClient must not be null!");
+                return;
+            }
+
+            var clientRequestLogging   = 0;
+            var clientResponseLogging  = 0;
+            var serverRequestLogging   = 0;
+            var serverResponseLogging  = 0;
 
             var request = new PushEVSEStatusRequest(
 
@@ -923,49 +933,139 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
                                                                                  new EVSEStatusRecord(
                                                                                      Id:          EVSE_Id.Parse("DE*GEF*E1234567*A*1"),
                                                                                      Status:      EVSEStatusTypes.Available,
-                                                                                     CustomData:  null
+                                                                                     CustomData:  new JObject(
+                                                                                                      new JProperty("hello", "EVSE world!")
+                                                                                                  )
                                                                                  )
                                                                              ],
 
                                                         OperatorId:          Operator_Id.Parse("DE*GEF"),
                                                         OperatorName:        "GraphDefined",
-                                                        CustomData:          null
+                                                        CustomData:          new JObject(
+                                                                                 new JProperty("hello", "CPO status world!")
+                                                                             )
 
                                                     ),
 
-                              Action:               ActionTypes.FullLoad
+                              Action:               ActionTypes.FullLoad,
+
+                              CustomData:           new JObject(
+                                                        new JProperty("hello", "PushStatus world!")
+                                                    )
 
                           );
 
-            ClassicAssert.IsNotNull(request);
+            Assert.That(request,                                                                            Is.Not.Null);
 
-            ClassicAssert.AreEqual(0, cpoClient.   Counters.PushEVSEStatus.Requests_OK);
-            ClassicAssert.AreEqual(0, cpoClient.   Counters.PushEVSEStatus.Requests_Error);
-            ClassicAssert.AreEqual(0, cpoClient.   Counters.PushEVSEStatus.Responses_OK);
-            ClassicAssert.AreEqual(0, cpoClient.   Counters.PushEVSEStatus.Responses_Error);
+            Assert.That(cpoClient.   Counters.PushEVSEStatus.Requests_OK,                                   Is.EqualTo(0));
+            Assert.That(cpoClient.   Counters.PushEVSEStatus.Requests_Error,                                Is.EqualTo(0));
+            Assert.That(cpoClient.   Counters.PushEVSEStatus.Responses_OK,                                  Is.EqualTo(0));
+            Assert.That(cpoClient.   Counters.PushEVSEStatus.Responses_Error,                               Is.EqualTo(0));
 
-            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.PushEVSEStatus.Requests_OK);
-            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.PushEVSEStatus.Requests_Error);
-            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.PushEVSEStatus.Responses_OK);
-            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.PushEVSEStatus.Responses_Error);
+            Assert.That(cpoClientAPI.Counters.PushEVSEStatus.Requests_OK,                                   Is.EqualTo(0));
+            Assert.That(cpoClientAPI.Counters.PushEVSEStatus.Requests_Error,                                Is.EqualTo(0));
+            Assert.That(cpoClientAPI.Counters.PushEVSEStatus.Responses_OK,                                  Is.EqualTo(0));
+            Assert.That(cpoClientAPI.Counters.PushEVSEStatus.Responses_Error,                               Is.EqualTo(0));
+
+            cpoClient.   OnPushEVSEStatusRequest  += (timestamp, cpoClient,    pushEVSEDataRequest) => {
+
+                var evseStatus1 = pushEVSEDataRequest.OperatorEVSEStatus.EVSEStatusRecords.FirstOrDefault();
+
+                Assert.That(evseStatus1.Id.ToString(),                                                      Is.EqualTo("DE*GEF*E1234567*A*1"));
+                Assert.That(evseStatus1.Status, Is.EqualTo(EVSEStatusTypes.Available));
+                Assert.That(evseStatus1.CustomData?.Count,                                                  Is.EqualTo(1));
+                Assert.That(evseStatus1.CustomData?["hello"]?.Value<String>(),                              Is.EqualTo("EVSE world!"));
+
+                Assert.That(pushEVSEDataRequest.OperatorEVSEStatus.CustomData?.Count,                       Is.EqualTo(1));
+                Assert.That(pushEVSEDataRequest.OperatorEVSEStatus.CustomData?["hello"]?.Value<String>(),   Is.EqualTo("CPO status world!"));
+
+                Assert.That(pushEVSEDataRequest.CustomData?.Count,                                          Is.EqualTo(1));
+                Assert.That(pushEVSEDataRequest.CustomData?["hello"]?.Value<String>(),                      Is.EqualTo("PushStatus world!"));
+
+                clientRequestLogging++;
+
+                return Task.CompletedTask;
+
+            };
+
+            cpoClient.   OnPushEVSEStatusResponse += (timestamp, cpoClient,    pushEVSEDataRequest, oicpResponse, runtime) => {
+
+                var pushEVSEDataResponse = oicpResponse.Response;
+
+                Assert.That(pushEVSEDataResponse,                                Is.Not.Null);
+                Assert.That(pushEVSEDataResponse?.Result,                        Is.True);
+                Assert.That(pushEVSEDataResponse?.StatusCode.Code,               Is.EqualTo(StatusCodes.Success));
+
+                Assert.That(pushEVSEDataResponse?.SessionId,                     Is.Null);
+                Assert.That(pushEVSEDataResponse?.CPOPartnerSessionId,           Is.Null);
+                Assert.That(pushEVSEDataResponse?.EMPPartnerSessionId,           Is.Null);
+
+                clientResponseLogging++;
+
+                return Task.CompletedTask;
+
+            };
+
+            cpoClientAPI.OnPushEVSEStatusRequest  += (timestamp, cpoClientAPI, pushEVSEDataRequest) => {
+
+                var evseStatus1 = pushEVSEDataRequest.OperatorEVSEStatus.EVSEStatusRecords.FirstOrDefault();
+
+                Assert.That(evseStatus1.Id.ToString(),                                                      Is.EqualTo("DE*GEF*E1234567*A*1"));
+                Assert.That(evseStatus1.Status, Is.EqualTo(EVSEStatusTypes.Available));
+                Assert.That(evseStatus1.CustomData?.Count,                                                  Is.EqualTo(1));
+                Assert.That(evseStatus1.CustomData?["hello"]?.Value<String>(),                              Is.EqualTo("EVSE world!"));
+
+                Assert.That(pushEVSEDataRequest.OperatorEVSEStatus.CustomData?.Count,                       Is.EqualTo(1));
+                Assert.That(pushEVSEDataRequest.OperatorEVSEStatus.CustomData?["hello"]?.Value<String>(),   Is.EqualTo("CPO status world!"));
+
+                Assert.That(pushEVSEDataRequest.CustomData?.Count,                                          Is.EqualTo(1));
+                Assert.That(pushEVSEDataRequest.CustomData?["hello"]?.Value<String>(),                      Is.EqualTo("PushStatus world!"));
+
+                serverRequestLogging++;
+
+                return Task.CompletedTask;
+
+            };
+
+            cpoClientAPI.OnPushEVSEStatusResponse += (timestamp, cpoClientAPI, pushEVSEDataRequest, oicpResponse, runtime) => {
+
+                var pushEVSEDataResponse = oicpResponse.Response;
+
+                Assert.That(pushEVSEDataResponse,                                Is.Not.Null);
+                Assert.That(pushEVSEDataResponse?.Result,                        Is.True);
+                Assert.That(pushEVSEDataResponse?.StatusCode.Code,               Is.EqualTo(StatusCodes.Success));
+
+                Assert.That(pushEVSEDataResponse?.SessionId,                     Is.Null);
+                Assert.That(pushEVSEDataResponse?.CPOPartnerSessionId,           Is.Null);
+                Assert.That(pushEVSEDataResponse?.EMPPartnerSessionId,           Is.Null);
+
+                serverResponseLogging++;
+
+                return Task.CompletedTask;
+
+            };
 
             var oicpResult  = await cpoClient.PushEVSEStatus(request);
 
-            ClassicAssert.IsNotNull(oicpResult);
-            ClassicAssert.IsNotNull(oicpResult.Response);
-            ClassicAssert.IsTrue   (oicpResult.IsSuccessful);
-            ClassicAssert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
-            ClassicAssert.IsTrue   (oicpResult.Response?.Result);
+            Assert.That(oicpResult,                                                                         Is.Not.Null);
+            Assert.That(oicpResult.IsSuccessful,                                                            Is.True);
+            Assert.That(oicpResult.Response?.Result,                                                        Is.True);
+            Assert.That(oicpResult.Response?.StatusCode.Code,                                               Is.EqualTo(StatusCodes.Success));
 
-            ClassicAssert.AreEqual(1, cpoClient.   Counters.PushEVSEStatus.Requests_OK);
-            ClassicAssert.AreEqual(0, cpoClient.   Counters.PushEVSEStatus.Requests_Error);
-            ClassicAssert.AreEqual(1, cpoClient.   Counters.PushEVSEStatus.Responses_OK);
-            ClassicAssert.AreEqual(0, cpoClient.   Counters.PushEVSEStatus.Responses_Error);
+            Assert.That(cpoClient.   Counters.PushEVSEStatus.Requests_OK,                                   Is.EqualTo(1));
+            Assert.That(cpoClient.   Counters.PushEVSEStatus.Requests_Error,                                Is.EqualTo(0));
+            Assert.That(cpoClient.   Counters.PushEVSEStatus.Responses_OK,                                  Is.EqualTo(1));
+            Assert.That(cpoClient.   Counters.PushEVSEStatus.Responses_Error,                               Is.EqualTo(0));
 
-            ClassicAssert.AreEqual(1, cpoClientAPI.Counters.PushEVSEStatus.Requests_OK);
-            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.PushEVSEStatus.Requests_Error);
-            ClassicAssert.AreEqual(1, cpoClientAPI.Counters.PushEVSEStatus.Responses_OK);
-            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.PushEVSEStatus.Responses_Error);
+            Assert.That(cpoClientAPI.Counters.PushEVSEStatus.Requests_OK,                                   Is.EqualTo(1));
+            Assert.That(cpoClientAPI.Counters.PushEVSEStatus.Requests_Error,                                Is.EqualTo(0));
+            Assert.That(cpoClientAPI.Counters.PushEVSEStatus.Responses_OK,                                  Is.EqualTo(1));
+            Assert.That(cpoClientAPI.Counters.PushEVSEStatus.Responses_Error,                               Is.EqualTo(0));
+
+            Assert.That(clientRequestLogging,                                                               Is.EqualTo(1));
+            Assert.That(clientResponseLogging,                                                              Is.EqualTo(1));
+            Assert.That(serverRequestLogging,                                                               Is.EqualTo(1));
+            Assert.That(serverResponseLogging,                                                              Is.EqualTo(1));
 
         }
 

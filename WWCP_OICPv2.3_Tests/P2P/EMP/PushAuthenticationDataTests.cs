@@ -61,7 +61,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.EMP
                                               RFIDType:        RFIDTypes.MifareClassic,
                                               EVCOId:          EVCO_Id.Parse("DE-GDF-C12345678-X"),
                                               PrintedNumber:  "GDF-0001",
-                                              ExpiryDate:      DateTime.Parse("2022-08-09T10:18:25.229Z"),
+                                              ExpiryDate:      DateTimeOffset.Parse("2022-08-09T10:18:25.229Z"),
                                               CustomData:      null
                                           ),
                                           CustomData:  null

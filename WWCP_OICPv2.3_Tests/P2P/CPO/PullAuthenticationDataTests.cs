@@ -152,7 +152,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.CPO
                 ClassicAssert.AreEqual (RFIDTypes.MifareClassic,                                       identification2?.RFIDIdentification?.RFIDType);
                 ClassicAssert.AreEqual (EVCO_Id.Parse("DE-GDF-C12345678-X"),                           identification2?.RFIDIdentification?.EVCOId);
                 ClassicAssert.AreEqual ("GDF-0001",                                                    identification2?.RFIDIdentification?.PrintedNumber);
-                ClassicAssert.AreEqual (DateTime.Parse("2022-08-09T10:18:25.229Z").ToUniversalTime(),  identification2?.RFIDIdentification?.ExpiryDate);
+                ClassicAssert.AreEqual (DateTimeOffset.Parse("2022-08-09T10:18:25.229Z").ToUniversalTime(),  identification2?.RFIDIdentification?.ExpiryDate);
 
                 var identification3  = providerAuthenticationData?.Identifications.ElementAt(2);
                 ClassicAssert.IsNotNull(identification3);

@@ -21,8 +21,6 @@ using NUnit.Framework;
 
 using Newtonsoft.Json.Linq;
 
-using org.GraphDefined.Vanaheimr.Hermod.HTTP;
-
 #endregion
 
 namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client

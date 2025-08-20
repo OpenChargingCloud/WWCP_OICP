@@ -56,11 +56,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.CPO
                                                          UID.Parse("11223344")
                                                      ),
                               EVSEId:                EVSE_Id.Parse("DE*GEF*E1234567*A*1"),
-                              ChargingStart:         DateTime.Parse("2022-08-09T10:20:25.229Z"),
+                              ChargingStart:         DateTimeOffset.Parse("2022-08-09T10:20:25.229Z"),
 
                               CPOPartnerSessionId:   CPOPartnerSession_Id.Parse("9b217a90-9924-4229-a217-3d67a4de00da"),
                               EMPPartnerSessionId:   EMPPartnerSession_Id.Parse("bce77f78-6966-48f4-9abd-007f04862d6c"),
-                              SessionStart:          DateTime.Parse("2022-08-09T10:18:25.229Z"),
+                              SessionStart:          DateTimeOffset.Parse("2022-08-09T10:18:25.229Z"),
                               MeterValueStart:       WattHour.ParseKWh(3),
                               OperatorId:            Operator_Id.Parse("DE*GEF"),
                               PartnerProductId:      PartnerProduct_Id.AC1,
@@ -131,13 +131,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.CPO
                                                             UID.Parse("11223344")
                                                         ),
                               EVSEId:                   EVSE_Id.Parse("DE*GEF*E1234567*A*1"),
-                              ChargingStart:            DateTime.Parse("2022-08-09T10:20:25.229Z"),
-                              EventOccurred:            DateTime.Parse("2022-08-09T10:21:13.451Z"),
+                              ChargingStart:            DateTimeOffset.Parse("2022-08-09T10:20:25.229Z"),
+                              EventOccurred:            DateTimeOffset.Parse("2022-08-09T10:21:13.451Z"),
 
                               CPOPartnerSessionId:      CPOPartnerSession_Id.Parse("9b217a90-9924-4229-a217-3d67a4de00da"),
                               EMPPartnerSessionId:      EMPPartnerSession_Id.Parse("bce77f78-6966-48f4-9abd-007f04862d6c"),
                               ChargingDuration:         TimeSpan.FromSeconds(48),
-                              SessionStart:             DateTime.Parse("2022-08-09T10:18:25.229Z"),
+                              SessionStart:             DateTimeOffset.Parse("2022-08-09T10:18:25.229Z"),
                               ConsumedEnergyProgress:   WattHour.ParseKWh(5),
                               MeterValueStart:          WattHour.ParseKWh(3),
                               MeterValuesInBetween:     [ WattHour.ParseKWh(4), WattHour.ParseKWh(5) ],
@@ -210,20 +210,20 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.CPO
                                                           UID.Parse("11223344")
                                                       ),
                               EVSEId:                 EVSE_Id.Parse("DE*GEF*E1234567*A*1"),
-                              ChargingStart:          DateTime.Parse("2022-08-09T10:20:25.229Z"),
-                              ChargingEnd:            DateTime.Parse("2022-08-09T11:13:25.229Z"),
+                              ChargingStart:          DateTimeOffset.Parse("2022-08-09T10:20:25.229Z"),
+                              ChargingEnd:            DateTimeOffset.Parse("2022-08-09T11:13:25.229Z"),
 
                               CPOPartnerSessionId:    CPOPartnerSession_Id.Parse("9b217a90-9924-4229-a217-3d67a4de00da"),
                               EMPPartnerSessionId:    EMPPartnerSession_Id.Parse("bce77f78-6966-48f4-9abd-007f04862d6c"),
-                              SessionStart:           DateTime.Parse("2022-08-09T10:18:25.229Z"),
-                              SessionEnd:             DateTime.Parse("2022-08-09T11:18:25.229Z"),
+                              SessionStart:           DateTimeOffset.Parse("2022-08-09T10:18:25.229Z"),
+                              SessionEnd:             DateTimeOffset.Parse("2022-08-09T11:18:25.229Z"),
                               ConsumedEnergy:         WattHour.ParseKWh(35),
                               MeterValueStart:        WattHour.ParseKWh( 3),
                               MeterValueEnd:          WattHour.ParseKWh(38),
                               MeterValuesInBetween:   [ WattHour.ParseKWh(4), WattHour.ParseKWh(5), WattHour.ParseKWh(6) ],
                               OperatorId:             Operator_Id.Parse("DE*GEF"),
                               PartnerProductId:       PartnerProduct_Id.AC1,
-                              PenaltyTimeStart:       DateTime.Parse("2022-08-09T11:19:00.000Z"),
+                              PenaltyTimeStart:       DateTimeOffset.Parse("2022-08-09T11:19:00.000Z"),
 
                               CustomData:             null
 

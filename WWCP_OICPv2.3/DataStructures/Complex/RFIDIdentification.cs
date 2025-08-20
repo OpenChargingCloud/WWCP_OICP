@@ -42,37 +42,37 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The UID from the RFID-Card. It should be read from left to right using big-endian format.
         /// </summary>
         [Mandatory]
-        public UID        UID              { get; }
+        public UID              UID              { get; }
 
         /// <summary>
         /// An optional electric vehicle contract identification for the given UID.
         /// </summary>
         [Optional]
-        public EVCO_Id?   EVCOId           { get; }
+        public EVCO_Id?         EVCOId           { get; }
 
         /// <summary>
         /// The type of the used RFID card.
         /// </summary>
         [Mandatory]
-        public RFIDTypes  RFIDType         { get; }
+        public RFIDTypes        RFIDType         { get; }
 
         /// <summary>
         /// A number printed on a customer’s card for manual authorization (e.q. via a call center).
         /// </summary>
         [Optional]
-        public String?    PrintedNumber    { get; }
+        public String?          PrintedNumber    { get; }
 
         /// <summary>
         /// Until when this card is valid. Should not be set if card does not have an expiration yet.
         /// </summary>
         [Optional]
-        public DateTime?  ExpiryDate       { get; }
+        public DateTimeOffset?  ExpiryDate       { get; }
 
         /// <summary>
         /// Optional custom data, e.g. in combination with custom parsers and serializers.
         /// </summary>
         [Optional]
-        public JObject?   CustomData       { get; }
+        public JObject?         CustomData       { get; }
 
         #endregion
 
@@ -87,12 +87,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="PrintedNumber">A number printed on a customer’s card for manual authorization (e.q. via a call center).</param>
         /// <param name="ExpiryDate">Until when this card is valid. Should not be set if card does not have an expiration yet.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
-        public RFIDIdentification(UID         UID,
-                                  RFIDTypes   RFIDType,
-                                  EVCO_Id?    EVCOId          = null,
-                                  String?     PrintedNumber   = null,
-                                  DateTime?   ExpiryDate      = null,
-                                  JObject?    CustomData      = null)
+        public RFIDIdentification(UID              UID,
+                                  RFIDTypes        RFIDType,
+                                  EVCO_Id?         EVCOId          = null,
+                                  String?          PrintedNumber   = null,
+                                  DateTimeOffset?  ExpiryDate      = null,
+                                  JObject?         CustomData      = null)
         {
 
             this.UID            = UID;

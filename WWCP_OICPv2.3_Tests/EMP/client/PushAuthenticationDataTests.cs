@@ -47,7 +47,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
 
             var request = new PushAuthenticationDataRequest(
                               new ProviderAuthenticationData(
-                                  new Identification[] {
+                                  [
 
                                       Identification.FromUID(
                                           UID.Parse("11223344")
@@ -59,7 +59,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
                                               RFIDType:        RFIDTypes.MifareClassic,
                                               EVCOId:          EVCO_Id.Parse("DE-GDF-C12345678-X"),
                                               PrintedNumber:  "GDF-0001",
-                                              ExpiryDate:      DateTime.Parse("2022-08-09T10:18:25.229Z"),
+                                              ExpiryDate:      DateTimeOffset.Parse("2022-08-09T10:18:25.229Z"),
                                               CustomData:      null
                                           ),
                                           CustomData:  null
@@ -86,7 +86,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
                                           CustomData:  null
                                       )
 
-                                  },
+                                  ],
                                   Provider_Id.Parse("DE-GDF")
                               ),
                               ActionTypes.FullLoad
