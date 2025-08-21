@@ -17,9 +17,9 @@
 
 #region Usings
 
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
-using NUnit.Framework.Legacy;
+
+using Newtonsoft.Json.Linq;
 
 #endregion
 
@@ -27,7 +27,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
 {
 
     /// <summary>
-    /// CPO sending pricing data tests.
+    /// CPO Sending PricingData tests.
     /// </summary>
     [TestFixture]
     public class PushPricingDataTests : ACPOClientAPITests
@@ -79,7 +79,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
                                                                                                                    Begin: HourMinute.Parse("09:00"),
                                                                                                                    End:   HourMinute.Parse("18:00")
                                                                                                                ),
-                                                                                                               On: WeekDay.Everyday)
+                                                                                                               On: WeekDay.Everyday
+                                                                                                           )
                                                                                                        ],
                                                                          AdditionalReferences:         [
                                                                                                            new AdditionalReferences(
@@ -105,37 +106,49 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
 
                           );
 
-            Assert.That(request,                                                                                Is.Not.Null);
+            Assert.That(request,                                                                                           Is.Not.Null);
 
-            Assert.That(cpoClient.   Counters.PushPricingProductData.Requests_OK,                               Is.EqualTo(0));
-            Assert.That(cpoClient.   Counters.PushPricingProductData.Requests_Error,                            Is.EqualTo(0));
-            Assert.That(cpoClient.   Counters.PushPricingProductData.Responses_OK,                              Is.EqualTo(0));
-            Assert.That(cpoClient.   Counters.PushPricingProductData.Responses_Error,                           Is.EqualTo(0));
+            Assert.That(cpoClient.   Counters.PushPricingProductData.Requests_OK,                                          Is.EqualTo(0));
+            Assert.That(cpoClient.   Counters.PushPricingProductData.Requests_Error,                                       Is.EqualTo(0));
+            Assert.That(cpoClient.   Counters.PushPricingProductData.Responses_OK,                                         Is.EqualTo(0));
+            Assert.That(cpoClient.   Counters.PushPricingProductData.Responses_Error,                                      Is.EqualTo(0));
 
-            Assert.That(cpoClientAPI.Counters.PushPricingProductData.Requests_OK,                               Is.EqualTo(0));
-            Assert.That(cpoClientAPI.Counters.PushPricingProductData.Requests_Error,                            Is.EqualTo(0));
-            Assert.That(cpoClientAPI.Counters.PushPricingProductData.Responses_OK,                              Is.EqualTo(0));
-            Assert.That(cpoClientAPI.Counters.PushPricingProductData.Responses_Error,                           Is.EqualTo(0));
+            Assert.That(cpoClientAPI.Counters.PushPricingProductData.Requests_OK,                                          Is.EqualTo(0));
+            Assert.That(cpoClientAPI.Counters.PushPricingProductData.Requests_Error,                                       Is.EqualTo(0));
+            Assert.That(cpoClientAPI.Counters.PushPricingProductData.Responses_OK,                                         Is.EqualTo(0));
+            Assert.That(cpoClientAPI.Counters.PushPricingProductData.Responses_Error,                                      Is.EqualTo(0));
 
             cpoClient.   OnPushPricingProductDataRequest  += (timestamp, cpoClient,    pushPricingProductDataRequest) => {
 
-                Assert.That(pushPricingProductDataRequest.PricingProductData.OperatorId.ToString(),             Is.EqualTo("DE*GEF"));
-                Assert.That(pushPricingProductDataRequest.PricingProductData.ProviderId.ToString(),             Is.EqualTo("DE-GDF"));
-                Assert.That(pushPricingProductDataRequest.PricingProductData.PricingDefaultPrice,               Is.EqualTo(1.23M));
-                Assert.That(pushPricingProductDataRequest.PricingProductData.PricingDefaultPriceCurrency,       Is.EqualTo(Currency_Id.EUR));
-                Assert.That(pushPricingProductDataRequest.PricingProductData.PricingDefaultReferenceUnit,       Is.EqualTo(Reference_Unit.HOUR));
-                Assert.That(pushPricingProductDataRequest.PricingProductData.OperatorName,                      Is.EqualTo("GraphDefined"));
+                Assert.That(pushPricingProductDataRequest.PricingProductData.OperatorId.ToString(),                        Is.EqualTo("DE*GEF"));
+                Assert.That(pushPricingProductDataRequest.PricingProductData.ProviderId.ToString(),                        Is.EqualTo("DE-GDF"));
+                Assert.That(pushPricingProductDataRequest.PricingProductData.PricingDefaultPrice,                          Is.EqualTo(1.23M));
+                Assert.That(pushPricingProductDataRequest.PricingProductData.PricingDefaultPriceCurrency,                  Is.EqualTo(Currency_Id.EUR));
+                Assert.That(pushPricingProductDataRequest.PricingProductData.PricingDefaultReferenceUnit,                  Is.EqualTo(Reference_Unit.HOUR));
+                Assert.That(pushPricingProductDataRequest.PricingProductData.OperatorName,                                 Is.EqualTo("GraphDefined"));
 
-                Assert.That(pushPricingProductDataRequest.PricingProductData.PricingProductDataRecords.Count,   Is.EqualTo(1));
+                Assert.That(pushPricingProductDataRequest.PricingProductData.PricingProductDataRecords.Count,              Is.EqualTo(1));
 
                 var pricingProductDataRecord = pushPricingProductDataRequest.PricingProductData.PricingProductDataRecords.FirstOrDefault();
 
+                Assert.That(pricingProductDataRecord?.ProductId.ToString(),                                                Is.EqualTo("AC1"));
+                Assert.That(pricingProductDataRecord?.ReferenceUnit,                                                       Is.EqualTo(Reference_Unit.HOUR));
+                Assert.That(pricingProductDataRecord?.ProductPriceCurrency,                                                Is.EqualTo(Currency_Id.EUR));
+                Assert.That(pricingProductDataRecord?.PricePerReferenceUnit,                                               Is.EqualTo(1));
+                Assert.That(pricingProductDataRecord?.MaximumProductChargingPower,                                         Is.EqualTo(22));
+                Assert.That(pricingProductDataRecord?.IsValid24hours,                                                      Is.False);
+                Assert.That(pricingProductDataRecord?.ProductAvailabilityTimes.Count(),                                    Is.EqualTo(1));
+                Assert.That(pricingProductDataRecord?.ProductAvailabilityTimes.ElementAt(0).Period.Begin,                  Is.EqualTo(HourMinute.Parse("09:00")));
+                Assert.That(pricingProductDataRecord?.ProductAvailabilityTimes.ElementAt(0).Period.End,                    Is.EqualTo(HourMinute.Parse("18:00")));
+                Assert.That(pricingProductDataRecord?.ProductAvailabilityTimes.ElementAt(0).On,                            Is.EqualTo(WeekDay.Everyday));
+                Assert.That(pricingProductDataRecord?.AdditionalReferences.    Count(),                                    Is.EqualTo(1));
+                Assert.That(pricingProductDataRecord?.AdditionalReferences.ElementAt(0).AdditionalReference,               Is.EqualTo(Additional_Reference.ParkingFee));
+                Assert.That(pricingProductDataRecord?.AdditionalReferences.ElementAt(0).AdditionalReferenceUnit,           Is.EqualTo(Reference_Unit.HOUR));
+                Assert.That(pricingProductDataRecord?.AdditionalReferences.ElementAt(0).PricePerAdditionalReferenceUnit,   Is.EqualTo(2));
 
-
-
-                Assert.That(pushPricingProductDataRequest.Action,                                               Is.EqualTo(ActionTypes.FullLoad));
-                Assert.That(pushPricingProductDataRequest.CustomData?.Count,                                    Is.EqualTo(1));
-                Assert.That(pushPricingProductDataRequest.CustomData?["hello"]?.Value<String>(),                Is.EqualTo("PricingProductData world!"));
+                Assert.That(pushPricingProductDataRequest.Action,                                                          Is.EqualTo(ActionTypes.FullLoad));
+                Assert.That(pushPricingProductDataRequest.CustomData?.Count,                                               Is.EqualTo(1));
+                Assert.That(pushPricingProductDataRequest.CustomData?["hello"]?.Value<String>(),                           Is.EqualTo("pricings world!"));
 
                 clientRequestLogging++;
 
@@ -147,13 +160,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
 
                 var pushPricingProductDataResponse = oicpResponse.Response;
 
-                Assert.That(pushPricingProductDataResponse,                                                     Is.Not.Null);
-                Assert.That(pushPricingProductDataResponse?.Result,                                             Is.True);
-                Assert.That(pushPricingProductDataResponse?.StatusCode.Code,                                    Is.EqualTo(StatusCodes.Success));
+                Assert.That(pushPricingProductDataResponse,                                                                Is.Not.Null);
+                Assert.That(pushPricingProductDataResponse?.Result,                                                        Is.True);
+                Assert.That(pushPricingProductDataResponse?.StatusCode.Code,                                               Is.EqualTo(StatusCodes.Success));
 
-                Assert.That(pushPricingProductDataResponse?.SessionId,                                          Is.Null);
-                Assert.That(pushPricingProductDataResponse?.CPOPartnerSessionId,                                Is.Null);
-                Assert.That(pushPricingProductDataResponse?.EMPPartnerSessionId,                                Is.Null);
+                Assert.That(pushPricingProductDataResponse?.SessionId,                                                     Is.Null);
+                Assert.That(pushPricingProductDataResponse?.CPOPartnerSessionId,                                           Is.Null);
+                Assert.That(pushPricingProductDataResponse?.EMPPartnerSessionId,                                           Is.Null);
 
                 clientResponseLogging++;
 
@@ -163,16 +176,35 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
 
             cpoClientAPI.OnPushPricingProductDataRequest  += (timestamp, cpoClientAPI, pushPricingProductDataRequest) => {
 
-                Assert.That(pushPricingProductDataRequest.PricingProductData.OperatorId.ToString(),             Is.EqualTo("DE*GEF"));
-                Assert.That(pushPricingProductDataRequest.PricingProductData.ProviderId.ToString(),             Is.EqualTo("DE-GDF"));
-                Assert.That(pushPricingProductDataRequest.PricingProductData.PricingDefaultPrice,               Is.EqualTo(1.23M));
-                Assert.That(pushPricingProductDataRequest.PricingProductData.PricingDefaultPriceCurrency,       Is.EqualTo(Currency_Id.EUR));
-                Assert.That(pushPricingProductDataRequest.PricingProductData.PricingDefaultReferenceUnit,       Is.EqualTo(Reference_Unit.HOUR));
-                Assert.That(pushPricingProductDataRequest.PricingProductData.OperatorName,                      Is.EqualTo("GraphDefined"));
+                Assert.That(pushPricingProductDataRequest.PricingProductData.OperatorId.ToString(),                        Is.EqualTo("DE*GEF"));
+                Assert.That(pushPricingProductDataRequest.PricingProductData.ProviderId.ToString(),                        Is.EqualTo("DE-GDF"));
+                Assert.That(pushPricingProductDataRequest.PricingProductData.PricingDefaultPrice,                          Is.EqualTo(1.23M));
+                Assert.That(pushPricingProductDataRequest.PricingProductData.PricingDefaultPriceCurrency,                  Is.EqualTo(Currency_Id.EUR));
+                Assert.That(pushPricingProductDataRequest.PricingProductData.PricingDefaultReferenceUnit,                  Is.EqualTo(Reference_Unit.HOUR));
+                Assert.That(pushPricingProductDataRequest.PricingProductData.OperatorName,                                 Is.EqualTo("GraphDefined"));
 
-                Assert.That(pushPricingProductDataRequest.Action,                                               Is.EqualTo(ActionTypes.FullLoad));
-                Assert.That(pushPricingProductDataRequest.CustomData?.Count,                                    Is.EqualTo(1));
-                Assert.That(pushPricingProductDataRequest.CustomData?["hello"]?.Value<String>(),                Is.EqualTo("PricingProductData world!"));
+                Assert.That(pushPricingProductDataRequest.PricingProductData.PricingProductDataRecords.Count,              Is.EqualTo(1));
+
+                var pricingProductDataRecord = pushPricingProductDataRequest.PricingProductData.PricingProductDataRecords.FirstOrDefault();
+
+                Assert.That(pricingProductDataRecord?.ProductId.ToString(),                                                Is.EqualTo("AC1"));
+                Assert.That(pricingProductDataRecord?.ReferenceUnit,                                                       Is.EqualTo(Reference_Unit.HOUR));
+                Assert.That(pricingProductDataRecord?.ProductPriceCurrency,                                                Is.EqualTo(Currency_Id.EUR));
+                Assert.That(pricingProductDataRecord?.PricePerReferenceUnit,                                               Is.EqualTo(1));
+                Assert.That(pricingProductDataRecord?.MaximumProductChargingPower,                                         Is.EqualTo(22));
+                Assert.That(pricingProductDataRecord?.IsValid24hours,                                                      Is.False);
+                Assert.That(pricingProductDataRecord?.ProductAvailabilityTimes.Count(),                                    Is.EqualTo(1));
+                Assert.That(pricingProductDataRecord?.ProductAvailabilityTimes.ElementAt(0).Period.Begin,                  Is.EqualTo(HourMinute.Parse("09:00")));
+                Assert.That(pricingProductDataRecord?.ProductAvailabilityTimes.ElementAt(0).Period.End,                    Is.EqualTo(HourMinute.Parse("18:00")));
+                Assert.That(pricingProductDataRecord?.ProductAvailabilityTimes.ElementAt(0).On,                            Is.EqualTo(WeekDay.Everyday));
+                Assert.That(pricingProductDataRecord?.AdditionalReferences.    Count(),                                    Is.EqualTo(1));
+                Assert.That(pricingProductDataRecord?.AdditionalReferences.ElementAt(0).AdditionalReference,               Is.EqualTo(Additional_Reference.ParkingFee));
+                Assert.That(pricingProductDataRecord?.AdditionalReferences.ElementAt(0).AdditionalReferenceUnit,           Is.EqualTo(Reference_Unit.HOUR));
+                Assert.That(pricingProductDataRecord?.AdditionalReferences.ElementAt(0).PricePerAdditionalReferenceUnit,   Is.EqualTo(2));
+
+                Assert.That(pushPricingProductDataRequest.Action,                                                          Is.EqualTo(ActionTypes.FullLoad));
+                Assert.That(pushPricingProductDataRequest.CustomData?.Count,                                               Is.EqualTo(1));
+                Assert.That(pushPricingProductDataRequest.CustomData?["hello"]?.Value<String>(),                           Is.EqualTo("pricings world!"));
 
                 serverRequestLogging++;
 
@@ -184,13 +216,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
 
                 var pushPricingProductDataResponse = oicpResponse.Response;
 
-                Assert.That(pushPricingProductDataResponse,                                                     Is.Not.Null);
-                Assert.That(pushPricingProductDataResponse?.Result,                                             Is.True);
-                Assert.That(pushPricingProductDataResponse?.StatusCode.Code,                                    Is.EqualTo(StatusCodes.Success));
+                Assert.That(pushPricingProductDataResponse,                                                                Is.Not.Null);
+                Assert.That(pushPricingProductDataResponse?.Result,                                                        Is.True);
+                Assert.That(pushPricingProductDataResponse?.StatusCode.Code,                                               Is.EqualTo(StatusCodes.Success));
 
-                Assert.That(pushPricingProductDataResponse?.SessionId,                                          Is.Null);
-                Assert.That(pushPricingProductDataResponse?.CPOPartnerSessionId,                                Is.Null);
-                Assert.That(pushPricingProductDataResponse?.EMPPartnerSessionId,                                Is.Null);
+                Assert.That(pushPricingProductDataResponse?.SessionId,                                                     Is.Null);
+                Assert.That(pushPricingProductDataResponse?.CPOPartnerSessionId,                                           Is.Null);
+                Assert.That(pushPricingProductDataResponse?.EMPPartnerSessionId,                                           Is.Null);
 
                 serverResponseLogging++;
 
@@ -200,25 +232,25 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
 
             var oicpResult  = await cpoClient.PushPricingProductData(request);
 
-            Assert.That(oicpResult,                                                                             Is.Not.Null);
-            Assert.That(oicpResult.IsSuccessful,                                                                Is.True);
-            Assert.That(oicpResult.Response?.Result,                                                            Is.True);
-            Assert.That(oicpResult.Response?.StatusCode.Code,                                                   Is.EqualTo(StatusCodes.Success));
+            Assert.That(oicpResult,                                                                                        Is.Not.Null);
+            Assert.That(oicpResult.IsSuccessful,                                                                           Is.True);
+            Assert.That(oicpResult.Response?.Result,                                                                       Is.True);
+            Assert.That(oicpResult.Response?.StatusCode.Code,                                                              Is.EqualTo(StatusCodes.Success));
 
-            Assert.That(cpoClient.   Counters.PushPricingProductData.Requests_OK,                               Is.EqualTo(1));
-            Assert.That(cpoClient.   Counters.PushPricingProductData.Requests_Error,                            Is.EqualTo(0));
-            Assert.That(cpoClient.   Counters.PushPricingProductData.Responses_OK,                              Is.EqualTo(1));
-            Assert.That(cpoClient.   Counters.PushPricingProductData.Responses_Error,                           Is.EqualTo(0));
+            Assert.That(cpoClient.   Counters.PushPricingProductData.Requests_OK,                                          Is.EqualTo(1));
+            Assert.That(cpoClient.   Counters.PushPricingProductData.Requests_Error,                                       Is.EqualTo(0));
+            Assert.That(cpoClient.   Counters.PushPricingProductData.Responses_OK,                                         Is.EqualTo(1));
+            Assert.That(cpoClient.   Counters.PushPricingProductData.Responses_Error,                                      Is.EqualTo(0));
 
-            Assert.That(cpoClientAPI.Counters.PushPricingProductData.Requests_OK,                               Is.EqualTo(1));
-            Assert.That(cpoClientAPI.Counters.PushPricingProductData.Requests_Error,                            Is.EqualTo(0));
-            Assert.That(cpoClientAPI.Counters.PushPricingProductData.Responses_OK,                              Is.EqualTo(1));
-            Assert.That(cpoClientAPI.Counters.PushPricingProductData.Responses_Error,                           Is.EqualTo(0));
+            Assert.That(cpoClientAPI.Counters.PushPricingProductData.Requests_OK,                                          Is.EqualTo(1));
+            Assert.That(cpoClientAPI.Counters.PushPricingProductData.Requests_Error,                                       Is.EqualTo(0));
+            Assert.That(cpoClientAPI.Counters.PushPricingProductData.Responses_OK,                                         Is.EqualTo(1));
+            Assert.That(cpoClientAPI.Counters.PushPricingProductData.Responses_Error,                                      Is.EqualTo(0));
 
-            Assert.That(clientRequestLogging,                                                                   Is.EqualTo(1));
-            Assert.That(clientResponseLogging,                                                                  Is.EqualTo(1));
-            Assert.That(serverRequestLogging,                                                                   Is.EqualTo(1));
-            Assert.That(serverResponseLogging,                                                                  Is.EqualTo(1));
+            Assert.That(clientRequestLogging,                                                                              Is.EqualTo(1));
+            Assert.That(clientResponseLogging,                                                                             Is.EqualTo(1));
+            Assert.That(serverRequestLogging,                                                                              Is.EqualTo(1));
+            Assert.That(serverResponseLogging,                                                                             Is.EqualTo(1));
 
         }
 

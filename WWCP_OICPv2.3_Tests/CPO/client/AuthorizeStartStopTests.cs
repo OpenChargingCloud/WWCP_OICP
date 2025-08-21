@@ -27,7 +27,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
 {
 
     /// <summary>
-    /// CPO sending AuthorizeStart/-Stop tests.
+    /// CPO Sending AuthorizeStart/-Stop tests.
     /// </summary>
     [TestFixture]
     public class AuthorizeStartStopTests : ACPOClientAPITests

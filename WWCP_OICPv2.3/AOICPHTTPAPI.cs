@@ -20,6 +20,7 @@
 using System.Runtime.CompilerServices;
 
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
@@ -146,6 +147,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                             IEnumerable<HTTPContentType>?  HTTPContentTypes      = null,
                             I18NString?                    Description           = null,
 
+                            String?                        ExternalDNSName       = null,
+                            HTTPPath?                      BasePath              = null,
+                            JObject?                       APIVersionHashes      = null,
+
                             Boolean                        RegisterRootService   = true,
                             HTTPPath?                      URLPathPrefix         = null,
                             Formatting?                    JSONFormatting        = null,
@@ -201,6 +206,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
             //       LogfileCreator,
             //       DNSClient,
             //       false) //AutoStart)
+
+                   ExternalDNSName,
+                   BasePath,
+                   APIVersionHashes,
 
                    DisableLogging,
                    LoggingPath,

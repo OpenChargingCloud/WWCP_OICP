@@ -29,7 +29,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
 {
 
     /// <summary>
-    /// CPO sending charging notifications tests.
+    /// CPO Sending ChargingNotifications tests.
     /// </summary>
     [TestFixture]
     public class SendChargingNotificationsTests : ACPOClientAPITests

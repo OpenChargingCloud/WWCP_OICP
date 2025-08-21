@@ -386,7 +386,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an PushEVSEData HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnPushEVSEDataHTTPRequest = new ();
+        public HTTPRequestLogEvent OnPushEVSEDataHTTPRequest = new();
 
         /// <summary>
         /// An event sent whenever an PushEVSEData HTTP request was received.
@@ -428,7 +428,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an PushEVSEData HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnPushEVSEDataHTTPResponse = new ();
+        public HTTPResponseLogEvent OnPushEVSEDataHTTPResponse = new();
 
         /// <summary>
         /// An event sent whenever an PushEVSEData HTTP response was sent.
@@ -455,7 +455,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an PushEVSEStatus HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnPushEVSEStatusHTTPRequest = new ();
+        public HTTPRequestLogEvent OnPushEVSEStatusHTTPRequest = new();
 
         /// <summary>
         /// An event sent whenever an PushEVSEStatus HTTP request was received.
@@ -497,7 +497,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an PushEVSEStatus HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnPushEVSEStatusHTTPResponse = new ();
+        public HTTPResponseLogEvent OnPushEVSEStatusHTTPResponse = new();
 
         /// <summary>
         /// An event sent whenever an PushEVSEStatus HTTP response was sent.
@@ -525,7 +525,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an PushPricingProductData HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnPushPricingProductDataHTTPRequest = new ();
+        public HTTPRequestLogEvent OnPushPricingProductDataHTTPRequest = new();
 
         /// <summary>
         /// An event sent whenever an PushPricingProductData HTTP request was received.
@@ -567,7 +567,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an PushPricingProductData HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnPushPricingProductDataHTTPResponse = new ();
+        public HTTPResponseLogEvent OnPushPricingProductDataHTTPResponse = new();
 
         /// <summary>
         /// An event sent whenever an PushPricingProductData HTTP response was sent.
@@ -594,7 +594,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an PushEVSEPricing HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnPushEVSEPricingHTTPRequest = new ();
+        public HTTPRequestLogEvent OnPushEVSEPricingHTTPRequest = new();
 
         /// <summary>
         /// An event sent whenever an PushEVSEPricing HTTP request was received.
@@ -636,7 +636,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an PushEVSEPricing HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnPushEVSEPricingHTTPResponse = new ();
+        public HTTPResponseLogEvent OnPushEVSEPricingHTTPResponse = new();
 
         /// <summary>
         /// An event sent whenever an PushEVSEPricing HTTP response was sent.
@@ -664,7 +664,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an PullAuthenticationData HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnPullAuthenticationDataHTTPRequest = new ();
+        public HTTPRequestLogEvent OnPullAuthenticationDataHTTPRequest = new();
 
         /// <summary>
         /// An event sent whenever an PullAuthenticationData HTTP request was received.
@@ -706,7 +706,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an PullAuthenticationData HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnPullAuthenticationDataHTTPResponse = new ();
+        public HTTPResponseLogEvent OnPullAuthenticationDataHTTPResponse = new();
 
         /// <summary>
         /// An event sent whenever an PullAuthenticationData HTTP response was sent.
@@ -734,7 +734,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an AuthorizeStart HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnAuthorizeStartHTTPRequest = new ();
+        public HTTPRequestLogEvent OnAuthorizeStartHTTPRequest = new();
 
         /// <summary>
         /// An event sent whenever an AuthorizeStart HTTP request was received.
@@ -776,7 +776,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an AuthorizationStart HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnAuthorizationStartHTTPResponse = new ();
+        public HTTPResponseLogEvent OnAuthorizationStartHTTPResponse = new();
 
         /// <summary>
         /// An event sent whenever an AuthorizationStart HTTP response was sent.
@@ -803,7 +803,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an AuthorizeStop HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnAuthorizeStopHTTPRequest = new ();
+        public HTTPRequestLogEvent OnAuthorizeStopHTTPRequest = new();
 
         /// <summary>
         /// An event sent whenever an AuthorizeStop HTTP request was received.
@@ -845,7 +845,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an AuthorizationStop HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnAuthorizationStopHTTPResponse = new ();
+        public HTTPResponseLogEvent OnAuthorizationStopHTTPResponse = new();
 
         /// <summary>
         /// An event sent whenever an AuthorizationStop HTTP response was sent.
@@ -873,7 +873,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an ChargingNotification HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnChargingNotificationHTTPRequest = new ();
+        public HTTPRequestLogEvent OnChargingNotificationHTTPRequest = new();
 
         /// <summary>
         /// An event sent whenever an ChargingNotification HTTP request was received.
@@ -972,7 +972,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an ChargingNotification HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnChargingNotificationHTTPResponse = new ();
+        public HTTPResponseLogEvent OnChargingNotificationHTTPResponse = new();
 
         /// <summary>
         /// An event sent whenever an ChargingNotification HTTP response was sent.
@@ -1000,7 +1000,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an ChargeDetailRecord HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnChargeDetailRecordHTTPRequest = new ();
+        public HTTPRequestLogEvent OnChargeDetailRecordHTTPRequest = new();
 
         /// <summary>
         /// An event sent whenever an ChargeDetailRecord HTTP request was received.
@@ -1042,7 +1042,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an ChargeDetailRecord HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnChargeDetailRecordHTTPResponse = new ();
+        public HTTPResponseLogEvent OnChargeDetailRecordHTTPResponse = new();
 
         /// <summary>
         /// An event sent whenever an ChargeDetailRecord HTTP response was sent.

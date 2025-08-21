@@ -187,7 +187,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// The DNS client defines which DNS servers to use.
         /// </summary>
-        DNSClient                                                   IHTTPClient.DNSClient
+        IDNSClient                                                  IHTTPClient.DNSClient
             => EMPClient.DNSClient;
 
 

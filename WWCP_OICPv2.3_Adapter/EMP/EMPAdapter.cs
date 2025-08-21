@@ -121,7 +121,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// The DNS client defines which DNS servers to use.
         /// </summary>
-        public DNSClient DNSClient
+        public IDNSClient DNSClient
             => EMPRoaming.EMPClient.DNSClient;
 
 

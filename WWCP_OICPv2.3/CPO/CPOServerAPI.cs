@@ -221,7 +221,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteReservationStart HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEventX OnAuthorizeRemoteReservationStartHTTPRequest = new ();
+        public HTTPRequestLogEventX OnAuthorizeRemoteReservationStartHTTPRequest = new();
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteReservationStart HTTP request was received.
@@ -229,14 +229,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The CPO Server HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logAuthorizeRemoteReservationStartHTTPRequest(//DateTimeOffset     Timestamp,
-                                                                              HTTPTestServerX    HTTPServer,
-                                                                              //HTTPAPIX           API,
+        protected internal Task logAuthorizeRemoteReservationStartHTTPRequest(DateTimeOffset     Timestamp,
+                                                                              HTTPAPIX           API,
                                                                               HTTPRequest        Request,
                                                                               CancellationToken  CancellationToken)
 
             => OnAuthorizeRemoteReservationStartHTTPRequest.WhenAll(Request.Timestamp,
-                                                                    this, //API ?? this,
+                                                                    API ?? this,
                                                                     Request);
 
         #endregion
@@ -265,7 +264,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteReservationStart HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEventX OnAuthorizeRemoteReservationStartHTTPResponse = new ();
+        public HTTPResponseLogEventX OnAuthorizeRemoteReservationStartHTTPResponse = new();
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteReservationStart HTTP response was sent.
@@ -274,17 +273,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="API">The CPO Server HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logAuthorizeRemoteReservationStartHTTPResponse(//DateTimeOffset  Timestamp,
-                                                                               HTTPTestServerX    HTTPServer,
+        protected internal Task logAuthorizeRemoteReservationStartHTTPResponse(DateTimeOffset     Timestamp,
+                                                                               HTTPAPIX           API,
+                                                                               HTTPRequest        Request,
                                                                                HTTPResponse       Response,
                                                                                CancellationToken  CancellationToken)
-                                                                              // HTTPAPIX        API,
-                                                                              // HTTPRequest     Request,
-                                                                              // HTTPResponse    Response)
 
             => OnAuthorizeRemoteReservationStartHTTPResponse.WhenAll(Response.Timestamp,
-                                                                     this, //API ?? this,
-                                                                     Response.HTTPRequest,
+                                                                     API ?? this,
+                                                                     Request,
                                                                      Response);
 
         #endregion
@@ -295,7 +292,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteReservationStop HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEventX OnAuthorizeRemoteReservationStopHTTPRequest = new ();
+        public HTTPRequestLogEventX OnAuthorizeRemoteReservationStopHTTPRequest = new();
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteReservationStop HTTP request was received.
@@ -303,14 +300,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The CPO Server HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logAuthorizeRemoteReservationStopHTTPRequest(//DateTimeOffset     Timestamp,
-                                                                             HTTPTestServerX    HTTPServer,
-                                                                             //HTTPAPIX           API,
+        protected internal Task logAuthorizeRemoteReservationStopHTTPRequest(DateTimeOffset     Timestamp,
+                                                                             HTTPAPIX           API,
                                                                              HTTPRequest        Request,
                                                                              CancellationToken  CancellationToken)
 
             => OnAuthorizeRemoteReservationStopHTTPRequest.WhenAll(Request.Timestamp,
-                                                                   this, //API ?? this,
+                                                                   API ?? this,
                                                                    Request);
 
         #endregion
@@ -339,7 +335,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteReservationStop HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEventX OnAuthorizeRemoteReservationStopHTTPResponse = new ();
+        public HTTPResponseLogEventX OnAuthorizeRemoteReservationStopHTTPResponse = new();
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteReservationStop HTTP response was sent.
@@ -348,17 +344,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="API">The CPO Server HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logAuthorizeRemoteReservationStopHTTPResponse(//DateTimeOffset  Timestamp,
-                                                                              HTTPTestServerX    HTTPServer,
+        protected internal Task logAuthorizeRemoteReservationStopHTTPResponse(DateTimeOffset     Timestamp,
+                                                                              HTTPAPIX           API,
+                                                                              HTTPRequest        Request,
                                                                               HTTPResponse       Response,
                                                                               CancellationToken  CancellationToken)
-                                                                              // HTTPAPIX        API,
-                                                                              // HTTPRequest     Request,
-                                                                              // HTTPResponse    Response)
 
             => OnAuthorizeRemoteReservationStopHTTPResponse.WhenAll(Response.Timestamp,
-                                                                    this, //API ?? this,
-                                                                    Response.HTTPRequest,
+                                                                    API ?? this,
+                                                                    Request,
                                                                     Response);
 
         #endregion
@@ -370,7 +364,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteStart HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEventX OnAuthorizeRemoteStartHTTPRequest = new ();
+        public HTTPRequestLogEventX OnAuthorizeRemoteStartHTTPRequest = new();
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteStart HTTP request was received.
@@ -378,14 +372,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The CPO Server HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logAuthorizeRemoteStartHTTPRequest(//DateTimeOffset     Timestamp,
-                                                                   HTTPTestServerX    HTTPServer,
-                                                                   //HTTPAPIX           API,
+        protected internal Task logAuthorizeRemoteStartHTTPRequest(DateTimeOffset     Timestamp,
+                                                                   HTTPAPIX           API,
                                                                    HTTPRequest        Request,
                                                                    CancellationToken  CancellationToken)
 
             => OnAuthorizeRemoteStartHTTPRequest.WhenAll(Request.Timestamp,
-                                                         this, //API ?? this,
+                                                         API ?? this,
                                                          Request);
 
         #endregion
@@ -414,7 +407,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteStart HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEventX OnAuthorizeRemoteStartHTTPResponse = new ();
+        public HTTPResponseLogEventX OnAuthorizeRemoteStartHTTPResponse = new();
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteStart HTTP response was sent.
@@ -423,17 +416,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="API">The CPO Server HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logAuthorizeRemoteStartHTTPResponse(//DateTimeOffset  Timestamp,
-                                                                    HTTPTestServerX    HTTPServer,
+        protected internal Task logAuthorizeRemoteStartHTTPResponse(DateTimeOffset     Timestamp,
+                                                                    HTTPAPIX           API,
+                                                                    HTTPRequest        Request,
                                                                     HTTPResponse       Response,
                                                                     CancellationToken  CancellationToken)
-                                                                   // HTTPAPIX        API,
-                                                                   // HTTPRequest     Request,
-                                                                   // HTTPResponse    Response)
 
             => OnAuthorizeRemoteStartHTTPResponse.WhenAll(Response.Timestamp,
-                                                          this, //API ?? this,
-                                                          Response.HTTPRequest,
+                                                          API ?? this,
+                                                          Request,
                                                           Response);
 
         #endregion
@@ -444,7 +435,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteStop HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEventX OnAuthorizeRemoteStopHTTPRequest = new ();
+        public HTTPRequestLogEventX OnAuthorizeRemoteStopHTTPRequest = new();
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteStop HTTP request was received.
@@ -452,14 +443,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The CPO Server HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logAuthorizeRemoteStopHTTPRequest(//DateTimeOffset     Timestamp,
-                                                                  HTTPTestServerX    HTTPServer,
-                                                                  //HTTPAPIX           API,
+        protected internal Task logAuthorizeRemoteStopHTTPRequest(DateTimeOffset     Timestamp,
+                                                                  HTTPAPIX           API,
                                                                   HTTPRequest        Request,
                                                                   CancellationToken  CancellationToken)
 
             => OnAuthorizeRemoteStopHTTPRequest.WhenAll(Request.Timestamp,
-                                                        this, //API ?? this,
+                                                        API ?? this,
                                                         Request);
 
         #endregion
@@ -488,7 +478,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteStop HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEventX OnAuthorizeRemoteStopHTTPResponse = new ();
+        public HTTPResponseLogEventX OnAuthorizeRemoteStopHTTPResponse = new();
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteStop HTTP response was sent.
@@ -497,17 +487,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="API">The CPO Server HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logAuthorizeRemoteStopHTTPResponse(//DateTimeOffset  Timestamp,
-                                                                   HTTPTestServerX    HTTPServer,
+        protected internal Task logAuthorizeRemoteStopHTTPResponse(DateTimeOffset     Timestamp,
+                                                                   HTTPAPIX           API,
+                                                                   HTTPRequest        Request,
                                                                    HTTPResponse       Response,
                                                                    CancellationToken  CancellationToken)
-                                                                  // HTTPAPIX        API,
-                                                                  // HTTPRequest     Request,
-                                                                  // HTTPResponse    Response)
 
             => OnAuthorizeRemoteStopHTTPResponse.WhenAll(Response.Timestamp,
-                                                         this, //API ?? this,
-                                                         Response.HTTPRequest,
+                                                         API ?? this,
+                                                         Request,
                                                          Response);
 
         #endregion
@@ -529,6 +517,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             IEnumerable<HTTPContentType>?  HTTPContentTypes      = null,
                             I18NString?                    Description           = null,
 
+                            String?                        ExternalDNSName       = null,
+                            HTTPPath?                      BasePath              = null,
+                            JObject?                       APIVersionHashes      = null,
+
                             Boolean                        RegisterRootService   = true,
                             HTTPPath?                      URLPathPrefix         = null,
                             Formatting?                    JSONFormatting        = null,
@@ -545,6 +537,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                    RootPath,
                    HTTPContentTypes,
                    Description,
+
+                   ExternalDNSName,
+                   BasePath,
+                   APIVersionHashes,
 
                    RegisterRootService,
                    URLPathPrefix,
@@ -652,9 +648,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3000/api/oicp/charging/v21/providers/{providerId}/authorize-remote-reservation/start
             // ---------------------------------------------------------------------------------------------------------------------------------------------------
             AddHandler(
+                HTTPMethod.POST,
                 URLPathPrefix + HTTPPath.Parse($"api/oicp/charging/v21/providers/{{{OICPExtensions.ProviderId}}}/authorize-remote-reservation/start"),
-                HTTPMethod:          HTTPMethod.POST,
-                HTTPContentType:     HTTPContentType.Application.JSON_UTF8,
+                HTTPContentType.Application.JSON_UTF8,
                 HTTPRequestLogger:   logAuthorizeRemoteReservationStartHTTPRequest,
                 HTTPResponseLogger:  logAuthorizeRemoteReservationStartHTTPResponse,
                 HTTPDelegate:        async request => {
@@ -868,9 +864,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3000/api/oicp/charging/v21/providers/{providerId}/authorize-remote-reservation/stop
             // --------------------------------------------------------------------------------------------------------------------------------------------------
             AddHandler(
+                HTTPMethod.POST,
                 URLPathPrefix + HTTPPath.Parse($"api/oicp/charging/v21/providers/{{{OICPExtensions.ProviderId}}}/authorize-remote-reservation/stop"),
-                HTTPMethod:          HTTPMethod.POST,
-                HTTPContentType:     HTTPContentType.Application.JSON_UTF8,
+                HTTPContentType.Application.JSON_UTF8,
                 HTTPRequestLogger:   logAuthorizeRemoteReservationStopHTTPRequest,
                 HTTPResponseLogger:  logAuthorizeRemoteReservationStopHTTPResponse,
                 HTTPDelegate:        async request => {
@@ -1085,9 +1081,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3000/api/oicp/charging/v21/providers/{providerId}/authorize-remote/start
             // ---------------------------------------------------------------------------------------------------------------------------------------------------
             AddHandler(
+                HTTPMethod.POST,
                 URLPathPrefix + HTTPPath.Parse($"api/oicp/charging/v21/providers/{{{OICPExtensions.ProviderId}}}/authorize-remote/start"),
-                HTTPMethod:          HTTPMethod.POST,
-                HTTPContentType:     HTTPContentType.Application.JSON_UTF8,
+                HTTPContentType.Application.JSON_UTF8,
                 HTTPRequestLogger:   logAuthorizeRemoteStartHTTPRequest,
                 HTTPResponseLogger:  logAuthorizeRemoteStartHTTPResponse,
                 HTTPDelegate:        async request => {
@@ -1301,9 +1297,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3000/api/oicp/charging/v21/providers/{providerId}/authorize-remote/stop
             // --------------------------------------------------------------------------------------------------------------------------------------------------
             AddHandler(
+                HTTPMethod.POST,
                 URLPathPrefix + HTTPPath.Parse($"api/oicp/charging/v21/providers/{{{OICPExtensions.ProviderId}}}/authorize-remote/stop"),
-                HTTPMethod:          HTTPMethod.POST,
-                HTTPContentType:     HTTPContentType.Application.JSON_UTF8,
+                HTTPContentType.Application.JSON_UTF8,
                 HTTPRequestLogger:   logAuthorizeRemoteStopHTTPRequest,
                 HTTPResponseLogger:  logAuthorizeRemoteStopHTTPResponse,
                 HTTPDelegate:        async request => {

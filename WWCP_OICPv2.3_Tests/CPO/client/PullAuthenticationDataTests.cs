@@ -27,7 +27,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
 {
 
     /// <summary>
-    /// CPO requesting authentication data tests.
+    /// CPO Pulling AuthenticationData tests.
     /// </summary>
     [TestFixture]
     public class PullAuthenticationDataTests : ACPOClientAPITests
