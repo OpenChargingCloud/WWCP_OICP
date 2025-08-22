@@ -297,7 +297,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
         public async Task ShutdownEachTest()
         {
 
-            var server = cpoServerAPI?.HTTPTestServer;
+            var server = cpoServerAPI?.HTTPServer;
 
             if (server is not null)
                 await server.Stop();

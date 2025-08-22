@@ -123,15 +123,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
                             //ConnectionIdBuilder?                                       ConnectionIdBuilder          = null,
                             //TimeSpan?                                                  ConnectionTimeout            = null,
                             //UInt32?                                                    MaxClientConnections         = null,
-                            //
+
                             //Boolean?                                                   DisableMaintenanceTasks      = false,
                             //TimeSpan?                                                  MaintenanceInitialDelay      = null,
                             //TimeSpan?                                                  MaintenanceEvery             = null,
-                            //
+
                             //Boolean?                                                   DisableWardenTasks           = false,
                             //TimeSpan?                                                  WardenInitialDelay           = null,
                             //TimeSpan?                                                  WardenCheckEvery             = null,
-                            //
+
                             //Boolean?                                                   IsDevelopment                = null,
                             //IEnumerable<String>?                                       DevelopmentServers           = null,
                             //Boolean                                                    DisableLogging               = false,
@@ -149,6 +149,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                             String?                        ExternalDNSName       = null,
                             HTTPPath?                      BasePath              = null,
+
                             JObject?                       APIVersionHashes      = null,
 
                             Boolean                        RegisterRootService   = true,
@@ -156,6 +157,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
                             Formatting?                    JSONFormatting        = null,
                             ConnectionType?                Connection            = null,
 
+                            Boolean?                                                   DisableMaintenanceTasks      = false,
+                            TimeSpan?                                                  MaintenanceInitialDelay      = null,
+                            TimeSpan?                                                  MaintenanceEvery             = null,
+
+                            Boolean?                                                   DisableWardenTasks           = false,
+                            TimeSpan?                                                  WardenInitialDelay           = null,
+                            TimeSpan?                                                  WardenCheckEvery             = null,
+
+                            Boolean?                                                   IsDevelopment                = null,
+                            IEnumerable<String>?                                       DevelopmentServers           = null,
                             Boolean                                                    DisableLogging               = false,
                             String                                                     LoggingPath                  = DefaultHTTPAPI_LoggingPath,
                             String                                                     LoggingContext               = DefaultLoggingContext,
@@ -209,8 +220,21 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                    ExternalDNSName,
                    BasePath,
+
+                   null,
+                   null,
                    APIVersionHashes,
 
+                   DisableMaintenanceTasks,
+                   MaintenanceInitialDelay,
+                   MaintenanceEvery,
+
+                   DisableWardenTasks,
+                   WardenInitialDelay,
+                   WardenCheckEvery,
+
+                   IsDevelopment,
+                   DevelopmentServers,
                    DisableLogging,
                    LoggingPath,
                    LoggingContext,

@@ -303,9 +303,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                              HTTPRequest        Request,
                                                              CancellationToken  CancellationToken)
 
-            => OnAuthorizeStartHTTPRequest.WhenAll(Request.Timestamp,
-                                                   API ?? this,
-                                                   Request);
+            => OnAuthorizeStartHTTPRequest.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -348,10 +351,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                   HTTPResponse       Response,
                                                                   CancellationToken  CancellationToken)
 
-            => OnAuthorizationStartHTTPResponse.WhenAll(Response.Timestamp,
-                                                        API ?? this,
-                                                        Request,
-                                                        Response);
+            => OnAuthorizationStartHTTPResponse.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   Response,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -374,9 +380,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                             HTTPRequest        Request,
                                                             CancellationToken  CancellationToken)
 
-            => OnAuthorizeStopHTTPRequest.WhenAll(Request.Timestamp,
-                                                  API ?? this,
-                                                  Request);
+            => OnAuthorizeStopHTTPRequest.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -419,10 +428,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                  HTTPResponse       Response,
                                                                  CancellationToken  CancellationToken)
 
-            => OnAuthorizationStopHTTPResponse.WhenAll(Response.Timestamp,
-                                                       API ?? this,
-                                                       Request,
-                                                       Response);
+            => OnAuthorizationStopHTTPResponse.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   Response,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -446,9 +458,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                     HTTPRequest        Request,
                                                                     CancellationToken  CancellationToken)
 
-            => OnChargingNotificationsHTTPRequest.WhenAll(Request.Timestamp,
-                                                          API ?? this,
-                                                          Request);
+            => OnChargingNotificationsHTTPRequest.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -492,10 +507,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                      HTTPResponse       Response,
                                                                      CancellationToken  CancellationToken)
 
-            => OnChargingNotificationsHTTPResponse.WhenAll(Response.Timestamp,
-                                                           API ?? this,
-                                                           Request,
-                                                           Response);
+            => OnChargingNotificationsHTTPResponse.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   Response,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -519,9 +537,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                  HTTPRequest        Request,
                                                                  CancellationToken  CancellationToken)
 
-            => OnChargeDetailRecordHTTPRequest.WhenAll(Request.Timestamp,
-                                                       API ?? this,
-                                                       Request);
+            => OnChargeDetailRecordHTTPRequest.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -564,10 +585,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                   HTTPResponse       Response,
                                                                   CancellationToken  CancellationToken)
 
-            => OnChargeDetailRecordHTTPResponse.WhenAll(Response.Timestamp,
-                                                        API ?? this,
-                                                        Request,
-                                                        Response);
+            => OnChargeDetailRecordHTTPResponse.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   Response,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -578,26 +602,36 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// Create a new EMP HTTP Server API.
         /// </summary>
-        public EMPServerAPI(HTTPTestServerX?               HTTPTestServer        = null,
-                            IEnumerable<HTTPHostname>?     Hostnames             = null,
-                            HTTPPath?                      RootPath              = null,
-                            IEnumerable<HTTPContentType>?  HTTPContentTypes      = null,
-                            I18NString?                    Description           = null,
+        public EMPServerAPI(HTTPTestServerX?               HTTPTestServer            = null,
+                            IEnumerable<HTTPHostname>?     Hostnames                 = null,
+                            HTTPPath?                      RootPath                  = null,
+                            IEnumerable<HTTPContentType>?  HTTPContentTypes          = null,
+                            I18NString?                    Description               = null,
 
-                            String?                        ExternalDNSName       = null,
-                            HTTPPath?                      BasePath              = null,
-                            JObject?                       APIVersionHashes      = null,
+                            String?                        ExternalDNSName           = null,
+                            HTTPPath?                      BasePath                  = null,
+                            JObject?                       APIVersionHashes          = null,
 
-                            Boolean                        RegisterRootService   = true,
-                            HTTPPath?                      URLPathPrefix         = null,
-                            Formatting?                    JSONFormatting        = null,
-                            ConnectionType?                Connection            = null,
+                            Boolean                        RegisterRootService       = true,
+                            HTTPPath?                      URLPathPrefix             = null,
+                            Formatting?                    JSONFormatting            = null,
+                            ConnectionType?                Connection                = null,
 
-                            Boolean                        DisableLogging        = false,
-                            String                         LoggingPath           = DefaultHTTPAPI_LoggingPath,
-                            String                         LoggingContext        = DefaultLoggingContext,
-                            String                         LogfileName           = DefaultHTTPAPI_LogfileName,
-                            LogfileCreatorDelegate?        LogfileCreator        = null)
+                            Boolean?                       DisableMaintenanceTasks   = false,
+                            TimeSpan?                      MaintenanceInitialDelay   = null,
+                            TimeSpan?                      MaintenanceEvery          = null,
+
+                            Boolean?                       DisableWardenTasks        = false,
+                            TimeSpan?                      WardenInitialDelay        = null,
+                            TimeSpan?                      WardenCheckEvery          = null,
+
+                            Boolean?                       IsDevelopment             = null,
+                            IEnumerable<String>?           DevelopmentServers        = null,
+                            Boolean                        DisableLogging            = false,
+                            String                         LoggingPath               = DefaultHTTPAPI_LoggingPath,
+                            String                         LoggingContext            = DefaultLoggingContext,
+                            String                         LogfileName               = DefaultHTTPAPI_LogfileName,
+                            LogfileCreatorDelegate?        LogfileCreator            = null)
 
             : base(HTTPTestServer,
                    Hostnames,
@@ -614,6 +648,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                    JSONFormatting,
                    Connection,
 
+                   DisableMaintenanceTasks,
+                   MaintenanceInitialDelay,
+                   MaintenanceEvery,
+
+                   DisableWardenTasks,
+                   WardenInitialDelay,
+                   WardenCheckEvery,
+
+                   IsDevelopment,
+                   DevelopmentServers,
                    DisableLogging,
                    LoggingPath,
                    LoggingContext,

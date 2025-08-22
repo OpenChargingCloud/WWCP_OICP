@@ -2108,8 +2108,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
             centralServiceAPI?.Shutdown();
 
-            cpoRoaming_DEGEF?.CPOServer.HTTPTestServer?.Stop();
-            empRoaming_DEGDF?.EMPServer.HTTPTestServer?.Stop();
+            cpoRoaming_DEGEF?.CPOServer.HTTPServer?.Stop();
+            empRoaming_DEGDF?.EMPServer.HTTPServer?.Stop();
 
         }
 

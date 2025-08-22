@@ -427,7 +427,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
         public async Task ShutdownEachTest()
         {
 
-            var server = empServerAPI?.HTTPTestServer;
+            var server = empServerAPI?.HTTPServer;
 
             if (server is not null)
                 await server.Stop();

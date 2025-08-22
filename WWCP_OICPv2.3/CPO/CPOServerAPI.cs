@@ -234,9 +234,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                               HTTPRequest        Request,
                                                                               CancellationToken  CancellationToken)
 
-            => OnAuthorizeRemoteReservationStartHTTPRequest.WhenAll(Request.Timestamp,
-                                                                    API ?? this,
-                                                                    Request);
+            => OnAuthorizeRemoteReservationStartHTTPRequest.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -279,10 +282,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                HTTPResponse       Response,
                                                                                CancellationToken  CancellationToken)
 
-            => OnAuthorizeRemoteReservationStartHTTPResponse.WhenAll(Response.Timestamp,
-                                                                     API ?? this,
-                                                                     Request,
-                                                                     Response);
+            => OnAuthorizeRemoteReservationStartHTTPResponse.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   Response,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -305,9 +311,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                              HTTPRequest        Request,
                                                                              CancellationToken  CancellationToken)
 
-            => OnAuthorizeRemoteReservationStopHTTPRequest.WhenAll(Request.Timestamp,
-                                                                   API ?? this,
-                                                                   Request);
+            => OnAuthorizeRemoteReservationStopHTTPRequest.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -350,10 +359,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                               HTTPResponse       Response,
                                                                               CancellationToken  CancellationToken)
 
-            => OnAuthorizeRemoteReservationStopHTTPResponse.WhenAll(Response.Timestamp,
-                                                                    API ?? this,
-                                                                    Request,
-                                                                    Response);
+            => OnAuthorizeRemoteReservationStopHTTPResponse.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   Response,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -377,9 +389,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                    HTTPRequest        Request,
                                                                    CancellationToken  CancellationToken)
 
-            => OnAuthorizeRemoteStartHTTPRequest.WhenAll(Request.Timestamp,
-                                                         API ?? this,
-                                                         Request);
+            => OnAuthorizeRemoteStartHTTPRequest.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -422,10 +437,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                     HTTPResponse       Response,
                                                                     CancellationToken  CancellationToken)
 
-            => OnAuthorizeRemoteStartHTTPResponse.WhenAll(Response.Timestamp,
-                                                          API ?? this,
-                                                          Request,
-                                                          Response);
+            => OnAuthorizeRemoteStartHTTPResponse.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   Response,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -448,9 +466,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                   HTTPRequest        Request,
                                                                   CancellationToken  CancellationToken)
 
-            => OnAuthorizeRemoteStopHTTPRequest.WhenAll(Request.Timestamp,
-                                                        API ?? this,
-                                                        Request);
+            => OnAuthorizeRemoteStopHTTPRequest.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -493,10 +514,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                    HTTPResponse       Response,
                                                                    CancellationToken  CancellationToken)
 
-            => OnAuthorizeRemoteStopHTTPResponse.WhenAll(Response.Timestamp,
-                                                         API ?? this,
-                                                         Request,
-                                                         Response);
+            => OnAuthorizeRemoteStopHTTPResponse.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   Response,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -511,26 +535,36 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="LoggingPath">The path for all logfiles.</param>
         /// <param name="LoggingContext">The context of all logfiles.</param>
         /// <param name="LogfileCreator">A delegate for creating the name of the logfile for this API.</param>
-        public CPOServerAPI(HTTPTestServerX?               HTTPTestServer        = null,
-                            IEnumerable<HTTPHostname>?     Hostnames             = null,
-                            HTTPPath?                      RootPath              = null,
-                            IEnumerable<HTTPContentType>?  HTTPContentTypes      = null,
-                            I18NString?                    Description           = null,
+        public CPOServerAPI(HTTPTestServerX?               HTTPTestServer            = null,
+                            IEnumerable<HTTPHostname>?     Hostnames                 = null,
+                            HTTPPath?                      RootPath                  = null,
+                            IEnumerable<HTTPContentType>?  HTTPContentTypes          = null,
+                            I18NString?                    Description               = null,
 
-                            String?                        ExternalDNSName       = null,
-                            HTTPPath?                      BasePath              = null,
-                            JObject?                       APIVersionHashes      = null,
+                            String?                        ExternalDNSName           = null,
+                            HTTPPath?                      BasePath                  = null,
+                            JObject?                       APIVersionHashes          = null,
 
-                            Boolean                        RegisterRootService   = true,
-                            HTTPPath?                      URLPathPrefix         = null,
-                            Formatting?                    JSONFormatting        = null,
-                            ConnectionType?                Connection            = null,
+                            Boolean                        RegisterRootService       = true,
+                            HTTPPath?                      URLPathPrefix             = null,
+                            Formatting?                    JSONFormatting            = null,
+                            ConnectionType?                Connection                = null,
 
-                            Boolean                        DisableLogging        = false,
-                            String                         LoggingPath           = DefaultHTTPAPI_LoggingPath,
-                            String                         LoggingContext        = DefaultLoggingContext,
-                            String                         LogfileName           = DefaultHTTPAPI_LogfileName,
-                            LogfileCreatorDelegate?        LogfileCreator        = null)
+                            Boolean?                       DisableMaintenanceTasks   = false,
+                            TimeSpan?                      MaintenanceInitialDelay   = null,
+                            TimeSpan?                      MaintenanceEvery          = null,
+
+                            Boolean?                       DisableWardenTasks        = false,
+                            TimeSpan?                      WardenInitialDelay        = null,
+                            TimeSpan?                      WardenCheckEvery          = null,
+
+                            Boolean?                       IsDevelopment             = null,
+                            IEnumerable<String>?           DevelopmentServers        = null,
+                            Boolean                        DisableLogging            = false,
+                            String                         LoggingPath               = DefaultHTTPAPI_LoggingPath,
+                            String                         LoggingContext            = DefaultLoggingContext,
+                            String                         LogfileName               = DefaultHTTPAPI_LogfileName,
+                            LogfileCreatorDelegate?        LogfileCreator            = null)
 
             : base(HTTPTestServer,
                    Hostnames,
@@ -547,6 +581,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                    JSONFormatting,
                    Connection,
 
+                   DisableMaintenanceTasks,
+                   MaintenanceInitialDelay,
+                   MaintenanceEvery,
+
+                   DisableWardenTasks,
+                   WardenInitialDelay,
+                   WardenCheckEvery,
+
+                   IsDevelopment,
+                   DevelopmentServers,
                    DisableLogging,
                    LoggingPath,
                    LoggingContext,
