@@ -150,6 +150,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                             String?                        ExternalDNSName       = null,
                             HTTPPath?                      BasePath              = null,
 
+                            String?                        HTTPServerName        = null,
+                            String?                        HTTPServiceName       = null,
+                            String?                        APIVersionHash        = null,
                             JObject?                       APIVersionHashes      = null,
 
                             Boolean                        RegisterRootService   = true,
@@ -183,46 +186,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
             //       ExternalDNSName,
             //       HTTPServerPort,
             //       BasePath,
-            //       HTTPServerName,
 
             //       URLPathPrefix,
-            //       HTTPServiceName,
             //       null, //HTMLTemplate,
-            //       APIVersionHashes,
-
-            //       ServerCertificateSelector,
-            //       ClientCertificateValidator,
-            //       LocalCertificateSelector,
-            //       AllowedTLSProtocols,
-            //       ClientCertificateRequired,
-            //       CheckCertificateRevocation,
 
             //       ConnectionIdBuilder,
             //       ConnectionTimeout,
             //       MaxClientConnections,
 
-            //       DisableMaintenanceTasks,
-            //       MaintenanceInitialDelay,
-            //       MaintenanceEvery,
-
-            //       DisableWardenTasks,
-            //       WardenInitialDelay,
-            //       WardenCheckEvery,
-
-            //       IsDevelopment,
-            //       DevelopmentServers,
-            //       DisableLogging,
-            //       LoggingPath,
-            //       LogfileName,
-            //       LogfileCreator,
-            //       DNSClient,
-            //       false) //AutoStart)
-
                    ExternalDNSName,
                    BasePath,
 
-                   null,
-                   null,
+                   HTTPServerName  ?? DefaultHTTPServerName,
+                   HTTPServiceName ?? DefaultHTTPServiceName,
+                   APIVersionHash,
                    APIVersionHashes,
 
                    DisableMaintenanceTasks,

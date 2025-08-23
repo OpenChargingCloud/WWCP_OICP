@@ -779,7 +779,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                          String?                                                  LoggingPath                  = null,
                          String                                                   LoggingContext               = CPOClientLogger.DefaultContext,
                          LogfileCreatorDelegate?                                  LogfileCreator               = null,
-                         DNSClient?                                               DNSClient                    = null)
+                         IDNSClient?                                              DNSClient                    = null)
 
             : base(RemoteURL           ?? DefaultRemoteURL,
                    VirtualHostname,

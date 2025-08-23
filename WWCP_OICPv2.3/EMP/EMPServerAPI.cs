@@ -610,6 +610,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                             String?                        ExternalDNSName           = null,
                             HTTPPath?                      BasePath                  = null,
+
+                            String?                        HTTPServerName            = DefaultHTTPServerName,
+                            String?                        HTTPServiceName           = DefaultHTTPServiceName,
+                            String?                        APIVersionHash            = null,
                             JObject?                       APIVersionHashes          = null,
 
                             Boolean                        RegisterRootService       = true,
@@ -641,6 +645,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                    ExternalDNSName,
                    BasePath,
+
+                   HTTPServerName  ?? DefaultHTTPServerName,
+                   HTTPServiceName ?? DefaultHTTPServiceName,
+                   APIVersionHash,
                    APIVersionHashes,
 
                    RegisterRootService,
@@ -697,7 +705,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                         return Task.FromResult(
                             new HTTPResponse.Builder(request) {
                                 HTTPStatusCode  = HTTPStatusCode.OK,
-                                Server          = DefaultServerName,
+                                Server          = HTTPServerName,
                                 Date            = Timestamp.Now,
                                 ContentType     = HTTPContentType.Text.PLAIN,
                                 Content         = $"This is an OICP {Version.String} EMP Server HTTP/JSON endpoint!".ToUTF8Bytes(),
@@ -716,7 +724,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                         return Task.FromResult(
                             new HTTPResponse.Builder(request) {
                                 HTTPStatusCode  = HTTPStatusCode.OK,
-                                Server          = DefaultServerName,
+                                Server          = HTTPServerName,
                                 Date            = Timestamp.Now,
                                 ContentType     = HTTPContentType.Text.PLAIN,
                                 Content         = $"This is an OICP {Version.String} CPO Server HTTP/JSON endpoint!".ToUTF8Bytes(),
@@ -907,7 +915,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     return new HTTPResponse.Builder(request) {
                                HTTPStatusCode             = HTTPStatusCode.OK,
-                               Server                     = DefaultServerName,
+                               Server                     = HTTPServerName,
                                Date                       = Timestamp.Now,
                                AccessControlAllowOrigin   = "*",
                                AccessControlAllowMethods  = [ "POST" ],
@@ -1098,7 +1106,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     return new HTTPResponse.Builder(request) {
                                HTTPStatusCode             = HTTPStatusCode.OK,
-                               Server                     = DefaultServerName,
+                               Server                     = HTTPServerName,
                                Date                       = Timestamp.Now,
                                AccessControlAllowOrigin   = "*",
                                AccessControlAllowMethods  = [ "POST" ],
@@ -1757,7 +1765,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     return new HTTPResponse.Builder(request) {
                                HTTPStatusCode             = HTTPStatusCode.OK,
-                               Server                     = DefaultServerName,
+                               Server                     = HTTPServerName,
                                Date                       = Timestamp.Now,
                                AccessControlAllowOrigin   = "*",
                                AccessControlAllowMethods  = [ "POST" ],
@@ -1949,7 +1957,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     return new HTTPResponse.Builder(request) {
                                HTTPStatusCode             = HTTPStatusCode.OK,
-                               Server                     = DefaultServerName,
+                               Server                     = HTTPServerName,
                                Date                       = Timestamp.Now,
                                AccessControlAllowOrigin   = "*",
                                AccessControlAllowMethods  = [ "POST" ],

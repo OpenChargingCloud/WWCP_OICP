@@ -543,6 +543,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                             String?                        ExternalDNSName           = null,
                             HTTPPath?                      BasePath                  = null,
+
+                            String?                        HTTPServerName            = DefaultHTTPServerName,
+                            String?                        HTTPServiceName           = DefaultHTTPServiceName,
+                            String?                        APIVersionHash            = null,
                             JObject?                       APIVersionHashes          = null,
 
                             Boolean                        RegisterRootService       = true,
@@ -574,6 +578,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                    ExternalDNSName,
                    BasePath,
+
+                   HTTPServerName  ?? DefaultHTTPServerName,
+                   HTTPServiceName ?? DefaultHTTPServiceName,
+                   APIVersionHash,
                    APIVersionHashes,
 
                    RegisterRootService,
@@ -630,7 +638,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         return Task.FromResult(
                             new HTTPResponse.Builder(request) {
                                 HTTPStatusCode  = HTTPStatusCode.OK,
-                                Server          = DefaultServerName,
+                                Server          = HTTPServerName,
                                 Date            = Timestamp.Now,
                                 ContentType     = HTTPContentType.Text.PLAIN,
                                 Content         = "This is an OICP v2.3 CPO Server HTTP/JSON endpoint!".ToUTF8Bytes(),
@@ -649,7 +657,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         return Task.FromResult(
                             new HTTPResponse.Builder(request) {
                                 HTTPStatusCode  = HTTPStatusCode.OK,
-                                Server          = DefaultServerName,
+                                Server          = HTTPServerName,
                                 Date            = Timestamp.Now,
                                 ContentType     = HTTPContentType.Text.PLAIN,
                                 Content         = "This is an OICP v2.3 CPO Server HTTP/JSON endpoint!".ToUTF8Bytes(),
@@ -863,7 +871,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     return new HTTPResponse.Builder(request) {
                                HTTPStatusCode             = HTTPStatusCode.OK,
-                               Server                     = DefaultServerName,
+                               Server                     = HTTPServerName,
                                Date                       = Timestamp.Now,
                                AccessControlAllowOrigin   = "*",
                                AccessControlAllowMethods  = [ "POST" ],
@@ -1079,7 +1087,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     return new HTTPResponse.Builder(request) {
                                HTTPStatusCode             = HTTPStatusCode.OK,
-                               Server                     = DefaultServerName,
+                               Server                     = HTTPServerName,
                                Date                       = Timestamp.Now,
                                AccessControlAllowOrigin   = "*",
                                AccessControlAllowMethods  = [ "POST" ],
@@ -1296,7 +1304,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     return new HTTPResponse.Builder(request) {
                                HTTPStatusCode             = HTTPStatusCode.OK,
-                               Server                     = DefaultServerName,
+                               Server                     = HTTPServerName,
                                Date                       = Timestamp.Now,
                                AccessControlAllowOrigin   = "*",
                                AccessControlAllowMethods  = [ "POST" ],
@@ -1512,7 +1520,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     return new HTTPResponse.Builder(request) {
                                HTTPStatusCode             = HTTPStatusCode.OK,
-                               Server                     = DefaultServerName,
+                               Server                     = HTTPServerName,
                                Date                       = Timestamp.Now,
                                AccessControlAllowOrigin   = "*",
                                AccessControlAllowMethods  = [ "POST" ],
@@ -1539,78 +1547,89 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         public static async Task<CPOServerAPI>
 
-            CreateServer(HTTPHostname?                                              HTTPHostname                 = null,
-                         String?                                                    ExternalDNSName              = null,
-                         IPPort?                                                    HTTPServerPort               = null,
-                         HTTPPath?                                                  BasePath                     = null,
-                         String                                                     HTTPServerName               = DefaultHTTPServerName,
+            CreateServer(HTTPHostname?                                             HTTPHostname                 = null,
+                         String?                                                   ExternalDNSName              = null,
+                         IPPort?                                                   HTTPServerPort               = null,
+                         HTTPPath?                                                 BasePath                     = null,
+                         String                                                    HTTPServerName               = DefaultHTTPServerName,
 
-                         HTTPPath?                                                  URLPathPrefix                = null,
-                         String                                                     HTTPServiceName              = DefaultHTTPServiceName,
-                         JObject?                                                   APIVersionHashes             = null,
+                         HTTPPath?                                                 URLPathPrefix                = null,
+                         String                                                    HTTPServiceName              = DefaultHTTPServiceName,
+                         JObject?                                                  APIVersionHashes             = null,
 
-                         ServerCertificateSelectorDelegate?                         ServerCertificateSelector    = null,
-                         LocalCertificateSelectionHandler?                          LocalCertificateSelector     = null,
-                         RemoteTLSClientCertificateValidationHandler<IHTTPServer>?  ClientCertificateValidator   = null,
-                         SslProtocols?                                              AllowedTLSProtocols          = null,
-                         Boolean?                                                   ClientCertificateRequired    = null,
-                         Boolean?                                                   CheckCertificateRevocation   = null,
+                         ServerCertificateSelectorDelegate?                        ServerCertificateSelector    = null,
+                         RemoteTLSClientCertificateValidationHandler<ITCPServer>?  ClientCertificateValidator   = null,
+                         LocalCertificateSelectionHandler?                         LocalCertificateSelector     = null,
+                         SslProtocols?                                             AllowedTLSProtocols          = null,
+                         Boolean?                                                  ClientCertificateRequired    = null,
+                         Boolean?                                                  CheckCertificateRevocation   = null,
 
-                         ConnectionIdBuilder?                                       ConnectionIdBuilder          = null,
-                         TimeSpan?                                                  ConnectionTimeout            = null,
-                         UInt32?                                                    MaxClientConnections         = null,
+                         ConnectionIdBuilder?                                      ConnectionIdBuilder          = null,
+                         TimeSpan?                                                 ConnectionTimeout            = null,
+                         UInt32?                                                   MaxClientConnections         = null,
 
-                         Boolean?                                                   DisableMaintenanceTasks      = false,
-                         TimeSpan?                                                  MaintenanceInitialDelay      = null,
-                         TimeSpan?                                                  MaintenanceEvery             = null,
+                         Boolean?                                                  DisableMaintenanceTasks      = false,
+                         TimeSpan?                                                 MaintenanceInitialDelay      = null,
+                         TimeSpan?                                                 MaintenanceEvery             = null,
 
-                         Boolean?                                                   DisableWardenTasks           = false,
-                         TimeSpan?                                                  WardenInitialDelay           = null,
-                         TimeSpan?                                                  WardenCheckEvery             = null,
+                         Boolean?                                                  DisableWardenTasks           = false,
+                         TimeSpan?                                                 WardenInitialDelay           = null,
+                         TimeSpan?                                                 WardenCheckEvery             = null,
 
-                         Boolean?                                                   IsDevelopment                = null,
-                         IEnumerable<String>?                                       DevelopmentServers           = null,
-                         Boolean                                                    DisableLogging               = false,
-                         String                                                     LoggingPath                  = DefaultHTTPAPI_LoggingPath,
-                         String                                                     LoggingContext               = DefaultLoggingContext,
-                         String                                                     LogfileName                  = DefaultHTTPAPI_LogfileName,
-                         LogfileCreatorDelegate?                                    LogfileCreator               = null,
-                         DNSClient?                                                 DNSClient                    = null,
-                         Boolean                                                    AutoStart                    = false,
+                         Boolean?                                                  IsDevelopment                = null,
+                         IEnumerable<String>?                                      DevelopmentServers           = null,
+                         Boolean                                                   DisableLogging               = false,
+                         String                                                    LoggingPath                  = DefaultHTTPAPI_LoggingPath,
+                         String                                                    LoggingContext               = DefaultLoggingContext,
+                         String                                                    LogfileName                  = DefaultHTTPAPI_LogfileName,
+                         LogfileCreatorDelegate?                                   LogfileCreator               = null,
+                         IDNSClient?                                               DNSClient                    = null,
+                         Boolean                                                   AutoStart                    = false,
 
-                         IEnumerable<HTTPHostname>?                                 Hostnames                    = null,
-                         HTTPPath?                                                  RootPath                     = null,
-                         IEnumerable<HTTPContentType>?                              HTTPContentTypes             = null,
-                         I18NString?                                                Description                  = null)
+                         IEnumerable<HTTPHostname>?                                Hostnames                    = null,
+                         HTTPPath?                                                 RootPath                     = null,
+                         IEnumerable<HTTPContentType>?                             HTTPContentTypes             = null,
+                         I18NString?                                               Description                  = null)
 
         {
 
             var server  = new HTTPTestServerX(
-                              IPAddress:             null,
-                              TCPPort:               HTTPServerPort,
-                              HTTPServerName:        HTTPServerName,
-                              BufferSize:            null,
-                              ReceiveTimeout:        null,
-                              SendTimeout:           null,
-                              LoggingHandler:        null
+                              IPAddress:                   null,
+                              TCPPort:                     HTTPServerPort,
+                              HTTPServerName:              HTTPServerName,
+                              BufferSize:                  null,
+                              ReceiveTimeout:              null,
+                              SendTimeout:                 null,
+                              LoggingHandler:              null,
+
+                              ServerCertificateSelector:   ServerCertificateSelector,
+                              ClientCertificateValidator:  ClientCertificateValidator,
+                              LocalCertificateSelector:    LocalCertificateSelector,
+                              AllowedTLSProtocols:         AllowedTLSProtocols,
+                              ClientCertificateRequired:   ClientCertificateRequired,
+                              CheckCertificateRevocation:  CheckCertificateRevocation,
+
+                              ConnectionIdBuilder:         ConnectionIdBuilder,
+                              MaxClientConnections:        MaxClientConnections,
+                              DNSClient:                   DNSClient
                           );
 
             var api     = new CPOServerAPI(
 
-                              HTTPTestServer:        server,
-                              Hostnames:             Hostnames,
-                              RootPath:              RootPath,
-                              HTTPContentTypes:      HTTPContentTypes,
-                              Description:           Description,
+                              HTTPTestServer:              server,
+                              Hostnames:                   Hostnames,
+                              RootPath:                    RootPath,
+                              HTTPContentTypes:            HTTPContentTypes,
+                              Description:                 Description,
 
-                              RegisterRootService:   true,
-                              URLPathPrefix:         URLPathPrefix,
+                              RegisterRootService:         true,
+                              URLPathPrefix:               URLPathPrefix,
 
-                              DisableLogging:        DisableLogging,
-                              LoggingPath:           LoggingPath,
-                              LoggingContext:        LoggingContext,
-                              LogfileName:           LogfileName,
-                              LogfileCreator:        LogfileCreator
+                              DisableLogging:              DisableLogging,
+                              LoggingPath:                 LoggingPath,
+                              LoggingContext:              LoggingContext,
+                              LogfileName:                 LogfileName,
+                              LogfileCreator:              LogfileCreator
 
                           );
 

@@ -73,7 +73,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            UInt32?                                                    InternalBufferSize           = null,
                            Boolean?                                                   UseHTTPPipelining            = null,
                            Boolean?                                                   DisableLogging               = null,
-                           DNSClient?                                                 DNSClient                    = null)
+                           IDNSClient?                                                DNSClient                    = null)
 
             : base(RemoteURL,
                    VirtualHostname,
