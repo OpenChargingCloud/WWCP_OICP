@@ -1141,7 +1141,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static IEnumerable<AuthenticationModes> ToOICP(this IEnumerable<WWCP.AuthenticationModes> AuthenticationModes)
         {
 
-            if (AuthenticationModes == null)
+            if (AuthenticationModes is null)
                 return [];
 
             var authenticationModes = new List<AuthenticationModes>();

@@ -661,7 +661,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             GeoCoordinates  = default;
 
-            if (JSON == null || !JSON.HasValues)
+            if (JSON is null || !JSON.HasValues)
             {
                 ErrorResponse = "The given JSON representation of geo coordinates must not be null or empty!";
                 return false;
@@ -696,8 +696,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 var latitude  = DecimalDegreeFormat[nameof(Latitude)]?. Value<String>();
                 var longitude = DecimalDegreeFormat[nameof(Longitude)]?.Value<String>();
 
-                if (latitude  != null &&
-                    longitude != null &&
+                if (latitude  is not null &&
+                    longitude is not null &&
                     TryParseLatLng(latitude,
                                    longitude,
                                    out GeoCoordinates? geoCoordinates,
@@ -725,8 +725,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 var latitude  = DegreeMinuteSecondsFormat[nameof(Latitude)]?. Value<String>();
                 var longitude = DegreeMinuteSecondsFormat[nameof(Longitude)]?.Value<String>();
 
-                if (latitude  != null &&
-                    longitude != null &&
+                if (latitude  is not null &&
+                    longitude is not null &&
                     TryParseLatLng(latitude,
                                    longitude,
                                    out GeoCoordinates? geoCoordinates,

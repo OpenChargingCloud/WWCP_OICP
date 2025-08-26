@@ -1818,7 +1818,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Add the eMAId to the list of valid eMAIds
 
-            if (eMAIds == null && RemoteAuthentication?.RemoteIdentification.HasValue == true)
+            if (eMAIds is null && RemoteAuthentication?.RemoteIdentification.HasValue == true)
                 eMAIds = [ RemoteAuthentication.RemoteIdentification.Value ];
 
             if (eMAIds is not null && RemoteAuthentication?.RemoteIdentification.HasValue == true && !eMAIds.Contains(RemoteAuthentication.RemoteIdentification.Value))

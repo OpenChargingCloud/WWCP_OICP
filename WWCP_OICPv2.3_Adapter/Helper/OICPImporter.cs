@@ -389,7 +389,7 @@
 
 //            #region Initial checks
 
-//            if (RoamingNetwork == null)
+//            if (RoamingNetwork is null)
 //                throw new ArgumentNullException("The given roaming network must not be null or empty!");
 
 //            #endregion
@@ -574,7 +574,7 @@
 //            if (Hostname.IsNullOrEmpty())
 //                throw new ArgumentNullException(nameof(Hostname),        "The given upstream service hostname must not be null or empty!");
 
-//            if (TCPPort == null)
+//            if (TCPPort is null)
 //                throw new ArgumentNullException(nameof(TCPPort),         "The given upstream service TCP port must not be null!");
 
 //            #endregion
@@ -680,10 +680,10 @@
 //            if (Hostname.IsNullOrEmpty())
 //                throw new ArgumentNullException("The given upstream service hostname must not be null or empty!");
 
-//            if (TCPPort == null)
+//            if (TCPPort is null)
 //                throw new ArgumentNullException("The given upstream service TCP port must not be null!");
 
-//            if (ProviderId == null)
+//            if (ProviderId is null)
 //                throw new ArgumentNullException("The given EV Service Provider identification (EVSP Id) must not be null!");
 
 //            #endregion
@@ -1120,7 +1120,7 @@
 //                            DebugX.Log("Could not fetch the list of EVSE Ids for dynamic EVSE status update!");
 //                        }
 
-//                        if (EVSEIds == null)
+//                        if (EVSEIds is null)
 //                            DebugX.Log("Could not fetch the list of EVSE Ids for dynamic EVSE status update!");
 
 //                        #endregion

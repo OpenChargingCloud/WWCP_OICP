@@ -187,7 +187,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         //    : this()
         //{
 
-        //    if (I18NPairs != null)
+        //    if (I18NPairs is not null)
         //        foreach (var Text in I18NPairs)
         //            I18NTexts.Add(Text.Language, Text.Text);
 
@@ -205,7 +205,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         //    : this()
         //{
 
-        //    if (I18NPairs != null)
+        //    if (I18NPairs is not null)
         //        foreach (var Text in I18NPairs)
         //            I18NTexts.Add(Text.Language, Text.Text);
 

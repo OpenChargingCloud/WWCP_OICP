@@ -571,8 +571,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                ((!ExpiryDate.HasValue && !RFIDIdentification.ExpiryDate.HasValue) ||
                  (ExpiryDate.HasValue &&  RFIDIdentification.ExpiryDate.HasValue && ExpiryDate.Value.Equals(RFIDIdentification.ExpiryDate.Value))) &&
 
-               ((PrintedNumber == null && RFIDIdentification.PrintedNumber == null) ||
-                (PrintedNumber != null && RFIDIdentification.PrintedNumber != null &&
+               ((PrintedNumber is null && RFIDIdentification.PrintedNumber is null) ||
+                (PrintedNumber is not null && RFIDIdentification.PrintedNumber is not null &&
                  String.Compare(PrintedNumber,
                                 RFIDIdentification.PrintedNumber,
                                 StringComparison.OrdinalIgnoreCase) == 0));

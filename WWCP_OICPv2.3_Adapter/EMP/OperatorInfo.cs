@@ -195,7 +195,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         //    //_ChargingPools.Values.
         //    //    SelectMany(cpinfo => cpinfo.ChargingStations).
         //    //    ForEach   (csinfo => {
-        //    //        if (csinfo.StationId == null)
+        //    //        if (csinfo.StationId is null)
         //    //        {
 
         //    //            csinfo.StationId = ChargingStation_Id.Parse(csinfo.ChargePoolInfo.OperatorInfo.OperatorId,

@@ -2133,7 +2133,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 {
 
                     if (lockTaken &&
-                        (IncludeEVSEs == null || IncludeEVSEs(EVSE)))
+                        (IncludeEVSEs is null || IncludeEVSEs(EVSE)))
                     {
 
                         evsesToRemoveQueue.Add(EVSE);
