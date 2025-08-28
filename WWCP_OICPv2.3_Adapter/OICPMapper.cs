@@ -1316,7 +1316,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             return new ChargingFacility(
                        powerType,
                                                               Convert.ToUInt32(EVSE.MaxPower.  Value.Value),
-                       EVSE.RMSVoltage.HasValue ? new UInt32?(Convert.ToUInt32(EVSE.RMSVoltage.Value.Value)) : null,
+                       EVSE.MaxVoltage.HasValue ? new UInt32?(Convert.ToUInt32(EVSE.MaxVoltage.Value.Value)) : null,
                        EVSE.MaxCurrent.HasValue ? new UInt32?(Convert.ToUInt32(EVSE.MaxCurrent.Value.Value)) : null,
                        EVSE.ChargingModes.Select(chargingMode => chargingMode.ToOICP())
                    );
@@ -1365,7 +1365,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        new ChargingFacility(
                            powerType,
                                                                       Convert.ToUInt32(EVSE.MaxPower.      Value.Value),
-                           EVSE.RMSVoltage.HasValue ? new UInt32?(Convert.ToUInt32(EVSE.RMSVoltage.Value.Value)) : null,
+                           EVSE.MaxVoltage.HasValue ? new UInt32?(Convert.ToUInt32(EVSE.MaxVoltage.Value.Value)) : null,
                            EVSE.MaxCurrent.    HasValue ? new UInt32?(Convert.ToUInt32(EVSE.MaxCurrent.    Value.Value)) : null,
                            EVSE.ChargingModes.Select(chargingMode => chargingMode.ToOICP())
                        )
