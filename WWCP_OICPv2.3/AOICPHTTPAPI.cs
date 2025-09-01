@@ -103,78 +103,40 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="LogfileCreator">A delegate for creating the name of the logfile for this API.</param>
         /// <param name="DNSClient">The DNS client of the API.</param>
         /// <param name="AutoStart">Whether to start the API automatically.</param>
-        public AOICPHTTPAPI(//HTTPHostname?                                              HTTPHostname                 = null,
-                            //String?                                                    ExternalDNSName              = null,
-                            //IPPort?                                                    HTTPServerPort               = null,
-                            //HTTPPath?                                                  BasePath                     = null,
-                            //String                                                     HTTPServerName               = DefaultHTTPServerName,
-                            //
-                            //HTTPPath?                                                  URLPathPrefix                = null,
-                            //String                                                     HTTPServiceName              = DefaultHTTPServiceName,
-                            //JObject?                                                   APIVersionHashes             = null,
-                            //
-                            //ServerCertificateSelectorDelegate?                         ServerCertificateSelector    = null,
-                            //LocalCertificateSelectionHandler?                          LocalCertificateSelector     = null,
-                            //RemoteTLSClientCertificateValidationHandler<IHTTPServer>?  ClientCertificateValidator   = null,
-                            //SslProtocols?                                              AllowedTLSProtocols          = null,
-                            //Boolean?                                                   ClientCertificateRequired    = null,
-                            //Boolean?                                                   CheckCertificateRevocation   = null,
-                            //
-                            //ConnectionIdBuilder?                                       ConnectionIdBuilder          = null,
-                            //TimeSpan?                                                  ConnectionTimeout            = null,
-                            //UInt32?                                                    MaxClientConnections         = null,
+        public AOICPHTTPAPI(HTTPTestServerX?               HTTPTestServer            = null,
+                            IEnumerable<HTTPHostname>?     Hostnames                 = null,
+                            HTTPPath?                      RootPath                  = null,
+                            IEnumerable<HTTPContentType>?  HTTPContentTypes          = null,
+                            I18NString?                    Description               = null,
 
-                            //Boolean?                                                   DisableMaintenanceTasks      = false,
-                            //TimeSpan?                                                  MaintenanceInitialDelay      = null,
-                            //TimeSpan?                                                  MaintenanceEvery             = null,
+                            String?                        ExternalDNSName           = null,
+                            HTTPPath?                      BasePath                  = null,
 
-                            //Boolean?                                                   DisableWardenTasks           = false,
-                            //TimeSpan?                                                  WardenInitialDelay           = null,
-                            //TimeSpan?                                                  WardenCheckEvery             = null,
+                            String?                        HTTPServerName            = null,
+                            String?                        HTTPServiceName           = null,
+                            String?                        APIVersionHash            = null,
+                            JObject?                       APIVersionHashes          = null,
 
-                            //Boolean?                                                   IsDevelopment                = null,
-                            //IEnumerable<String>?                                       DevelopmentServers           = null,
-                            //Boolean                                                    DisableLogging               = false,
-                            //String                                                     LoggingPath                  = DefaultHTTPAPI_LoggingPath,
-                            //String                                                     LoggingContext               = DefaultLoggingContext,
-                            //String                                                     LogfileName                  = DefaultHTTPAPI_LogfileName,
-                            //LogfileCreatorDelegate?                                    LogfileCreator               = null,
-                            //DNSClient?                                                 DNSClient                    = null,
-                            //Boolean                                                    AutoStart                    = false)
-                            HTTPTestServerX?               HTTPTestServer        = null,
-                            IEnumerable<HTTPHostname>?     Hostnames             = null,
-                            HTTPPath?                      RootPath              = null,
-                            IEnumerable<HTTPContentType>?  HTTPContentTypes      = null,
-                            I18NString?                    Description           = null,
+                            Boolean                        RegisterRootService       = true,
+                            HTTPPath?                      URLPathPrefix             = null,
+                            Formatting?                    JSONFormatting            = null,
+                            ConnectionType?                Connection                = null,
 
-                            String?                        ExternalDNSName       = null,
-                            HTTPPath?                      BasePath              = null,
+                            Boolean?                       DisableMaintenanceTasks   = false,
+                            TimeSpan?                      MaintenanceInitialDelay   = null,
+                            TimeSpan?                      MaintenanceEvery          = null,
 
-                            String?                        HTTPServerName        = null,
-                            String?                        HTTPServiceName       = null,
-                            String?                        APIVersionHash        = null,
-                            JObject?                       APIVersionHashes      = null,
+                            Boolean?                       DisableWardenTasks        = false,
+                            TimeSpan?                      WardenInitialDelay        = null,
+                            TimeSpan?                      WardenCheckEvery          = null,
 
-                            Boolean                        RegisterRootService   = true,
-                            HTTPPath?                      URLPathPrefix         = null,
-                            Formatting?                    JSONFormatting        = null,
-                            ConnectionType?                Connection            = null,
-
-                            Boolean?                                                   DisableMaintenanceTasks      = false,
-                            TimeSpan?                                                  MaintenanceInitialDelay      = null,
-                            TimeSpan?                                                  MaintenanceEvery             = null,
-
-                            Boolean?                                                   DisableWardenTasks           = false,
-                            TimeSpan?                                                  WardenInitialDelay           = null,
-                            TimeSpan?                                                  WardenCheckEvery             = null,
-
-                            Boolean?                                                   IsDevelopment                = null,
-                            IEnumerable<String>?                                       DevelopmentServers           = null,
-                            Boolean                                                    DisableLogging               = false,
-                            String                                                     LoggingPath                  = DefaultHTTPAPI_LoggingPath,
-                            String                                                     LoggingContext               = DefaultLoggingContext,
-                            String                                                     LogfileName                  = DefaultHTTPAPI_LogfileName,
-                            LogfileCreatorDelegate?                                    LogfileCreator               = null)
+                            Boolean?                       IsDevelopment             = null,
+                            IEnumerable<String>?           DevelopmentServers        = null,
+                            Boolean                        DisableLogging            = false,
+                            String                         LoggingPath               = DefaultHTTPAPI_LoggingPath,
+                            String                         LoggingContext            = DefaultLoggingContext,
+                            String                         LogfileName               = DefaultHTTPAPI_LogfileName,
+                            LogfileCreatorDelegate?        LogfileCreator            = null)
 
             : base(HTTPTestServer,
                    Hostnames,
@@ -182,21 +144,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                    HTTPContentTypes,
                    Description,
 
-            //: base(HTTPHostname,
-            //       ExternalDNSName,
-            //       HTTPServerPort,
-            //       BasePath,
-
-            //       URLPathPrefix,
-            //       null, //HTMLTemplate,
-
-            //       ConnectionIdBuilder,
-            //       ConnectionTimeout,
-            //       MaxClientConnections,
-
-                   ExternalDNSName,
                    BasePath,
 
+                   ExternalDNSName,
                    HTTPServerName  ?? DefaultHTTPServerName,
                    HTTPServiceName ?? DefaultHTTPServiceName,
                    APIVersionHash,
