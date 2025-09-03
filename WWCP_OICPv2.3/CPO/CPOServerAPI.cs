@@ -696,9 +696,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             //     "PartnerProductID": null
             // }
 
-            // ---------------------------------------------------------------------------------------------------------------------------------------------------
-            // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3000/api/oicp/charging/v21/providers/{providerId}/authorize-remote-reservation/start
-            // ---------------------------------------------------------------------------------------------------------------------------------------------------
+            // ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            // curl -v -k -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3001/api/oicp/charging/v21/providers/{providerId}/authorize-remote-reservation/start
+            // ------------------------------------------------------------------------------------------------------------------------------------------------------------------
             AddHandler(
                 HTTPMethod.POST,
                 URLPathPrefix + HTTPPath.Parse($"api/oicp/charging/v21/providers/{{{OICPExtensions.ProviderId}}}/authorize-remote-reservation/start"),
@@ -912,9 +912,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             //     "PartnerProductID": null
             // }
 
-            // --------------------------------------------------------------------------------------------------------------------------------------------------
-            // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3000/api/oicp/charging/v21/providers/{providerId}/authorize-remote-reservation/stop
-            // --------------------------------------------------------------------------------------------------------------------------------------------------
+            // ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            // curl -v -k -X POST -H "Accept: application/json" -d "test" https://127.0.0.1:3001/api/oicp/charging/v21/providers/{providerId}/authorize-remote-reservation/stop
+            // ------------------------------------------------------------------------------------------------------------------------------------------------------------------
             AddHandler(
                 HTTPMethod.POST,
                 URLPathPrefix + HTTPPath.Parse($"api/oicp/charging/v21/providers/{{{OICPExtensions.ProviderId}}}/authorize-remote-reservation/stop"),
@@ -1129,9 +1129,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             //     "PartnerProductID": null
             // }
 
-            // ---------------------------------------------------------------------------------------------------------------------------------------------------
-            // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3000/api/oicp/charging/v21/providers/{providerId}/authorize-remote/start
-            // ---------------------------------------------------------------------------------------------------------------------------------------------------
+            // -------------------------------------------------------------------------------------------------------------------------------------------------------
+            // curl -v -k -X POST -H "Accept: application/json" -d "test" https://127.0.0.1:3001/api/oicp/charging/v21/providers/{providerId}/authorize-remote/start
+            // -------------------------------------------------------------------------------------------------------------------------------------------------------
             AddHandler(
                 HTTPMethod.POST,
                 URLPathPrefix + HTTPPath.Parse($"api/oicp/charging/v21/providers/{{{OICPExtensions.ProviderId}}}/authorize-remote/start"),
@@ -1345,9 +1345,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             //     "PartnerProductID": null
             // }
 
-            // --------------------------------------------------------------------------------------------------------------------------------------------------
-            // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3000/api/oicp/charging/v21/providers/{providerId}/authorize-remote/stop
-            // --------------------------------------------------------------------------------------------------------------------------------------------------
+            // ------------------------------------------------------------------------------------------------------------------------------------------------------
+            // curl -v -k -X POST -H "Accept: application/json" -d "test" https://127.0.0.1:3001/api/oicp/charging/v21/providers/{providerId}/authorize-remote/stop
+            // ------------------------------------------------------------------------------------------------------------------------------------------------------
             AddHandler(
                 HTTPMethod.POST,
                 URLPathPrefix + HTTPPath.Parse($"api/oicp/charging/v21/providers/{{{OICPExtensions.ProviderId}}}/authorize-remote/stop"),
@@ -1547,13 +1547,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         public static async Task<CPOServerAPI>
 
-            CreateServer(HTTPHostname?                                             HTTPHostname                 = null,
-                         String?                                                   ExternalDNSName              = null,
+            CreateServer(IIPAddress?                                               IPAddress                    = null,
                          IPPort?                                                   HTTPServerPort               = null,
+                         HTTPHostname?                                             HTTPHostname                 = null,
+                         String?                                                   ExternalDNSName              = null,
                          HTTPPath?                                                 BasePath                     = null,
-                         String                                                    HTTPServerName               = DefaultHTTPServerName,
 
                          HTTPPath?                                                 URLPathPrefix                = null,
+                         String                                                    HTTPServerName               = DefaultHTTPServerName,
                          String                                                    HTTPServiceName              = DefaultHTTPServiceName,
                          JObject?                                                  APIVersionHashes             = null,
 
@@ -1594,7 +1595,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         {
 
             var server  = new HTTPTestServerX(
-                              IPAddress:                   null,
+                              IPAddress:                   IPAddress,
                               TCPPort:                     HTTPServerPort,
                               HTTPServerName:              HTTPServerName,
                               BufferSize:                  null,
@@ -1621,6 +1622,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                               RootPath:                    RootPath,
                               HTTPContentTypes:            HTTPContentTypes,
                               Description:                 Description,
+
+                              // HTTPServerName
+                              // HTTPServiceName
 
                               RegisterRootService:         true,
                               URLPathPrefix:               URLPathPrefix,
