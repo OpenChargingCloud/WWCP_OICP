@@ -535,7 +535,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="LoggingPath">The path for all logfiles.</param>
         /// <param name="LoggingContext">The context of all logfiles.</param>
         /// <param name="LogfileCreator">A delegate for creating the name of the logfile for this API.</param>
-        public CPOServerAPI(HTTPTestServerX?               HTTPTestServer            = null,
+        public CPOServerAPI(HTTPTestServerX                HTTPServer,
                             IEnumerable<HTTPHostname>?     Hostnames                 = null,
                             HTTPPath?                      RootPath                  = null,
                             IEnumerable<HTTPContentType>?  HTTPContentTypes          = null,
@@ -570,7 +570,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             String                         LogfileName               = DefaultHTTPAPI_LogfileName,
                             LogfileCreatorDelegate?        LogfileCreator            = null)
 
-            : base(HTTPTestServer,
+            : base(HTTPServer,
                    Hostnames,
                    RootPath,
                    HTTPContentTypes,
@@ -584,7 +584,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                    APIVersionHash,
                    APIVersionHashes,
 
-                   RegisterRootService,
                    URLPathPrefix,
                    JSONFormatting,
                    Connection,
@@ -1550,12 +1549,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             CreateServer(IIPAddress?                                               IPAddress                    = null,
                          IPPort?                                                   HTTPServerPort               = null,
                          HTTPHostname?                                             HTTPHostname                 = null,
+
                          String?                                                   ExternalDNSName              = null,
                          HTTPPath?                                                 BasePath                     = null,
 
-                         HTTPPath?                                                 URLPathPrefix                = null,
-                         String                                                    HTTPServerName               = DefaultHTTPServerName,
-                         String                                                    HTTPServiceName              = DefaultHTTPServiceName,
+                         String?                                                   HTTPServerName               = DefaultHTTPServerName,
+                         String?                                                   HTTPServiceName              = DefaultHTTPServiceName,
+                         String?                                                   APIVersionHash               = null,
                          JObject?                                                  APIVersionHashes             = null,
 
                          ServerCertificateSelectorDelegate?                        ServerCertificateSelector    = null,
@@ -1590,50 +1590,74 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                          IEnumerable<HTTPHostname>?                                Hostnames                    = null,
                          HTTPPath?                                                 RootPath                     = null,
                          IEnumerable<HTTPContentType>?                             HTTPContentTypes             = null,
-                         I18NString?                                               Description                  = null)
+                         I18NString?                                               Description                  = null,
+
+                         Boolean                                                   RegisterRootService          = true,
+                         HTTPPath?                                                 URLPathPrefix                = null,
+                         Formatting?                                               JSONFormatting               = null,
+                         ConnectionType?                                           Connection                   = null)
 
         {
 
             var server  = new HTTPTestServerX(
-                              IPAddress:                   IPAddress,
-                              TCPPort:                     HTTPServerPort,
-                              HTTPServerName:              HTTPServerName,
-                              BufferSize:                  null,
-                              ReceiveTimeout:              null,
-                              SendTimeout:                 null,
-                              LoggingHandler:              null,
 
-                              ServerCertificateSelector:   ServerCertificateSelector,
-                              ClientCertificateValidator:  ClientCertificateValidator,
-                              LocalCertificateSelector:    LocalCertificateSelector,
-                              AllowedTLSProtocols:         AllowedTLSProtocols,
-                              ClientCertificateRequired:   ClientCertificateRequired,
-                              CheckCertificateRevocation:  CheckCertificateRevocation,
+                              IPAddress:                    IPAddress,
+                              TCPPort:                      HTTPServerPort,
+                              HTTPServerName:               HTTPServerName,
+                              BufferSize:                   null,
+                              ReceiveTimeout:               null,
+                              SendTimeout:                  null,
+                              LoggingHandler:               null,
 
-                              ConnectionIdBuilder:         ConnectionIdBuilder,
-                              MaxClientConnections:        MaxClientConnections,
-                              DNSClient:                   DNSClient
+                              ServerCertificateSelector:    ServerCertificateSelector,
+                              ClientCertificateValidator:   ClientCertificateValidator,
+                              LocalCertificateSelector:     LocalCertificateSelector,
+                              AllowedTLSProtocols:          AllowedTLSProtocols,
+                              ClientCertificateRequired:    ClientCertificateRequired,
+                              CheckCertificateRevocation:   CheckCertificateRevocation,
+
+                              ConnectionIdBuilder:          ConnectionIdBuilder,
+                              MaxClientConnections:         MaxClientConnections,
+                              DNSClient:                    DNSClient
+
                           );
 
             var api     = new CPOServerAPI(
 
-                              HTTPTestServer:              server,
-                              Hostnames:                   Hostnames,
-                              RootPath:                    RootPath,
-                              HTTPContentTypes:            HTTPContentTypes,
-                              Description:                 Description,
+                              HTTPServer:                server,
+                              Hostnames:                 Hostnames,
+                              RootPath:                  RootPath,
+                              HTTPContentTypes:          HTTPContentTypes,
+                              Description:               Description,
 
-                              // HTTPServerName
-                              // HTTPServiceName
+                              ExternalDNSName:           ExternalDNSName,
+                              BasePath:                  BasePath,
 
-                              RegisterRootService:         true,
-                              URLPathPrefix:               URLPathPrefix,
+                              HTTPServerName:            HTTPServerName,
+                              HTTPServiceName:           HTTPServiceName,
+                              APIVersionHash:            APIVersionHash,
+                              APIVersionHashes:          APIVersionHashes,
 
-                              DisableLogging:              DisableLogging,
-                              LoggingPath:                 LoggingPath,
-                              LoggingContext:              LoggingContext,
-                              LogfileName:                 LogfileName,
-                              LogfileCreator:              LogfileCreator
+                              RegisterRootService:       RegisterRootService,
+                              URLPathPrefix:             URLPathPrefix,
+                              JSONFormatting:            JSONFormatting,
+                              Connection:                Connection,
+
+                              DisableMaintenanceTasks:   DisableMaintenanceTasks,
+                              MaintenanceInitialDelay:   MaintenanceInitialDelay,
+                              MaintenanceEvery:          MaintenanceEvery,
+
+                              DisableWardenTasks:        DisableWardenTasks,
+                              WardenInitialDelay:        WardenInitialDelay,
+                              WardenCheckEvery:          WardenCheckEvery,
+
+                              IsDevelopment:             IsDevelopment,
+                              DevelopmentServers:        DevelopmentServers,
+                              DisableLogging:            DisableLogging,
+                              LoggingPath:               LoggingPath,
+                              LoggingContext:            LoggingContext,
+                              LogfileName:               LogfileName,
+                              LogfileCreator:            LogfileCreator
 
                           );
 

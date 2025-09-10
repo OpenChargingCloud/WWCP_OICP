@@ -602,7 +602,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// Create a new EMP HTTP Server API.
         /// </summary>
-        public EMPServerAPI(HTTPTestServerX?               HTTPTestServer            = null,
+        public EMPServerAPI(HTTPTestServerX                HTTPTestServer,
                             IEnumerable<HTTPHostname>?     Hostnames                 = null,
                             HTTPPath?                      RootPath                  = null,
                             IEnumerable<HTTPContentType>?  HTTPContentTypes          = null,
@@ -651,7 +651,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                    APIVersionHash,
                    APIVersionHashes,
 
-                   RegisterRootService,
                    URLPathPrefix,
                    JSONFormatting,
                    Connection,

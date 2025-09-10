@@ -24,7 +24,6 @@ using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
-using org.GraphDefined.Vanaheimr.Hermod.Sockets.TCP;
 using org.GraphDefined.Vanaheimr.Hermod.HTTPTest;
 
 #endregion
@@ -38,10 +37,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// <remarks>
     /// Create a new EMP roaming.
     /// </remarks>
-    /// <param name="EMPClient">An EMP client.</param>
-    /// <param name="EMPServer">An optional EMP Server.</param>
-    public class EMPRoaming(EMPClient      EMPClient,
-                            EMPServerAPI?  EMPServer   = null) : IEMPClient
+    /// <param name="EMPClient">An EMP Client.</param>
+    /// <param name="EMPServer">An EMP Server API.</param>
+    public class EMPRoaming(EMPClient     EMPClient,
+                            EMPServerAPI  EMPServer) : IEMPClient
     {
 
         #region Properties
@@ -49,12 +48,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// The EMP client part.
         /// </summary>
-        public EMPClient     EMPClient    { get; } = EMPClient ?? throw new ArgumentNullException(nameof(EMPClient), "The given EMPClient must not be null!");
+        public EMPClient     EMPClient    { get; } = EMPClient;
 
         /// <summary>
         /// The EMP server part.
         /// </summary>
-        public EMPServerAPI  EMPServer    { get; } = EMPServer ?? new EMPServerAPI();
+        public EMPServerAPI  EMPServer    { get; } = EMPServer;
+
 
         #region IEMPClient
 

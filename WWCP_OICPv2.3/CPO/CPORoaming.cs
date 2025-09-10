@@ -35,8 +35,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// The CPO roaming object combines the CPO client and CPO server
     /// and adds additional logging for both.
     /// </summary>
-    /// <param name="CPOClient">A CPO client.</param>
-    /// <param name="CPOServer">A CPO sever.</param>
+    /// <param name="CPOClient">A CPO Client.</param>
+    /// <param name="CPOServer">A CPO Server API.</param>
     public class CPORoaming(CPOClient     CPOClient,
                             CPOServerAPI  CPOServer) : ICPOClient
     {
@@ -46,12 +46,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// The CPO client.
         /// </summary>
-        public CPOClient     CPOClient    { get; } = CPOClient ?? throw new ArgumentNullException(nameof(CPOClient), "The given CPOClient must not be null!");
+        public CPOClient     CPOClient    { get; } = CPOClient;
 
         /// <summary>
         /// The CPO server.
         /// </summary>
-        public CPOServerAPI  CPOServer    { get; } = CPOServer ?? new CPOServerAPI();
+        public CPOServerAPI  CPOServer    { get; } = CPOServer;
+
 
         #region ICPOClient
 

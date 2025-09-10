@@ -50,12 +50,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Properties
 
-        /// <summary>
-        /// The optional URL path prefix, used when defining URL templates.
-        /// </summary>
-        public HTTPPath         URLPathPrefix     { get; }
-
-
         public Formatting       JSONFormatting    { get; }
 
 
@@ -78,15 +72,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="HTTPServiceName">The name of the HTTP service.</param>
         /// <param name="APIVersionHashes">The API version hashes (git commit hash values).</param>
         /// 
-        /// <param name="ServerCertificateSelector">An optional delegate to select a TLS server certificate.</param>
-        /// <param name="ClientCertificateValidator">An optional delegate to verify the TLS client certificate used for authentication.</param>
-        /// <param name="LocalCertificateSelector">An optional delegate to select the TLS client certificate used for authentication.</param>
-        /// <param name="AllowedTLSProtocols">The TLS protocol(s) allowed for this connection.</param>
-        /// 
-        /// <param name="ConnectionIdBuilder">An optional delegate to build a connection identification based on IP socket information.</param>
-        /// <param name="ConnectionTimeout">The TCP client timeout for all incoming client connections in seconds (default: 30 sec).</param>
-        /// <param name="MaxClientConnections">The maximum number of concurrent TCP client connections (default: 4096).</param>
-        /// 
         /// <param name="DisableMaintenanceTasks">Disable all maintenance tasks.</param>
         /// <param name="MaintenanceInitialDelay">The initial delay of the maintenance tasks.</param>
         /// <param name="MaintenanceEvery">The maintenance interval.</param>
@@ -101,9 +86,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="LoggingPath">The path for all logfiles.</param>
         /// <param name="LoggingContext">The context of all logfiles.</param>
         /// <param name="LogfileCreator">A delegate for creating the name of the logfile for this API.</param>
-        /// <param name="DNSClient">The DNS client of the API.</param>
-        /// <param name="AutoStart">Whether to start the API automatically.</param>
-        public AOICPHTTPAPI(HTTPTestServerX?               HTTPTestServer            = null,
+        public AOICPHTTPAPI(HTTPTestServerX                HTTPTestServer,
                             IEnumerable<HTTPHostname>?     Hostnames                 = null,
                             HTTPPath?                      RootPath                  = null,
                             IEnumerable<HTTPContentType>?  HTTPContentTypes          = null,
@@ -117,7 +100,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                             String?                        APIVersionHash            = null,
                             JObject?                       APIVersionHashes          = null,
 
-                            Boolean                        RegisterRootService       = true,
                             HTTPPath?                      URLPathPrefix             = null,
                             Formatting?                    JSONFormatting            = null,
                             ConnectionType?                Connection                = null,
@@ -170,7 +152,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         {
 
-            this.URLPathPrefix   = URLPathPrefix  ?? HTTPPath.Root;
             this.JSONFormatting  = JSONFormatting ?? Formatting.None;
             this.Connection      = Connection     ?? ConnectionType.KeepAlive;
 
