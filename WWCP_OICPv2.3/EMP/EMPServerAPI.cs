@@ -621,14 +621,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             Formatting?                    JSONFormatting            = null,
                             ConnectionType?                Connection                = null,
 
-                            Boolean?                       DisableMaintenanceTasks   = false,
-                            TimeSpan?                      MaintenanceInitialDelay   = null,
-                            TimeSpan?                      MaintenanceEvery          = null,
-
-                            Boolean?                       DisableWardenTasks        = false,
-                            TimeSpan?                      WardenInitialDelay        = null,
-                            TimeSpan?                      WardenCheckEvery          = null,
-
                             Boolean?                       IsDevelopment             = null,
                             IEnumerable<String>?           DevelopmentServers        = null,
                             Boolean                        DisableLogging            = false,
@@ -654,14 +646,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                    URLPathPrefix,
                    JSONFormatting,
                    Connection,
-
-                   DisableMaintenanceTasks,
-                   MaintenanceInitialDelay,
-                   MaintenanceEvery,
-
-                   DisableWardenTasks,
-                   WardenInitialDelay,
-                   WardenCheckEvery,
 
                    IsDevelopment,
                    DevelopmentServers,

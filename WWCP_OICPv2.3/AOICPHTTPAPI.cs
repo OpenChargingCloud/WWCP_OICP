@@ -72,14 +72,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="HTTPServiceName">The name of the HTTP service.</param>
         /// <param name="APIVersionHashes">The API version hashes (git commit hash values).</param>
         /// 
-        /// <param name="DisableMaintenanceTasks">Disable all maintenance tasks.</param>
-        /// <param name="MaintenanceInitialDelay">The initial delay of the maintenance tasks.</param>
-        /// <param name="MaintenanceEvery">The maintenance interval.</param>
-        /// 
-        /// <param name="DisableWardenTasks">Disable all warden tasks.</param>
-        /// <param name="WardenInitialDelay">The initial delay of the warden tasks.</param>
-        /// <param name="WardenCheckEvery">The warden interval.</param>
-        /// 
         /// <param name="IsDevelopment">This HTTP API runs in development mode.</param>
         /// <param name="DevelopmentServers">An enumeration of server names which will imply to run this service in development mode.</param>
         /// <param name="DisableLogging">Disable the log file.</param>
@@ -104,14 +96,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                             Formatting?                    JSONFormatting            = null,
                             ConnectionType?                Connection                = null,
 
-                            Boolean?                       DisableMaintenanceTasks   = false,
-                            TimeSpan?                      MaintenanceInitialDelay   = null,
-                            TimeSpan?                      MaintenanceEvery          = null,
-
-                            Boolean?                       DisableWardenTasks        = false,
-                            TimeSpan?                      WardenInitialDelay        = null,
-                            TimeSpan?                      WardenCheckEvery          = null,
-
                             Boolean?                       IsDevelopment             = null,
                             IEnumerable<String>?           DevelopmentServers        = null,
                             Boolean                        DisableLogging            = false,
@@ -133,14 +117,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                    HTTPServiceName ?? DefaultHTTPServiceName,
                    APIVersionHash,
                    APIVersionHashes,
-
-                   DisableMaintenanceTasks,
-                   MaintenanceInitialDelay,
-                   MaintenanceEvery,
-
-                   DisableWardenTasks,
-                   WardenInitialDelay,
-                   WardenCheckEvery,
 
                    IsDevelopment,
                    DevelopmentServers,

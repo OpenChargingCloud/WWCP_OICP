@@ -554,14 +554,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             Formatting?                    JSONFormatting            = null,
                             ConnectionType?                Connection                = null,
 
-                            Boolean?                       DisableMaintenanceTasks   = false,
-                            TimeSpan?                      MaintenanceInitialDelay   = null,
-                            TimeSpan?                      MaintenanceEvery          = null,
-
-                            Boolean?                       DisableWardenTasks        = false,
-                            TimeSpan?                      WardenInitialDelay        = null,
-                            TimeSpan?                      WardenCheckEvery          = null,
-
                             Boolean?                       IsDevelopment             = null,
                             IEnumerable<String>?           DevelopmentServers        = null,
                             Boolean                        DisableLogging            = false,
@@ -587,14 +579,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                    URLPathPrefix,
                    JSONFormatting,
                    Connection,
-
-                   DisableMaintenanceTasks,
-                   MaintenanceInitialDelay,
-                   MaintenanceEvery,
-
-                   DisableWardenTasks,
-                   WardenInitialDelay,
-                   WardenCheckEvery,
 
                    IsDevelopment,
                    DevelopmentServers,
@@ -1618,46 +1602,46 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                               ConnectionIdBuilder:          ConnectionIdBuilder,
                               MaxClientConnections:         MaxClientConnections,
-                              DNSClient:                    DNSClient
+                              DNSClient:                    DNSClient,
+
+                              DisableMaintenanceTasks:      DisableMaintenanceTasks,
+                              MaintenanceInitialDelay:      MaintenanceInitialDelay,
+                              MaintenanceEvery:             MaintenanceEvery,
+
+                              DisableWardenTasks:           DisableWardenTasks,
+                              WardenInitialDelay:           WardenInitialDelay,
+                              WardenCheckEvery:             WardenCheckEvery
 
                           );
 
             var api     = new CPOServerAPI(
 
-                              HTTPServer:                server,
-                              Hostnames:                 Hostnames,
-                              RootPath:                  RootPath,
-                              HTTPContentTypes:          HTTPContentTypes,
-                              Description:               Description,
+                              HTTPServer:                   server,
+                              Hostnames:                    Hostnames,
+                              RootPath:                     RootPath,
+                              HTTPContentTypes:             HTTPContentTypes,
+                              Description:                  Description,
 
-                              ExternalDNSName:           ExternalDNSName,
-                              BasePath:                  BasePath,
+                              ExternalDNSName:              ExternalDNSName,
+                              BasePath:                     BasePath,
 
-                              HTTPServerName:            HTTPServerName,
-                              HTTPServiceName:           HTTPServiceName,
-                              APIVersionHash:            APIVersionHash,
-                              APIVersionHashes:          APIVersionHashes,
+                              HTTPServerName:               HTTPServerName,
+                              HTTPServiceName:              HTTPServiceName,
+                              APIVersionHash:               APIVersionHash,
+                              APIVersionHashes:             APIVersionHashes,
 
-                              RegisterRootService:       RegisterRootService,
-                              URLPathPrefix:             URLPathPrefix,
-                              JSONFormatting:            JSONFormatting,
-                              Connection:                Connection,
+                              RegisterRootService:          RegisterRootService,
+                              URLPathPrefix:                URLPathPrefix,
+                              JSONFormatting:               JSONFormatting,
+                              Connection:                   Connection,
 
-                              DisableMaintenanceTasks:   DisableMaintenanceTasks,
-                              MaintenanceInitialDelay:   MaintenanceInitialDelay,
-                              MaintenanceEvery:          MaintenanceEvery,
-
-                              DisableWardenTasks:        DisableWardenTasks,
-                              WardenInitialDelay:        WardenInitialDelay,
-                              WardenCheckEvery:          WardenCheckEvery,
-
-                              IsDevelopment:             IsDevelopment,
-                              DevelopmentServers:        DevelopmentServers,
-                              DisableLogging:            DisableLogging,
-                              LoggingPath:               LoggingPath,
-                              LoggingContext:            LoggingContext,
-                              LogfileName:               LogfileName,
-                              LogfileCreator:            LogfileCreator
+                              IsDevelopment:                IsDevelopment,
+                              DevelopmentServers:           DevelopmentServers,
+                              DisableLogging:               DisableLogging,
+                              LoggingPath:                  LoggingPath,
+                              LoggingContext:               LoggingContext,
+                              LogfileName:                  LogfileName,
+                              LogfileCreator:               LogfileCreator
 
                           );
 
@@ -1667,7 +1651,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 (s, p) => api
             );
 
-            await server.Start();
+            if (AutoStart)
+                await server.Start();
 
             return api;
 
