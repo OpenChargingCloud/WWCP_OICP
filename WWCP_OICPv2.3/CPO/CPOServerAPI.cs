@@ -1114,7 +1114,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             // -------------------------------------------------------------------------------------------------------------------------------------------------------
             // curl -vk -X POST -H "Accept: application/json" -d "test" https://127.0.0.1:3001/api/oicp/charging/v21/providers/{providerId}/authorize-remote/start
-            // curl -vk -X POST -H "Accept: application/json" https://localhost:3001/api/oicp/charging/v21/providers/DE*ICE/authorize-remote/start --cert client.crt --key client.key --cacert rootCA.crt
+            // curl -vk -X POST -H "Accept: application/json" -d @remoteStart.json https://localhost:3001/api/oicp/charging/v21/providers/DE*ICE/authorize-remote/start --cert client.crt --key client.key --cacert rootCA.crt
             // -------------------------------------------------------------------------------------------------------------------------------------------------------
             AddHandler(
                 HTTPMethod.POST,
