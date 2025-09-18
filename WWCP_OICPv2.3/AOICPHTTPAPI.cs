@@ -96,6 +96,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                             Formatting?                    JSONFormatting            = null,
                             ConnectionType?                Connection                = null,
 
+                            ServiceCheckKeys?              ServiceCheckKeys          = null,
+
                             Boolean?                       IsDevelopment             = null,
                             IEnumerable<String>?           DevelopmentServers        = null,
                             Boolean                        DisableLogging            = false,
@@ -117,6 +119,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                    HTTPServiceName ?? DefaultHTTPServiceName,
                    APIVersionHash,
                    APIVersionHashes,
+
+                   ServiceCheckKeys,
 
                    IsDevelopment,
                    DevelopmentServers,

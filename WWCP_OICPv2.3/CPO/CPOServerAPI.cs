@@ -554,6 +554,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             Formatting?                    JSONFormatting            = null,
                             ConnectionType?                Connection                = null,
 
+                            ServiceCheckKeys?              ServiceCheckKeys          = null,
+
                             Boolean?                       IsDevelopment             = null,
                             IEnumerable<String>?           DevelopmentServers        = null,
                             Boolean                        DisableLogging            = false,
@@ -579,6 +581,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                    URLPathPrefix,
                    JSONFormatting,
                    Connection,
+
+                   ServiceCheckKeys,
 
                    IsDevelopment,
                    DevelopmentServers,
@@ -1562,6 +1566,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                          TimeSpan?                                                 WardenInitialDelay           = null,
                          TimeSpan?                                                 WardenCheckEvery             = null,
 
+                         ServiceCheckKeys?                                         ServiceCheckKeys             = null,
+
                          Boolean?                                                  IsDevelopment                = null,
                          IEnumerable<String>?                                      DevelopmentServers           = null,
                          Boolean                                                   DisableLogging               = false,
@@ -1635,6 +1641,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                               URLPathPrefix:                URLPathPrefix,
                               JSONFormatting:               JSONFormatting,
                               Connection:                   Connection,
+
+                              ServiceCheckKeys:             ServiceCheckKeys,
 
                               IsDevelopment:                IsDevelopment,
                               DevelopmentServers:           DevelopmentServers,

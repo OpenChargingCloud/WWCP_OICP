@@ -621,6 +621,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             Formatting?                    JSONFormatting            = null,
                             ConnectionType?                Connection                = null,
 
+                            ServiceCheckKeys?              ServiceCheckKeys          = null,
+
                             Boolean?                       IsDevelopment             = null,
                             IEnumerable<String>?           DevelopmentServers        = null,
                             Boolean                        DisableLogging            = false,
@@ -646,6 +648,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                    URLPathPrefix,
                    JSONFormatting,
                    Connection,
+
+                   ServiceCheckKeys,
 
                    IsDevelopment,
                    DevelopmentServers,
