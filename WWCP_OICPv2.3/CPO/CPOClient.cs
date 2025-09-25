@@ -29,6 +29,7 @@ using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.Logging;
+using System.Net.Security;
 
 #endregion
 
@@ -781,45 +782,24 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                          LogfileCreatorDelegate?                                  LogfileCreator               = null,
                          IDNSClient?                                              DNSClient                    = null)
 
-            : base(RemoteURL           ?? DefaultRemoteURL,
+            : base(RemoteURL ?? DefaultRemoteURL,
                    VirtualHostname,
                    Description,
                    PreferIPv4,
 
-                   null, // Will be set later!
-
-                   //RemoteCertificateValidator is not null
-                   //    ? (sender,
-                   //       certificate,
-                   //       certificateChain,
-                   //       httpClient,
-                   //       policyErrors) => {
-
-                   //           return (true, []);
-
-                   //           //return RemoteCertificateValidator.Invoke(
-                   //           //                    sender,
-                   //           //                    certificate,
-                   //           //                    certificateChain,
-                   //           //                    this as IHTTPClient, //httpClient,
-                   //           //                    policyErrors
-                   //           //                );
-
-                   //       }
-                   //    : null,
-
-                  // RemoteCertificateValidator is not null
-                  //     ? new RemoteTLSServerCertificateValidationHandler<IHTTPClient>(
-                  //         (sender, certificate, certificateChain, httpClient, policyErrors) =>
-                  //             RemoteCertificateValidator.Invoke(
-                  //                 sender,
-                  //                 certificate,
-                  //                 certificateChain,
-                  //                 httpClient is CPOClient cpoClient ? cpoClient : this as IHTTPClient,
-                  //                 policyErrors
-                  //             )
-                  //       )
-                  //     : null,
+                   RemoteCertificateValidator is not null
+                       ? (sender,
+                          certificate,
+                          certificateChain,
+                          httpClient,
+                          policyErrors) => RemoteCertificateValidator.Invoke(
+                                               sender,
+                                               certificate,
+                                               certificateChain,
+                                              (httpClient as CPOClient)!,
+                                               policyErrors
+                                           )
+                       : null,
 
                    LocalCertificateSelector,
                    ClientCert,
@@ -827,11 +807,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                    HTTPContentType.Application.JSON_UTF8,
                    AcceptTypes.FromHTTPContentTypes(HTTPContentType.Application.JSON_UTF8),
                    Authentication,
-                   HTTPUserAgent       ?? DefaultHTTPUserAgent,
+                   HTTPUserAgent      ?? DefaultHTTPUserAgent,
                    ConnectionType.Close,
                    RequestTimeout,
                    TransmissionRetryDelay,
-                   MaxNumberOfRetries  ?? DefaultMaxNumberOfRetries,
+                   MaxNumberOfRetries ?? DefaultMaxNumberOfRetries,
                    InternalBufferSize,
                    false,
                    DisableLogging,

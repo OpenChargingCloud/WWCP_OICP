@@ -120,17 +120,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                 certificate,
                                                                                 certificateChain,
                                                                                 httpTestClient,
-                                                                                policyErrors) => {
-
-                                                                                    return RemoteCertificateValidator.Invoke(
-                                                                                                sender,
-                                                                                                certificate,
-                                                                                                certificateChain,
-                                                                                                this,
-                                                                                                policyErrors
-                                                                                            );
-
-                                                                                }
+                                                                                policyErrors) => RemoteCertificateValidator.Invoke(
+                                                                                                     sender,
+                                                                                                     certificate,
+                                                                                                     certificateChain,
+                                                                                                     this,
+                                                                                                     policyErrors
+                                                                                                 )
                                                                              :  null,
                                        LocalCertificateSelector:         LocalCertificateSelector,
                                        ClientCertificateChain:           ClientCert is not null

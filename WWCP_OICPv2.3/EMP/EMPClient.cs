@@ -771,31 +771,45 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="LoggingContext">An optional context for logging.</param>
         /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
         /// <param name="DNSClient">The DNS client to use.</param>
-        public EMPClient(URL?                                                       RemoteURL                    = null,
-                         HTTPHostname?                                              VirtualHostname              = null,
-                         I18NString?                                                Description                  = null,
-                         Boolean?                                                   PreferIPv4                   = null,
-                         RemoteTLSServerCertificateValidationHandler<IHTTPClient>?  RemoteCertificateValidator   = null,
-                         LocalCertificateSelectionHandler?                          LocalCertificateSelector     = null,
-                         X509Certificate?                                           ClientCert                   = null,
-                         SslProtocols?                                              TLSProtocol                  = null,
-                         IHTTPAuthentication?                                       Authentication               = null,
-                         String?                                                    HTTPUserAgent                = DefaultHTTPUserAgent,
-                         TimeSpan?                                                  RequestTimeout               = null,
-                         TransmissionRetryDelayDelegate?                            TransmissionRetryDelay       = null,
-                         UInt16?                                                    MaxNumberOfRetries           = DefaultMaxNumberOfRetries,
-                         UInt32?                                                    InternalBufferSize           = null,
-                         Boolean?                                                   DisableLogging               = false,
-                         String?                                                    LoggingPath                  = null,
-                         String                                                     LoggingContext               = EMPClientLogger.DefaultContext,
-                         LogfileCreatorDelegate?                                    LogfileCreator               = null,
-                         DNSClient?                                                 DNSClient                    = null)
+        public EMPClient(URL?                                                     RemoteURL                    = null,
+                         HTTPHostname?                                            VirtualHostname              = null,
+                         I18NString?                                              Description                  = null,
+                         Boolean?                                                 PreferIPv4                   = null,
+                         RemoteTLSServerCertificateValidationHandler<EMPClient>?  RemoteCertificateValidator   = null,
+                         LocalCertificateSelectionHandler?                        LocalCertificateSelector     = null,
+                         X509Certificate?                                         ClientCert                   = null,
+                         SslProtocols?                                            TLSProtocol                  = null,
+                         IHTTPAuthentication?                                     Authentication               = null,
+                         String?                                                  HTTPUserAgent                = DefaultHTTPUserAgent,
+                         TimeSpan?                                                RequestTimeout               = null,
+                         TransmissionRetryDelayDelegate?                          TransmissionRetryDelay       = null,
+                         UInt16?                                                  MaxNumberOfRetries           = DefaultMaxNumberOfRetries,
+                         UInt32?                                                  InternalBufferSize           = null,
+                         Boolean?                                                 DisableLogging               = false,
+                         String?                                                  LoggingPath                  = null,
+                         String                                                   LoggingContext               = EMPClientLogger.DefaultContext,
+                         LogfileCreatorDelegate?                                  LogfileCreator               = null,
+                         DNSClient?                                               DNSClient                    = null)
 
-            : base(RemoteURL           ?? DefaultRemoteURL,
+            : base(RemoteURL ?? DefaultRemoteURL,
                    VirtualHostname,
                    Description,
                    PreferIPv4,
-                   RemoteCertificateValidator,
+
+                   RemoteCertificateValidator is not null
+                       ? (sender,
+                          certificate,
+                          certificateChain,
+                          httpClient,
+                          policyErrors) => RemoteCertificateValidator.Invoke(
+                                               sender,
+                                               certificate,
+                                               certificateChain,
+                                              (httpClient as EMPClient)!,
+                                               policyErrors
+                                           )
+                       : null,
+
                    LocalCertificateSelector,
                    ClientCert,
                    TLSProtocol,
