@@ -42,7 +42,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// The HTTP client.
         /// </summary>
-        protected HTTPTestClient newHTTPClient;
+        protected HTTPTestClient  newHTTPClient;
+
+        /// <summary>
+        /// A HTTP client pool for low-latency HTTP requests.
+        /// </summary>
+        protected HTTPClientPool  httpClientPool;
 
         #endregion
 
@@ -57,6 +62,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         public AOICPClient(URL                                                        RemoteURL,
                            HTTPHostname?                                              VirtualHostname              = null,
                            I18NString?                                                Description                  = null,
+                           UInt16?                                                    MaxNumberOfPooledClients     = null,
                            Boolean?                                                   PreferIPv4                   = null,
                            RemoteTLSServerCertificateValidationHandler<IHTTPClient>?  RemoteCertificateValidator   = null,
                            LocalCertificateSelectionHandler?                          LocalCertificateSelector     = null,
@@ -137,6 +143,55 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                        ApplicationProtocols:             null,
                                        AllowRenegotiation:               null,
                                        AllowTLSResume:                   null,
+
+                                       PreferIPv4:                       PreferIPv4,
+                                       ConnectTimeout:                   null,
+                                       ReceiveTimeout:                   null,
+                                       SendTimeout:                      null,
+                                       BufferSize:                       null,
+
+                                       DNSClient:                        DNSClient
+
+                                   );
+
+            this.httpClientPool  = new HTTPClientPool(
+
+                                       URL:                              base.RemoteURL,
+                                       Description:                      Description,
+
+                                       HTTPUserAgent:                    HTTPUserAgent,
+                                       DefaultRequestBuilder:            () => new HTTPRequest.Builder(this, CancellationToken.None) {
+                                                                                   Host         = this.RemoteURL.Hostname,
+                                                                                   Accept       = AcceptTypes.FromHTTPContentTypes(HTTPContentType.Application.JSON_UTF8),
+                                                                                   ContentType  = HTTPContentType.Application.JSON_UTF8,
+                                                                                   UserAgent    = this.HTTPUserAgent ?? DefaultHTTPUserAgent,
+                                                                                   Connection   = ConnectionType.KeepAlive
+                                                                               },
+
+                                       RemoteCertificateValidator:       RemoteCertificateValidator is not null
+                                                                             ? (sender,
+                                                                                certificate,
+                                                                                certificateChain,
+                                                                                httpTestClient,
+                                                                                policyErrors) => RemoteCertificateValidator.Invoke(
+                                                                                                     sender,
+                                                                                                     certificate,
+                                                                                                     certificateChain,
+                                                                                                     this,
+                                                                                                     policyErrors
+                                                                                                 )
+                                                                             :  null,
+                                       LocalCertificateSelector:         LocalCertificateSelector,
+                                       ClientCertificateChain:           ClientCert is not null
+                                                                             ? [ ClientCert ]
+                                                                             : null,
+                                       TLSProtocols:                     TLSProtocols,
+                                       CertificateRevocationCheckMode:   X509RevocationMode.NoCheck,
+                                       ApplicationProtocols:             null,
+                                       AllowRenegotiation:               null,
+                                       AllowTLSResume:                   null,
+
+                                       MaxNumberOfClients:               MaxNumberOfPooledClients ?? 6,
 
                                        PreferIPv4:                       PreferIPv4,
                                        ConnectTimeout:                   null,

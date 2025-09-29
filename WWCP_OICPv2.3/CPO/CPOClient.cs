@@ -765,6 +765,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         public CPOClient(URL?                                                     RemoteURL                    = null,
                          HTTPHostname?                                            VirtualHostname              = null,
                          I18NString?                                              Description                  = null,
+                         UInt16?                                                  MaxNumberOfPooledClients     = null,
                          Boolean?                                                 PreferIPv4                   = null,
                          RemoteTLSServerCertificateValidationHandler<CPOClient>?  RemoteCertificateValidator   = null,
                          LocalCertificateSelectionHandler?                        LocalCertificateSelector     = null,
@@ -785,6 +786,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             : base(RemoteURL ?? DefaultRemoteURL,
                    VirtualHostname,
                    Description,
+                   MaxNumberOfPooledClients,
                    PreferIPv4,
 
                    RemoteCertificateValidator is not null
@@ -3413,7 +3415,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     #region Upstream HTTP request...
 
-                    var httpResponse = await newHTTPClient.POST(
+                    var httpResponse = await httpClientPool.POST(
                                                  Path:                 RemoteURL.Path + $"/api/oicp/charging/v21/operators/{Request.OperatorId.URLEncoded}/authorize/start",
                                                  Content:              Request.ToJSON(CustomAuthorizeStartRequestSerializer,
                                                                                       CustomIdentificationSerializer).
@@ -3786,7 +3788,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     #region Upstream HTTP request...
 
-                    var httpResponse = await newHTTPClient.POST(
+                    var httpResponse = await httpClientPool.POST(
                                                  Path:                 RemoteURL.Path + $"/api/oicp/charging/v21/operators/{Request.OperatorId.URLEncoded}/authorize/stop",
                                                  Content:              Request.ToJSON(CustomAuthorizeStopRequestSerializer,
                                                                                       CustomIdentificationSerializer).

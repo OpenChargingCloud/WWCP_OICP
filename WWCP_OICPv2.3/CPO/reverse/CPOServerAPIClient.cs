@@ -331,6 +331,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         public CPOServerAPIClient(URL?                                                       RemoteURL                    = null,
                                   HTTPHostname?                                              VirtualHostname              = null,
                                   I18NString?                                                Description                  = null,
+                                  UInt16?                                                    MaxNumberOfPooledClients     = null,
                                   Boolean?                                                   PreferIPv4                   = null,
                                   RemoteTLSServerCertificateValidationHandler<IHTTPClient>?  RemoteCertificateValidator   = null,
                                   LocalCertificateSelectionHandler?                          LocalCertificateSelector     = null,
@@ -351,9 +352,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             : base(RemoteURL ?? DefaultRemoteURL,
                    VirtualHostname,
                    Description,
+                   MaxNumberOfPooledClients,
                    PreferIPv4,
 
-                   null, // Will be set later!
+                   RemoteCertificateValidator is not null
+                       ? (sender,
+                          certificate,
+                          certificateChain,
+                          httpClient,
+                          policyErrors) => RemoteCertificateValidator.Invoke(
+                                               sender,
+                                               certificate,
+                                               certificateChain,
+                                              (httpClient as CPOServerAPIClient)!,
+                                               policyErrors
+                                           )
+                       : null,
 
                    LocalCertificateSelector,
                    ClientCert,

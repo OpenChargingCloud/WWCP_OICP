@@ -774,6 +774,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         public EMPClient(URL?                                                     RemoteURL                    = null,
                          HTTPHostname?                                            VirtualHostname              = null,
                          I18NString?                                              Description                  = null,
+                         UInt16?                                                  MaxNumberOfPooledClients     = null,
                          Boolean?                                                 PreferIPv4                   = null,
                          RemoteTLSServerCertificateValidationHandler<EMPClient>?  RemoteCertificateValidator   = null,
                          LocalCertificateSelectionHandler?                        LocalCertificateSelector     = null,
@@ -794,6 +795,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             : base(RemoteURL ?? DefaultRemoteURL,
                    VirtualHostname,
                    Description,
+                   MaxNumberOfPooledClients,
                    PreferIPv4,
 
                    RemoteCertificateValidator is not null
@@ -3752,7 +3754,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     #region Upstream HTTP request...
 
-                    var httpResponse = await newHTTPClient.POST(
+                    var httpResponse = await httpClientPool.POST(
                                                  Path:                 RemoteURL.Path + $"/api/oicp/charging/v21/providers/{Request.ProviderId.URLEncoded}/authorize-remote-reservation/start",
                                                  Content:              Request.ToJSON(CustomAuthorizeRemoteReservationStartRequestSerializer,
                                                                                       CustomIdentificationSerializer).
@@ -4122,7 +4124,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     #region Upstream HTTP request...
 
-                    var httpResponse = await newHTTPClient.POST(
+                    var httpResponse = await httpClientPool.POST(
                                                  Path:                 RemoteURL.Path + $"/api/oicp/charging/v21/providers/{Request.ProviderId.URLEncoded}/authorize-remote-reservation/stop",
                                                  Content:              Request.ToJSON(CustomAuthorizeRemoteReservationStopRequestSerializer).
                                                                                ToUTF8Bytes(JSONFormatting),
@@ -4491,7 +4493,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     #region Upstream HTTP request...
 
-                    var httpResponse = await newHTTPClient.POST(
+                    var httpResponse = await httpClientPool.POST(
                                                  Path:                 RemoteURL.Path + $"/api/oicp/charging/v21/providers/{Request.ProviderId.URLEncoded}/authorize-remote/start",
                                                  Content:              Request.ToJSON(CustomAuthorizeRemoteStartRequestSerializer).
                                                                                ToUTF8Bytes(JSONFormatting),
@@ -4860,7 +4862,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     #region Upstream HTTP request...
 
-                    var httpResponse = await newHTTPClient.POST(
+                    var httpResponse = await httpClientPool.POST(
                                                  Path:                 RemoteURL.Path + $"/api/oicp/charging/v21/providers/{Request.ProviderId.URLEncoded}/authorize-remote/stop",
                                                  Content:              Request.ToJSON(CustomAuthorizeRemoteStopRequestSerializer).
                                                                                ToUTF8Bytes(JSONFormatting),
