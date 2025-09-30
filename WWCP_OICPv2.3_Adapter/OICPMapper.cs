@@ -360,7 +360,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-
                 var evseDataRecord = new EVSEDataRecord(
                                          Id:                                 evseId.Value,
                                          OperatorId:                         evseId.Value.OperatorId,

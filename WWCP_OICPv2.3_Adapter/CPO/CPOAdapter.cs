@@ -1041,12 +1041,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     if (IncludeEVSEs(evse) && IncludeEVSEIds(evse.Id))
                     {
 
-                        var mappedEVSE = evse.ToOICP(evse.Operator.Name.FirstText(),
-                                                     EVSE2EVSEDataRecord);
+                        var mappedEVSE = evse.ToOICP(
+                                             evse.Operator.Name.FirstText(),
+                                             EVSE2EVSEDataRecord
+                                         );
 
                         // WWCP EVSE will be added as internal data "WWCP.EVSE"...
                         if (mappedEVSE is not null)
                             evseDataRecords.Add(mappedEVSE);
+                        else
+                        {
+
+                        }
 
                     }
                     else
@@ -4316,17 +4322,26 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             if (evsesToAddQueueCopy.Count != 0)
             {
 
-                var result = await PushEVSEData(evsesToAddQueueCopy,
-                                                //_FlushEVSEDataRunId == 1
-                                                //    ? ActionTypes.FullLoad
-                                                //    : ActionTypes.Update,
-                                                NumberOfSuccessfullyUploadedEVSEs_before == 0
-                                                    ? ActionTypes.FullLoad
-                                                    : ActionTypes.Update,
-                                                EventTrackingId: EventTrackingId);
+                var result = await PushEVSEData(
+                                       evsesToAddQueueCopy,
+                                       //_FlushEVSEDataRunId == 1
+                                       //    ? ActionTypes.FullLoad
+                                       //    : ActionTypes.Update,
+                                       NumberOfSuccessfullyUploadedEVSEs_before == 0
+                                           ? ActionTypes.FullLoad
+                                           : ActionTypes.Update,
+                                       EventTrackingId: EventTrackingId
+                                   );
 
                 foreach (var pushEVSEResult in result.SuccessfulEVSEs)
-                    successfullyUploadedEVSEs.Add(pushEVSEResult.EVSE.Id.ToWWCP().Value);
+                {
+
+                    var evseId = pushEVSEResult.EVSE.Id.ToWWCP();
+
+                    if (evseId.HasValue)
+                        successfullyUploadedEVSEs.Add(evseId.Value);
+
+                }
 
                 if (result.Warnings.Any())
                 {
@@ -4352,19 +4367,28 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             if (evsesToUpdateQueueCopy.Count != 0)
             {
 
-                // Surpress EVSE data updates for all newly added EVSEs
+                // Suppress EVSE data updates for all newly added EVSEs
                 foreach (var _evse in evsesToUpdateQueueCopy.Where(evse => evsesToAddQueueCopy.Contains(evse)).ToArray())
                     evsesToUpdateQueueCopy.Remove(_evse);
 
                 if (evsesToUpdateQueueCopy.Count != 0)
                 {
 
-                    var EVSEsToUpdateResult = await PushEVSEData(evsesToUpdateQueueCopy,
-                                                                 ActionTypes.Update,
-                                                                 EventTrackingId: EventTrackingId);
+                    var EVSEsToUpdateResult = await PushEVSEData(
+                                                        evsesToUpdateQueueCopy,
+                                                        ActionTypes.Update,
+                                                        EventTrackingId: EventTrackingId
+                                                    );
 
                     foreach (var pushEVSEResult in EVSEsToUpdateResult.SuccessfulEVSEs)
-                        successfullyUploadedEVSEs.Add(pushEVSEResult.EVSE.Id.ToWWCP().Value);
+                    {
+
+                        var evseId = pushEVSEResult.EVSE.Id.ToWWCP();
+
+                        if (evseId.HasValue)
+                            successfullyUploadedEVSEs.Add(evseId.Value);
+
+                    }
 
                     if (EVSEsToUpdateResult.Warnings.Any())
                     {
@@ -4393,14 +4417,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 evseStatusChangesDelayedQueueCopy.Count > 0)
             {
 
-                var PushEVSEStatusTask = await PushEVSEStatus(evseStatusChangesDelayedQueueCopy.Where(evseStatusUpdate => successfullyUploadedEVSEs.Contains(evseStatusUpdate.Id)),
-                                                              //_FlushEVSEDataRunId == 1
-                                                              //    ? ActionTypes.FullLoad
-                                                              //    : ActionTypes.Update,
-                                                              NumberOfSuccessfullyUploadedEVSEs_before == 0
-                                                                  ? ActionTypes.FullLoad
-                                                                  : ActionTypes.Update,
-                                                              EventTrackingId: EventTrackingId);
+                var PushEVSEStatusTask = await PushEVSEStatus(
+                                                   evseStatusChangesDelayedQueueCopy.Where(evseStatusUpdate => successfullyUploadedEVSEs.Contains(evseStatusUpdate.Id)),
+                                                   //_FlushEVSEDataRunId == 1
+                                                   //    ? ActionTypes.FullLoad
+                                                   //    : ActionTypes.Update,
+                                                   NumberOfSuccessfullyUploadedEVSEs_before == 0
+                                                       ? ActionTypes.FullLoad
+                                                       : ActionTypes.Update,
+                                                   EventTrackingId: EventTrackingId
+                                               );
 
 
                 if (PushEVSEStatusTask.Warnings.Any())
@@ -4432,12 +4458,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 if (EVSEsToRemove.Length > 0)
                 {
 
-                    var EVSEsToRemoveTask = await PushEVSEData(EVSEsToRemove,
-                                                               ActionTypes.Delete,
-                                                               EventTrackingId: EventTrackingId);
+                    var EVSEsToRemoveTask = await PushEVSEData(
+                                                      EVSEsToRemove,
+                                                      ActionTypes.Delete,
+                                                      EventTrackingId: EventTrackingId
+                                                  );
 
                     foreach (var pushEVSEResult in EVSEsToRemoveTask.SuccessfulEVSEs)
-                        successfullyUploadedEVSEs.Remove(pushEVSEResult.EVSE.Id.ToWWCP().Value);
+                    {
+
+                        var evseId = pushEVSEResult.EVSE.Id.ToWWCP();
+
+                        if (evseId.HasValue)
+                            successfullyUploadedEVSEs.Add(evseId.Value);
+
+                    }
 
                     if (EVSEsToRemoveTask.Warnings.Any())
                     {
@@ -4557,60 +4592,82 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             WWCP.SendCDRResult result;
 
+            // OICP CDRs...
             foreach (var chargeDetailRecord in ChargeDetailRecords)
             {
+
+                var wwcpCDR = chargeDetailRecord.GetInternalDataAs<WWCP.ChargeDetailRecord>(OICPMapper.WWCP_CDR);
 
                 try
                 {
 
-                    var response  = await CPORoaming.SendChargeDetailRecord(
-                                              chargeDetailRecord,
-                                              DefaultOperator.Id.ToOICP().Value,
+                    var defaultOperatorId = DefaultOperator.Id.ToOICP();
 
-                                              Timestamp.Now,
-                                              EventTracking_Id.New,
-                                              DefaultRequestTimeout,
-                                              new CancellationTokenSource().Token
-                                          ).ConfigureAwait(false);
-
-                    if (response.IsSuccess())
+                    if (wwcpCDR is not null &&
+                        defaultOperatorId.HasValue)
                     {
 
-                        if (response.Response?.Result == true)
+                        var response  = await CPORoaming.SendChargeDetailRecord(
+                                                  chargeDetailRecord,
+                                                  defaultOperatorId.Value,
+
+                                                  Timestamp.Now,
+                                                  EventTracking_Id.New,
+                                                  DefaultRequestTimeout,
+                                                  new CancellationTokenSource().Token
+                                              ).ConfigureAwait(false);
+
+                        if (response.IsSuccess())
                         {
 
-                            result = WWCP.SendCDRResult.Success(
-                                         Timestamp.Now,
-                                         Id,
-                                         chargeDetailRecord.GetInternalDataAs<WWCP.ChargeDetailRecord>(OICPMapper.WWCP_CDR),
-                                         Runtime: response.Response.Runtime
-                                     );
+                            if (response.Response?.Result == true)
+                            {
+
+                                result = WWCP.SendCDRResult.Success(
+                                             Timestamp.Now,
+                                             Id,
+                                             wwcpCDR,
+                                             Runtime: response.Response.Runtime
+                                         );
+
+                            }
+
+                            else
+                            {
+
+                                result = WWCP.SendCDRResult.Error(
+                                             Timestamp.Now,
+                                             Id,
+                                             wwcpCDR,
+                                             //I18NString.Create(response.HTTPBodyAsUTF8String),
+                                             Runtime: response.Response?.Runtime
+                                         );
+
+                            }
 
                         }
 
                         else
-                        {
-
                             result = WWCP.SendCDRResult.Error(
                                          Timestamp.Now,
                                          Id,
-                                         chargeDetailRecord.GetInternalDataAs<WWCP.ChargeDetailRecord>(OICPMapper.WWCP_CDR),
+                                         wwcpCDR,
                                          //I18NString.Create(response.HTTPBodyAsUTF8String),
-                                         Runtime: response.Response.Runtime
+                                         Runtime: response.Response?.Runtime
                                      );
 
-                        }
-
                     }
-
                     else
+                    {
                         result = WWCP.SendCDRResult.Error(
                                      Timestamp.Now,
                                      Id,
-                                     chargeDetailRecord.GetInternalDataAs<WWCP.ChargeDetailRecord>(OICPMapper.WWCP_CDR),
-                                     //I18NString.Create(response.HTTPBodyAsUTF8String),
-                                     Runtime: response.Response.Runtime
+                                     wwcpCDR,
+                                     Warnings: Warnings.Create($"The DefaultOperatorId '{DefaultOperator.Id}' can not be converted to OICP!"),
+                                     Runtime:  TimeSpan.Zero
                                  );
+
+                    }
 
                 }
                 catch (Exception e)
@@ -4619,7 +4676,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     result = WWCP.SendCDRResult.Error(
                                  Timestamp.Now,
                                  Id,
-                                 chargeDetailRecord.GetInternalDataAs<WWCP.ChargeDetailRecord>(OICPMapper.WWCP_CDR),
+                                 wwcpCDR,
                                  Warnings: Warnings.Create(e.Message),
                                  Runtime:  TimeSpan.Zero
                              );
