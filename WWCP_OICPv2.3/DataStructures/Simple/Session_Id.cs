@@ -371,7 +371,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
 
-            => InternalId?.GetHashCode() ?? 0;
+            => InternalId?.ToLower().GetHashCode() ?? 0;
 
         #endregion
 
