@@ -165,7 +165,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             => CPOClient.TransmissionRetryDelay;
 
         /// <summary>
-        /// The maximum number of retries when communicationg with the remote OICP service.
+        /// The maximum number of retries when communicating with the remote OICP service.
         /// </summary>
         UInt16                                                      IHTTPClient.MaxNumberOfRetries
             => CPOClient.MaxNumberOfRetries;
