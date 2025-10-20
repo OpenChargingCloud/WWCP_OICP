@@ -61,7 +61,7 @@ namespace cloud.charging.open.protocols.WWCP
         /// <param name="Configurator">An optional delegate to configure the new roaming provider after its creation.</param>
         public static OICPv2_3.CPO.CPOAdapter?
 
-            CreateOICPv2_3_CPOAdapter(this RoamingNetwork                                          RoamingNetwork,
+            CreateOICPv2_3_CPOAdapter(this IRoamingNetwork                                         RoamingNetwork,
                                       CSORoamingProvider_Id                                        Id,
                                       I18NString                                                   Name,
                                       I18NString                                                   Description,

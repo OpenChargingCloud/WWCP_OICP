@@ -80,7 +80,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="RequestTimestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
@@ -92,14 +92,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                      Process_Id?            ProcessId             = null,
                                                      JObject?               CustomData            = null,
 
-                                                     DateTimeOffset?        Timestamp             = null,
+                                                     DateTimeOffset?        RequestTimestamp             = null,
                                                      EventTracking_Id?      EventTrackingId       = null,
                                                      TimeSpan?              RequestTimeout        = null,
                                                      CancellationToken      CancellationToken     = default)
 
             : base(ProcessId,
                    CustomData,
-                   Timestamp,
+                   RequestTimestamp,
                    EventTrackingId,
                    RequestTimeout,
                    CancellationToken)

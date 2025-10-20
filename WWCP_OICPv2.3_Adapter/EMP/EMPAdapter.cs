@@ -1713,8 +1713,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                IEnumerable<WWCP.AuthenticationToken>?  AuthTokens,
                                                IEnumerable<WWCP.EMobilityAccount_Id>?  eMAIds,
                                                IEnumerable<UInt32>?                    PINs,
+                                               WWCP.ICSORoamingProvider?               CSORoamingProvider,
 
-                                               DateTimeOffset?                         Timestamp,
+                                               DateTimeOffset?                         RequestTimestamp,
                                                EventTracking_Id?                       EventTrackingId,
                                                TimeSpan?                               RequestTimeout,
                                                CancellationToken                       CancellationToken)
@@ -1723,9 +1724,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Initial checks
 
-            Timestamp       ??= org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-            EventTrackingId ??= EventTracking_Id.New;
-            RequestTimeout  ??= EMPClient?.RequestTimeout;
+            RequestTimestamp ??= Timestamp.Now;
+            EventTrackingId  ??= EventTracking_Id.New;
+            RequestTimeout   ??= EMPClient?.RequestTimeout;
 
             WWCP.ReservationResult? result = null;
 
@@ -1733,13 +1734,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnReserveRequest event
 
-            var startTime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+            var startTime = Timestamp.Now;
 
             try
             {
 
                 OnReserveRequest?.Invoke(startTime,
-                                         Timestamp.Value,
+                                         RequestTimestamp.Value,
                                          this,
                                          EventTrackingId,
                                          RoamingNetwork.Id,
@@ -1846,7 +1847,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                       AggregateWith("|"))
                                                                         : default(PartnerProduct_Id?),
 
-                                             Timestamp:             Timestamp,
+                                             Timestamp:             RequestTimestamp,
                                              CancellationToken:     CancellationToken,
                                              EventTrackingId:       EventTrackingId,
                                              RequestTimeout:        RequestTimeout)).
@@ -1857,24 +1858,26 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             {
 
                 result = WWCP.ReservationResult.Success(!reserveResponse.Response.SessionId.HasValue
-                                                            ? new WWCP.ChargingReservation(Id:                        WWCP.ChargingReservation_Id.Parse(EVSEId.OperatorId.ToString() +
-                                                                                                                          "*R" + reserveResponse.Response.SessionId.ToString()),
-                                                                                           Timestamp:                 org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
-                                                                                           StartTime:                 org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
-                                                                                           Duration:                  Duration ?? DefaultReservationTime,
-                                                                                           //EndTime:                   org.GraphDefined.Vanaheimr.Illias.Timestamp.Now + (Duration ?? DefaultReservationTime),
-                                                                                           ConsumedReservationTime:   TimeSpan.FromSeconds(0),
-                                                                                           ReservationLevel:          WWCP.ChargingReservationLevel.EVSE,
-                                                                                           ProviderId:                ProviderId,
-                                                                                           StartAuthentication:       RemoteAuthentication,
-                                                                                           RoamingNetworkId:          RoamingNetwork.Id,
-                                                                                           ChargingPoolId:            null,
-                                                                                           ChargingStationId:         null,
-                                                                                           EVSEId:                    EVSEId,
-                                                                                           ChargingProduct:           ChargingProduct,
-                                                                                           AuthTokens:                AuthTokens,
-                                                                                           eMAIds:                    eMAIds,
-                                                                                           PINs:                      PINs)
+                                                            ? new WWCP.ChargingReservation(
+                                                                  Id:                        WWCP.ChargingReservation_Id.Parse(EVSEId.OperatorId.ToString() +
+                                                                                                 "*R" + reserveResponse.Response.SessionId.ToString()),
+                                                                  Timestamp:                 Timestamp.Now,
+                                                                  StartTime:                 Timestamp.Now,
+                                                                  Duration:                  Duration ?? DefaultReservationTime,
+                                                                  //EndTime:                   org.GraphDefined.Vanaheimr.Illias.Timestamp.Now + (Duration ?? DefaultReservationTime),
+                                                                  ConsumedReservationTime:   TimeSpan.FromSeconds(0),
+                                                                  ReservationLevel:          WWCP.ChargingReservationLevel.EVSE,
+                                                                  ProviderId:                ProviderId,
+                                                                  StartAuthentication:       RemoteAuthentication,
+                                                                  RoamingNetworkId:          RoamingNetwork.Id,
+                                                                  ChargingPoolId:            null,
+                                                                  ChargingStationId:         null,
+                                                                  EVSEId:                    EVSEId,
+                                                                  ChargingProduct:           ChargingProduct,
+                                                                  AuthTokens:                AuthTokens,
+                                                                  eMAIds:                    eMAIds,
+                                                                  PINs:                      PINs
+                                                              )
                                                             : null);
 
             }
@@ -1886,13 +1889,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnReserveResponse event
 
-            var endTime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+            var endTime = Timestamp.Now;
 
             try
             {
 
                 OnReserveResponse?.Invoke(endTime,
-                                          Timestamp.Value,
+                                          RequestTimestamp.Value,
                                           this,
                                           EventTrackingId,
                                           RoamingNetwork.Id,
@@ -1941,8 +1944,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             WWCP.IChargingReservations.CancelReservation(WWCP.ChargingReservation_Id                 ReservationId,
                                                          WWCP.ChargingReservationCancellationReason  Reason,
+                                                         WWCP.ICSORoamingProvider?                   CSORoamingProvider,
 
-                                                         DateTimeOffset?                             Timestamp,
+                                                         DateTimeOffset?                             RequestTimestamp,
                                                          EventTracking_Id?                           EventTrackingId,
                                                          TimeSpan?                                   RequestTimeout,
                                                          CancellationToken                           CancellationToken)
@@ -1951,21 +1955,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Initial checks
 
-            Timestamp       ??= org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-            EventTrackingId ??= EventTracking_Id.New;
-            RequestTimeout  ??= EMPClient?.RequestTimeout;
+            RequestTimestamp ??= Timestamp.Now;
+            EventTrackingId  ??= EventTracking_Id.New;
+            RequestTimeout   ??= EMPClient?.RequestTimeout;
 
             #endregion
 
             #region Send OnCancelReservationRequest event
 
-            var startTime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+            var startTime = Timestamp.Now;
 
             try
             {
 
                 OnCancelReservationRequest?.Invoke(startTime,
-                                                   Timestamp.Value,
+                                                   RequestTimestamp.Value,
                                                    this,
                                                    EventTrackingId,
                                                    RoamingNetwork.Id,
@@ -1990,32 +1994,37 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             var sessionId   = reservation.Id.        ToOICP();
 
             var result      = await EMPRoaming.AuthorizeRemoteReservationStop(
-                                    new AuthorizeRemoteReservationStopRequest(
-                                        ProviderId:            providerId.Value,
-                                        EVSEId:                evseId.    Value,
-                                        SessionId:             sessionId. Value,
-                                        CPOPartnerSessionId:   null,
-                                        EMPPartnerSessionId:   null,
-                                        CustomData:            null,
+                                        new AuthorizeRemoteReservationStopRequest(
+                                            ProviderId:            providerId.Value,
+                                            EVSEId:                evseId.    Value,
+                                            SessionId:             sessionId. Value,
+                                            CPOPartnerSessionId:   null,
+                                            EMPPartnerSessionId:   null,
+                                            CustomData:            null,
 
-                                        Timestamp:             Timestamp,
-                                        CancellationToken:     CancellationToken,
-                                        EventTrackingId:       EventTrackingId,
-                                        RequestTimeout:        RequestTimeout)).
-                                    ConfigureAwait(false);
+                                            RequestTimestamp:      RequestTimestamp,
+                                            CancellationToken:     CancellationToken,
+                                            EventTrackingId:       EventTrackingId,
+                                            RequestTimeout:        RequestTimeout
+                                        )
+                                    ).ConfigureAwait(false);
 
             if (result.IsSuccess())
             {
 
-                return WWCP.CancelReservationResult.Success(ReservationId,
-                                                            Reason);
+                return WWCP.CancelReservationResult.Success(
+                           ReservationId,
+                           Reason
+                       );
 
             }
 
-            return WWCP.CancelReservationResult.Error(ReservationId,
-                                                      Reason,
-                                                      result.Response.HTTPResponse.HTTPStatusCode.ToString(),
-                                                      result.Response.HTTPResponse.EntirePDU);
+            return WWCP.CancelReservationResult.Error(
+                       ReservationId,
+                       Reason,
+                       result.Response.HTTPResponse.HTTPStatusCode.ToString(),
+                       result.Response.HTTPResponse.EntirePDU
+                   );
 
         }
 
@@ -2048,6 +2057,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                               WWCP.RemoteAuthentication?    RemoteAuthentication,    // = null,
                                               JObject?                      AdditionalSessionInfos,  // = null,
                                               WWCP.Auth_Path?               AuthenticationPath,      // = null,
+                                              WWCP.ICSORoamingProvider?     CSORoamingProvider,
 
                                               DateTimeOffset?               RequestTimestamp,
                                               EventTracking_Id?             EventTrackingId,
@@ -2316,6 +2326,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              WWCP.EMobilityProvider_Id?  ProviderId,            // = null,
                                              WWCP.RemoteAuthentication?  RemoteAuthentication,  // = null,
                                              WWCP.Auth_Path?             AuthenticationPath,    // = null,
+                                             WWCP.ICSORoamingProvider?   CSORoamingProvider,
 
                                              DateTimeOffset?             RequestTimestamp,
                                              EventTracking_Id?           EventTrackingId,
