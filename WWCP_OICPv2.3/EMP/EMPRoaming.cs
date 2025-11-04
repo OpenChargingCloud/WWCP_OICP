@@ -95,10 +95,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             => EMPClient.RemoteCertificateValidator;
 
         /// <summary>
-        /// The TLS client certificate to use of HTTP authentication.
+        /// The TLS client certificate to use for HTTP authentication.
         /// </summary>
-        X509Certificate?                                            IHTTPClient.ClientCert
-            => EMPClient.ClientCert;
+        X509Certificate2?                                           IHTTPClient.ClientCertificate
+            => EMPClient.ClientCertificate;
 
         /// <summary>
         /// The TLS protocol to use.
@@ -133,8 +133,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// The optional HTTP authentication to use.
         /// </summary>
-        IHTTPAuthentication?                                        IHTTPClient.Authentication
-            => EMPClient.Authentication;
+        IHTTPAuthentication?                                        IHTTPClient.HTTPAuthentication
+        {
+            get
+            {
+                return EMPClient.HTTPAuthentication;
+            }
+            set
+            {
+                EMPClient.HTTPAuthentication = value;
+            }
+        }
 
         /// <summary>
         /// The HTTP user agent identification.
@@ -199,6 +208,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         UInt64                                                      IHTTPClient.KeepAliveMessageCount
             => EMPClient.KeepAliveMessageCount;
+
+        TOTPConfig?                                                 IHTTPClient.TOTPConfig
+        {
+            get => throw new NotImplementedException();
+            set => throw new NotImplementedException();
+        }
 
         #endregion
 

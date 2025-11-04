@@ -759,7 +759,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="PreferIPv4">Prefer IPv4 instead of IPv6.</param>
         /// <param name="RemoteCertificateValidator">The remote TLS certificate validator.</param>
         /// <param name="LocalCertificateSelector">A delegate to select a TLS client certificate.</param>
-        /// <param name="ClientCert">The TLS client certificate to use of HTTP authentication.</param>
+        /// <param name="ClientCert">The TLS client certificate to use for HTTP authentication.</param>
         /// <param name="Authentication">The optional HTTP authentication to use, e.g. HTTP Basic Auth.</param>
         /// <param name="HTTPUserAgent">The HTTP user agent identification.</param>
         /// <param name="RequestTimeout">An optional request timeout.</param>
@@ -778,7 +778,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                          Boolean?                                                 PreferIPv4                   = null,
                          RemoteTLSServerCertificateValidationHandler<EMPClient>?  RemoteCertificateValidator   = null,
                          LocalCertificateSelectionHandler?                        LocalCertificateSelector     = null,
-                         X509Certificate?                                         ClientCert                   = null,
+                         X509Certificate2?                                        ClientCertificate            = null,
                          SslProtocols?                                            TLSProtocol                  = null,
                          IHTTPAuthentication?                                     Authentication               = null,
                          String?                                                  HTTPUserAgent                = DefaultHTTPUserAgent,
@@ -813,7 +813,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                        : null,
 
                    LocalCertificateSelector,
-                   ClientCert,
+                   ClientCertificate,
                    TLSProtocol,
                    HTTPContentType.Application.JSON_UTF8,
                    AcceptTypes.FromHTTPContentTypes(HTTPContentType.Application.JSON_UTF8),

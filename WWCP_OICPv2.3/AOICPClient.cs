@@ -66,7 +66,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            Boolean?                                                   PreferIPv4                   = null,
                            RemoteTLSServerCertificateValidationHandler<IHTTPClient>?  RemoteCertificateValidator   = null,
                            LocalCertificateSelectionHandler?                          LocalCertificateSelector     = null,
-                           X509Certificate?                                           ClientCert                   = null,
+                           X509Certificate2?                                          ClientCertificate            = null,
                            SslProtocols?                                              TLSProtocol                  = null,
                            HTTPContentType?                                           ContentType                  = null,
                            AcceptTypes?                                               Accept                       = null,
@@ -87,11 +87,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                    PreferIPv4,
                    RemoteCertificateValidator,
                    LocalCertificateSelector,
-                   ClientCert,
+                   ClientCertificate,
                    TLSProtocol,
                    ContentType,
                    Accept,
                    HTTPAuthentication,
+                   null, // TOTPConfig
                    HTTPUserAgent,
                    Connection,
                    RequestTimeout,
@@ -135,8 +136,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                  )
                                                                              :  null,
                                        LocalCertificateSelector:         LocalCertificateSelector,
-                                       ClientCertificateChain:           ClientCert is not null
-                                                                             ? [ ClientCert ]
+                                       ClientCertificateChain:           ClientCertificate is not null
+                                                                             ? [ ClientCertificate ]
                                                                              : null,
                                        TLSProtocols:                     TLSProtocols,
                                        CertificateRevocationCheckMode:   X509RevocationMode.NoCheck,
@@ -182,8 +183,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                  )
                                                                              :  null,
                                        LocalCertificateSelector:         LocalCertificateSelector,
-                                       ClientCertificateChain:           ClientCert is not null
-                                                                             ? [ ClientCert ]
+                                       ClientCertificateChain:           ClientCertificate is not null
+                                                                             ? [ ClientCertificate ]
                                                                              : null,
                                        TLSProtocols:                     TLSProtocols,
                                        CertificateRevocationCheckMode:   X509RevocationMode.NoCheck,
