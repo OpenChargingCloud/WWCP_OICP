@@ -18,6 +18,7 @@
 #region Usings
 
 using System.Diagnostics;
+using System.Net.Security;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 
@@ -316,7 +317,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="PreferIPv4">Prefer IPv4 instead of IPv6.</param>
         /// <param name="RemoteCertificateValidator">The remote TLS certificate validator.</param>
         /// <param name="LocalCertificateSelector">A delegate to select a TLS client certificate.</param>
-        /// <param name="ClientCert">The TLS client certificate to use for HTTP authentication.</param>
+        /// <param name="ClientCertificates">An optional enumeration of client certificates.</param>
+        /// <param name="ClientCertificateContext">An optional TLS client certificate context.</param>
         /// <param name="Authentication">The optional HTTP authentication to use, e.g. HTTP Basic Auth.</param>
         /// <param name="HTTPUserAgent">The HTTP user agent identification.</param>
         /// <param name="RequestTimeout">An optional request timeout.</param>
@@ -335,7 +337,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                   Boolean?                                                   PreferIPv4                   = null,
                                   RemoteTLSServerCertificateValidationHandler<IHTTPClient>?  RemoteCertificateValidator   = null,
                                   LocalCertificateSelectionHandler?                          LocalCertificateSelector     = null,
-                                  X509Certificate2?                                          ClientCertificate            = null,
+                                  IEnumerable<X509Certificate2>?                             ClientCertificates           = null,
+                                  SslStreamCertificateContext?                               ClientCertificateContext     = null,
+                                  IEnumerable<X509Certificate2>?                             ClientCertificateChain       = null,
                                   SslProtocols?                                              TLSProtocols                 = null,
                                   IHTTPAuthentication?                                       Authentication               = null,
                                   String?                                                    HTTPUserAgent                = DefaultHTTPUserAgent,
@@ -370,7 +374,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                        : null,
 
                    LocalCertificateSelector,
-                   ClientCertificate,
+                   ClientCertificates,
+                   ClientCertificateContext,
+                   ClientCertificateChain,
                    TLSProtocols,
                    HTTPContentType.Application.JSON_UTF8,
                    AcceptTypes.FromHTTPContentTypes(HTTPContentType.Application.JSON_UTF8),
