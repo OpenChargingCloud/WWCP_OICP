@@ -497,7 +497,7 @@
 //        #region OnException
 
 //        /// <summary>
-//        /// An event fired whenever an exception occured.
+//        /// An event fired whenever an exception occurred.
 //        /// </summary>
 //        public event OnExceptionDelegate OnException;
 
@@ -506,12 +506,12 @@
 //        #region OnHTTPError
 
 //        /// <summary>
-//        /// A delegate called whenever a HTTP error occured.
+//        /// A delegate called whenever a HTTP error occurred.
 //        /// </summary>
 //        public delegate void OnHTTPErrorDelegate(DateTime Timestamp, Object Sender, HTTPResponse HttpResponse);
 
 //        /// <summary>
-//        /// An event fired whenever a HTTP error occured.
+//        /// An event fired whenever a HTTP error occurred.
 //        /// </summary>
 //        public event OnHTTPErrorDelegate OnHTTPError;
 
@@ -520,12 +520,12 @@
 //        #region OnSOAPError
 
 //        /// <summary>
-//        /// A delegate called whenever a SOAP error occured.
+//        /// A delegate called whenever a SOAP error occurred.
 //        /// </summary>
 //        public delegate void OnSOAPErrorDelegate(DateTime Timestamp, Object Sender, XElement SOAPXML);
 
 //        /// <summary>
-//        /// An event fired whenever a SOAP error occured.
+//        /// An event fired whenever a SOAP error occurred.
 //        /// </summary>
 //        public event OnSOAPErrorDelegate OnSOAPError;
 
@@ -1237,7 +1237,7 @@
 //        #region (protected) SendException(Timestamp, Sender, Exception)
 
 //        /// <summary>
-//        /// Notify that an exception occured.
+//        /// Notify that an exception occurred.
 //        /// </summary>
 //        /// <param name="Timestamp">The timestamp of the exception.</param>
 //        /// <param name="Sender">The sender of this exception.</param>
@@ -1258,7 +1258,7 @@
 //        #region (protected) SendHTTPError(Timestamp, Sender, HttpResponse)
 
 //        /// <summary>
-//        /// Notify that an HTTP error occured.
+//        /// Notify that an HTTP error occurred.
 //        /// </summary>
 //        /// <param name="Timestamp">The timestamp of the error received.</param>
 //        /// <param name="Sender">The sender of this error message.</param>
@@ -1279,7 +1279,7 @@
 //        #region (protected) SendSOAPError(Timestamp, Sender, SOAPXML)
 
 //        /// <summary>
-//        /// Notify that an HTTP error occured.
+//        /// Notify that an HTTP error occurred.
 //        /// </summary>
 //        /// <param name="Timestamp">The timestamp of the error received.</param>
 //        /// <param name="Sender">The sender of this error message.</param>

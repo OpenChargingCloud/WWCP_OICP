@@ -234,7 +234,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         public UInt64?         DefaultDistanceKM                                 { get; }
 
 
-        public Func<WWCP.EVSEStatusReport, WWCP.ChargingStationStatusTypes>? EVSEStatusAggregationDelegate { get; }
+        public Func<WWCP.EVSEStatusReport, WWCP.ChargingStationStatusType>? EVSEStatusAggregationDelegate { get; }
 
 
         public IEnumerable<WWCP.ChargingReservation> ChargingReservations

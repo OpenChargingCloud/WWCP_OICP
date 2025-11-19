@@ -153,7 +153,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                         Timestamped<WWCP.EVSEAdminStatusType>?              InitialEVSEAdminStatus                  = null,
                                         Timestamped<WWCP.ChargingStationAdminStatusTypes>?  InitialChargingStationAdminStatus       = null,
                                         Timestamped<WWCP.EVSEStatusType>?                   InitialEVSEStatus                       = null,
-                                        Timestamped<WWCP.ChargingStationStatusTypes>?       InitialChargingStationStatus            = null,
+                                        Timestamped<WWCP.ChargingStationStatusType>?       InitialChargingStationStatus            = null,
                                         UInt16                                              MaxEVSEAdminStatusListSize              = WWCP.EVSE.           DefaultMaxEVSEAdminStatusScheduleSize,
                                         UInt16                                              MaxChargingStationAdminStatusListSize   = WWCP.ChargingStation.DefaultMaxChargingStationAdminStatusScheduleSize,
                                         UInt16                                              MaxEVSEStatusListSize                   = WWCP.EVSE.           DefaultMaxEVSEStatusScheduleSize,
