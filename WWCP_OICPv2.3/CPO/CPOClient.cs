@@ -948,7 +948,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      ResponseLogDelegate:  OnPushEVSEDataHTTPResponse,
                                                      CancellationToken:    Request.CancellationToken
                                                  ).
-
                                                  ConfigureAwait(false);
 
                         #endregion
@@ -1441,7 +1440,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      ResponseLogDelegate:  OnPushEVSEStatusHTTPResponse,
                                                      CancellationToken:    Request.CancellationToken
                                                  ).
-
                                                  ConfigureAwait(false);
 
                         #endregion

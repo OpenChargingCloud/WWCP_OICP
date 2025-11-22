@@ -17,15 +17,17 @@
 
 #region Usings
 
+using System.Net.Security;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using System.Runtime.CompilerServices;
+
+using Newtonsoft.Json;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
-using System.Net.Security;
 
 #endregion
 
@@ -54,7 +56,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region Properties
 
-        public Newtonsoft.Json.Formatting  JSONFormatting    { get; set; }
+        /// <summary>
+        /// The JSON formatting to use.
+        /// </summary>
+        public Formatting  JSONFormatting    { get; set; } = Formatting.None;
 
         #endregion
 
@@ -109,8 +114,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                    DNSClient)
 
         {
-
-            this.JSONFormatting  = Newtonsoft.Json.Formatting.None;
 
             this.newHTTPClient   = new HTTPTestClient(
 
