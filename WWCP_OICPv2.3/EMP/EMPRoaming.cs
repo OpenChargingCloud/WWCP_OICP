@@ -17,6 +17,7 @@
 
 #region Usings
 
+using System.Net.Security;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 
@@ -95,10 +96,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             => EMPClient.RemoteCertificateValidator;
 
         /// <summary>
-        /// The TLS client certificate to use for HTTP authentication.
+        /// Multiple optional TLS client certificates to use for HTTP authentication (not a chain of certificates!).
         /// </summary>
-        X509Certificate2?                                           IHTTPClient.ClientCertificate
-            => EMPClient.ClientCertificate;
+        IEnumerable<X509Certificate2>                               IHTTPClient.ClientCertificates
+            => EMPClient.ClientCertificates;
+
+        /// <summary>
+        /// The optionalTLS client certificate context to use for HTTP authentication.
+        /// </summary>
+        SslStreamCertificateContext?                                IHTTPClient.ClientCertificateContext
+            => EMPClient.ClientCertificateContext;
+
+        /// <summary>
+        /// The optional TLS client certificate chain to use for HTTP authentication.
+        /// </summary>
+        IEnumerable<X509Certificate2>                               IHTTPClient.ClientCertificateChain
+            => EMPClient.ClientCertificateChain;
 
         /// <summary>
         /// The TLS protocol to use.

@@ -17,6 +17,7 @@
 
 #region Usings
 
+using System.Net.Security;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 
@@ -24,7 +25,6 @@ using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
-using cloud.charging.open.protocols.OICPv2_3.EMP;
 
 #endregion
 
@@ -93,10 +93,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             => CPOClient.RemoteCertificateValidator;
 
         /// <summary>
-        /// The TLS client certificate to use for HTTP authentication.
+        /// Multiple optional TLS client certificates to use for HTTP authentication (not a chain of certificates!).
         /// </summary>
-        X509Certificate2?                                           IHTTPClient.ClientCertificate
-            => CPOClient.ClientCertificate;
+        IEnumerable<X509Certificate2>                               IHTTPClient.ClientCertificates
+            => CPOClient.ClientCertificates;
+
+        /// <summary>
+        /// The optionalTLS client certificate context to use for HTTP authentication.
+        /// </summary>
+        SslStreamCertificateContext?                                IHTTPClient.ClientCertificateContext
+            => CPOClient.ClientCertificateContext;
+
+        /// <summary>
+        /// The optional TLS client certificate chain to use for HTTP authentication.
+        /// </summary>
+        IEnumerable<X509Certificate2>                               IHTTPClient.ClientCertificateChain
+            => CPOClient.ClientCertificateChain;
 
         /// <summary>
         /// The TLS protocol to use.

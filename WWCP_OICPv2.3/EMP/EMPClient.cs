@@ -762,7 +762,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="LocalCertificateSelector">A delegate to select a TLS client certificate.</param>
         /// <param name="ClientCertificates">An optional enumeration of client certificates.</param>
         /// <param name="ClientCertificateContext">An optional TLS client certificate context.</param>
-        /// <param name="Authentication">The optional HTTP authentication to use, e.g. HTTP Basic Auth.</param>
+        /// <param name="HTTPAuthentication">The optional HTTP authentication to use, e.g. HTTP Basic Auth.</param>
         /// <param name="HTTPUserAgent">The HTTP user agent identification.</param>
         /// <param name="RequestTimeout">An optional request timeout.</param>
         /// <param name="TransmissionRetryDelay">The delay between transmission retries.</param>
@@ -784,7 +784,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                          SslStreamCertificateContext?                             ClientCertificateContext     = null,
                          IEnumerable<X509Certificate2>?                           ClientCertificateChain       = null,
                          SslProtocols?                                            TLSProtocol                  = null,
-                         IHTTPAuthentication?                                     Authentication               = null,
+                         IHTTPAuthentication?                                     HTTPAuthentication           = null,
+                         TOTPConfig?                                              TOTPConfig                   = null,
                          String?                                                  HTTPUserAgent                = DefaultHTTPUserAgent,
                          TimeSpan?                                                RequestTimeout               = null,
                          TransmissionRetryDelayDelegate?                          TransmissionRetryDelay       = null,
@@ -823,7 +824,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                    TLSProtocol,
                    HTTPContentType.Application.JSON_UTF8,
                    AcceptTypes.FromHTTPContentTypes(HTTPContentType.Application.JSON_UTF8),
-                   Authentication,
+                   HTTPAuthentication,
+                   TOTPConfig,
                    HTTPUserAgent       ?? DefaultHTTPUserAgent,
                    ConnectionType.Close,
                    RequestTimeout,
