@@ -602,7 +602,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                 #region Verify local authentication
 
-                var localAuthentication  = request.Identification.ToWWCP()?.ToLocal;
+                var localAuthentication  = request.Identification.ToWWCP()?.AsLocalAuthentication();
 
                 if (localAuthentication is null)
                     return AuthorizationStartResponse.NotAuthorized(
@@ -819,7 +819,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 #region Map parameter values
 
                 var sessionId            = request.SessionId.          ToWWCP();
-                var localAuthentication  = request.Identification.     ToWWCP()?.ToLocal;
+                var localAuthentication  = request.Identification.     ToWWCP()?.AsLocalAuthentication();
                 var chargingLocation     = WWCP.ChargingLocation.FromEVSEId(request.EVSEId?.ToWWCP());
                 var CPOPartnerSessionId  = request.CPOPartnerSessionId.ToWWCP();
                 var operatorId           = request.OperatorId.         ToWWCP();
