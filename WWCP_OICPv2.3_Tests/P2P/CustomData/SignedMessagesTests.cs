@@ -104,7 +104,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.Signed.CPO
 
                         if (requestSignatureValidationValue is not null)
                         {
-                            authorizationStartResponse.CustomData ??= new ();
+                            authorizationStartResponse.CustomData ??= new();
                             authorizationStartResponse.CustomData.Add("requestSignatureValidation", requestSignatureValidationValue);
                         }
 

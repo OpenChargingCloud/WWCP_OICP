@@ -133,7 +133,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.Signed.CPO
                                                           ToUTF8Bytes()),
                                      0, 32);
 
-                Request.CustomData ??= new ();
+                Request.CustomData ??= new();
                 Request.CustomData?.Add("signatureValidation", verifier.VerifySignature(signatureTXT.FromBASE64()));
 
                 return Request;
@@ -142,7 +142,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.Signed.CPO
             else
             {
 
-                Request.CustomData ??= new ();
+                Request.CustomData ??= new();
                 Request.CustomData?.Add("signatureValidation", false);
 
                 return Request;
@@ -179,7 +179,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.Signed.CPO
                                                           ToUTF8Bytes()),
                                      0, 32);
 
-                Response.CustomData ??= new ();
+                Response.CustomData ??= new();
                 Response.CustomData?.Add("signatureValidation", verifier.VerifySignature(signatureTXT.FromBASE64()));
 
                 return Response;
@@ -188,7 +188,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.Signed.CPO
             else
             {
 
-                Response.CustomData ??= new ();
+                Response.CustomData ??= new();
                 Response.CustomData?.Add("signatureValidation", false);
 
                 return Response;
