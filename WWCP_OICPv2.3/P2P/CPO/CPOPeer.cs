@@ -527,6 +527,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                        String?                                                    LogfileName                  = null,
                        LogfileCreatorDelegate?                                    LogfileCreator               = null,
                        DNSClient?                                                 DNSClient                    = null,
+                       String?                                                    Description                  = null,
                        Boolean                                                    AutoStart                    = false)
 
             : base(KeyPair)
@@ -574,6 +575,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                           LogfileName,
                           LogfileCreator,
                           DNSClient,
+                          Description,
                           false
                       );
 

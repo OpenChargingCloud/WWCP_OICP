@@ -1438,6 +1438,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             String                                                     LogfileName                  = DefaultHTTPAPI_LogfileName,
                             LogfileCreatorDelegate?                                    LogfileCreator               = null,
                             DNSClient?                                                 DNSClient                    = null,
+                            String?                                                    Description                  = null,
                             Boolean                                                    AutoStart                    = false)
 
             : base(HTTPHostname,
@@ -1480,6 +1481,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                    LogfileName,
                    LogfileCreator,
                    DNSClient,
+                   Description,
                    false) //AutoStart)
 
         {

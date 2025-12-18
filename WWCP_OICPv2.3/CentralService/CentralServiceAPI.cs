@@ -157,6 +157,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CentralService
                                  String?                                                    LogfileName                  = null,
                                  LogfileCreatorDelegate?                                    LogfileCreator               = null,
                                  DNSClient?                                                 DNSClient                    = null,
+                                 String?                                                    Description                  = null,
                                  Boolean                                                    AutoStart                    = false)
 
         {
@@ -202,6 +203,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CentralService
                           LogfileName,
                           LogfileCreator,
                           DNSClient,
+                          Description,
                           false
                       );
 

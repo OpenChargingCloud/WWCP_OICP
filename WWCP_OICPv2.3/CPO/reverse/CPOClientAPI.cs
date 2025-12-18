@@ -1190,6 +1190,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             String                                                     LogfileName                  = DefaultHTTPAPI_LogfileName,
                             LogfileCreatorDelegate?                                    LogfileCreator               = null,
                             DNSClient?                                                 DNSClient                    = null,
+                            String?                                                    Description                  = null,
                             Boolean                                                    AutoStart                    = false)
 
             : base(HTTPHostname,
@@ -1232,6 +1233,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                    LogfileName,
                    LogfileCreator,
                    DNSClient,
+                   Description,
                    false) //AutoStart)
 
         {

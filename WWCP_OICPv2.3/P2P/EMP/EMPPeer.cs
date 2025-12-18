@@ -495,6 +495,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
                        String?                                                    LogfileName                  = null,
                        LogfileCreatorDelegate?                                    LogfileCreator               = null,
                        DNSClient?                                                 DNSClient                    = null,
+                       String?                                                    Description                  = null,
                        Boolean                                                    AutoStart                    = false)
 
             : base(KeyPair)
@@ -542,6 +543,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
                           LogfileName,
                           LogfileCreator,
                           DNSClient,
+                          Description,
                           false
                       );
 
