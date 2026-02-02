@@ -955,7 +955,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         #endregion
 
 
-                        var processId = httpResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
+                        var processId = httpResponse.TryParseHeaderStruct<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
 
                         if (httpResponse.HTTPStatusCode == HTTPStatusCode.OK)
                         {
@@ -1447,7 +1447,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         #endregion
 
 
-                        var processId = httpResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
+                        var processId = httpResponse.TryParseHeaderStruct<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
 
                         if (httpResponse.HTTPStatusCode == HTTPStatusCode.OK)
                         {
@@ -1936,7 +1936,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         #endregion
 
 
-                        var processId = httpResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
+                        var processId = httpResponse.TryParseHeaderStruct<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
 
                         if (httpResponse.HTTPStatusCode == HTTPStatusCode.OK)
                         {
@@ -2426,7 +2426,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         #endregion
 
 
-                        var processId = httpResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
+                        var processId = httpResponse.TryParseHeaderStruct<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
 
                         if (httpResponse.HTTPStatusCode == HTTPStatusCode.OK)
                         {
@@ -2897,7 +2897,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     #endregion
 
 
-                    var processId = httpResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
+                    var processId = httpResponse.TryParseHeaderStruct<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
 
                     if (httpResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
@@ -3437,7 +3437,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     #endregion
 
 
-                    var processId = httpResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
+                    var processId = httpResponse.TryParseHeaderStruct<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
 
                     if (httpResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
@@ -3810,7 +3810,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     #endregion
 
 
-                    var processId = httpResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
+                    var processId = httpResponse.TryParseHeaderStruct<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
 
                     if (httpResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
@@ -4213,7 +4213,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     #endregion
 
 
-                    var processId = httpResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
+                    var processId = httpResponse.TryParseHeaderStruct<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
 
                     // X-HUBJECT-PARTNER-RUNTIME: 400
 
@@ -4665,7 +4665,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     #endregion
 
 
-                    var processId = httpResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
+                    var processId = httpResponse.TryParseHeaderStruct<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
 
                     if (httpResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
@@ -5116,7 +5116,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     #endregion
 
 
-                    var processId = httpResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
+                    var processId = httpResponse.TryParseHeaderStruct<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
 
                     if (httpResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
@@ -5567,7 +5567,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     #endregion
 
 
-                    var processId = httpResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
+                    var processId = httpResponse.TryParseHeaderStruct<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
 
                     if (httpResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
@@ -6097,7 +6097,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     #endregion
 
 
-                    var processId = httpResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
+                    var processId = httpResponse.TryParseHeaderStruct<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
 
                     if (httpResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
