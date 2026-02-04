@@ -1281,8 +1281,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         }
 
-                        if (httpResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
-                        { }
+                        if (httpResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout ||
+                            httpResponse.HTTPStatusCode.Code >= 500 &&
+                            httpResponse.HTTPStatusCode.Code <  600)
+                        {
+
+                            // It seems that Hubject sometimes returns HTTP 408 or 5xx errors and
+                            // this might be corrected with rotated AWS instances on their side.
+                            //
+                            // Best is to retry the request after reconnecting...
+
+                            await newHTTPClient.ReconnectAsync();
+
+                        }
 
                     }
                     while (TransmissionRetry++ < MaxNumberOfRetries);
@@ -1770,8 +1781,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         }
 
-                        if (httpResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
-                        { }
+                        if (httpResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout ||
+                            httpResponse.HTTPStatusCode.Code >= 500 &&
+                            httpResponse.HTTPStatusCode.Code <  600)
+                        {
+
+                            // It seems that Hubject sometimes returns HTTP 408 or 5xx errors and
+                            // this might be corrected with rotated AWS instances on their side.
+                            //
+                            // Best is to retry the request after reconnecting...
+
+                            await newHTTPClient.ReconnectAsync();
+
+                        }
 
                     }
                     while (TransmissionRetry++ < MaxNumberOfRetries);
@@ -2262,8 +2284,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         }
 
-                        if (httpResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
-                        { }
+                        if (httpResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout ||
+                            httpResponse.HTTPStatusCode.Code >= 500 &&
+                            httpResponse.HTTPStatusCode.Code <  600)
+                        {
+
+                            // It seems that Hubject sometimes returns HTTP 408 or 5xx errors and
+                            // this might be corrected with rotated AWS instances on their side.
+                            //
+                            // Best is to retry the request after reconnecting...
+
+                            await newHTTPClient.ReconnectAsync();
+
+                        }
 
                     }
                     while (TransmissionRetry++ < MaxNumberOfRetries);
@@ -2752,8 +2785,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         }
 
-                        if (httpResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
-                        { }
+                        if (httpResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout ||
+                            httpResponse.HTTPStatusCode.Code >= 500 &&
+                            httpResponse.HTTPStatusCode.Code <  600)
+                        {
+
+                            // It seems that Hubject sometimes returns HTTP 408 or 5xx errors and
+                            // this might be corrected with rotated AWS instances on their side.
+                            //
+                            // Best is to retry the request after reconnecting...
+
+                            await newHTTPClient.ReconnectAsync();
+
+                        }
 
                     }
                     while (TransmissionRetry++ < MaxNumberOfRetries);
@@ -3298,8 +3342,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
-                    { }
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout ||
+                        httpResponse.HTTPStatusCode.Code >= 500 &&
+                        httpResponse.HTTPStatusCode.Code <  600)
+                    {
+
+                        // It seems that Hubject sometimes returns HTTP 408 or 5xx errors and
+                        // this might be corrected with rotated AWS instances on their side.
+                        //
+                        // Best is to retry the request after reconnecting...
+
+                        await newHTTPClient.ReconnectAsync();
+
+                    }
 
                 }
                 while (TransmissionRetry++ < MaxNumberOfRetries);
@@ -3682,8 +3737,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
-                    { }
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout ||
+                        httpResponse.HTTPStatusCode.Code >= 500 &&
+                        httpResponse.HTTPStatusCode.Code <  600)
+                    {
+
+                        // It seems that Hubject sometimes returns HTTP 408 or 5xx errors and
+                        // this might be corrected with rotated AWS instances on their side.
+
+                    }
 
                 }
                 while (TransmissionRetry++ < MaxNumberOfRetries);
@@ -4084,8 +4146,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
-                    { }
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout ||
+                        httpResponse.HTTPStatusCode.Code >= 500 &&
+                        httpResponse.HTTPStatusCode.Code <  600)
+                    {
+
+                        // It seems that Hubject sometimes returns HTTP 408 or 5xx errors and
+                        // this might be corrected with rotated AWS instances on their side.
+
+                    }
 
                 }
                 while (TransmissionRetry++ < MaxNumberOfRetries);
@@ -4524,8 +4593,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
-                    { }
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout ||
+                        httpResponse.HTTPStatusCode.Code >= 500 &&
+                        httpResponse.HTTPStatusCode.Code <  600)
+                    {
+
+                        // It seems that Hubject sometimes returns HTTP 408 or 5xx errors and
+                        // this might be corrected with rotated AWS instances on their side.
+                        //
+                        // Best is to retry the request after reconnecting...
+
+                        await newHTTPClient.ReconnectAsync();
+
+                    }
 
                 }
                 while (TransmissionRetry++ < MaxNumberOfRetries);
@@ -4974,8 +5054,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
-                    { }
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout ||
+                        httpResponse.HTTPStatusCode.Code >= 500 &&
+                        httpResponse.HTTPStatusCode.Code <  600)
+                    {
+
+                        // It seems that Hubject sometimes returns HTTP 408 or 5xx errors and
+                        // this might be corrected with rotated AWS instances on their side.
+                        //
+                        // Best is to retry the request after reconnecting...
+
+                        await newHTTPClient.ReconnectAsync();
+
+                    }
 
                 }
                 while (TransmissionRetry++ < MaxNumberOfRetries);
@@ -5425,8 +5516,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
-                    { }
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout ||
+                        httpResponse.HTTPStatusCode.Code >= 500 &&
+                        httpResponse.HTTPStatusCode.Code <  600)
+                    {
+
+                        // It seems that Hubject sometimes returns HTTP 408 or 5xx errors and
+                        // this might be corrected with rotated AWS instances on their side.
+                        //
+                        // Best is to retry the request after reconnecting...
+
+                        await newHTTPClient.ReconnectAsync();
+
+                    }
 
                 }
                 while (TransmissionRetry++ < MaxNumberOfRetries);
@@ -5876,9 +5978,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
-                    { }
-
                     if (httpResponse.HTTPStatusCode == HTTPStatusCode.InternalServerError)
                     {
 
@@ -5951,6 +6050,20 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         }
 
                         break;
+
+                    }
+
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout ||
+                        httpResponse.HTTPStatusCode.Code >= 500 &&
+                        httpResponse.HTTPStatusCode.Code <  600)
+                    {
+
+                        // It seems that Hubject sometimes returns HTTP 408 or 5xx errors and
+                        // this might be corrected with rotated AWS instances on their side.
+                        //
+                        // Best is to retry the request after reconnecting...
+
+                        await newHTTPClient.ReconnectAsync();
 
                     }
 
@@ -6109,16 +6222,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             try
                             {
 
-                                if (Acknowledgement<ChargeDetailRecordRequest>.TryParse(Request,
-                                                                                        JObject.Parse(httpResponse.HTTPBody.ToUTF8String()),
-                                                                                        out var acknowledgement,
-                                                                                        out var errorResponse,
-                                                                                        httpResponse,
-                                                                                        httpResponse.Timestamp,
-                                                                                        httpResponse.EventTrackingId,
-                                                                                        httpResponse.Runtime,
-                                                                                        processId,
-                                                                                        CustomSendChargeDetailRecordAcknowledgementParser))
+                                if (Acknowledgement<ChargeDetailRecordRequest>.TryParse(
+                                        Request,
+                                        JObject.Parse(httpResponse.HTTPBody.ToUTF8String()),
+                                        out var acknowledgement,
+                                        out var errorResponse,
+                                        httpResponse,
+                                        httpResponse.Timestamp,
+                                        httpResponse.EventTrackingId,
+                                        httpResponse.Runtime,
+                                        processId,
+                                        CustomSendChargeDetailRecordAcknowledgementParser
+                                   ))
                                 {
 
                                     Counters.SendChargeDetailRecord.IncResponses_OK();
@@ -6325,8 +6440,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
-                    { }
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout ||
+                        httpResponse.HTTPStatusCode.Code >= 500 &&
+                        httpResponse.HTTPStatusCode.Code <  600)
+                    {
+
+                        // It seems that Hubject sometimes returns HTTP 408 or 5xx errors and
+                        // this might be corrected with rotated AWS instances on their side.
+                        //
+                        // Best is to retry the request after reconnecting...
+
+                        await newHTTPClient.ReconnectAsync();
+
+                    }
 
                 }
                 while (TransmissionRetry++ < MaxNumberOfRetries);
@@ -6400,6 +6526,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         }
 
         #endregion
+
 
 
         #region (private) LogEvent (Logger, LogHandler, ...)
