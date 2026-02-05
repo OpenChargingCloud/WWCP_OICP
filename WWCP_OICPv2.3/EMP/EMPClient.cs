@@ -1164,7 +1164,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         // It seems that Hubject sometimes returns HTTP 408 or 5xx errors and
-                        // this might be corrected with rotated AWS instances on their side.
+                        // this might be correlated with rotated AWS instances on their side.
                         //
                         // Best is to retry the request after reconnecting...
 
@@ -1185,7 +1185,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                  Timestamp.Now,
                                  Request.EventTrackingId ?? EventTracking_Id.New,
                                  Process_Id.NewRandom(),
-                                 Timestamp.Now - Request.Timestamp,
+                                 stopwatch.Elapsed,
                                  [],
                                  Request,
                                  StatusCode: new StatusCode(
@@ -1204,7 +1204,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                Timestamp.Now,
                                Request.EventTrackingId ?? EventTracking_Id.New,
                                Process_Id.NewRandom(),
-                               Timestamp.Now - Request.Timestamp,
+                               stopwatch.Elapsed,
                                [],
                                Request,
                                StatusCode: new StatusCode(
@@ -1537,7 +1537,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         // It seems that Hubject sometimes returns HTTP 408 or 5xx errors and
-                        // this might be corrected with rotated AWS instances on their side.
+                        // this might be correlated with rotated AWS instances on their side.
                         //
                         // Best is to retry the request after reconnecting...
 
@@ -1558,7 +1558,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                  Timestamp.Now,
                                  Request.EventTrackingId ?? EventTracking_Id.New,
                                  Process_Id.NewRandom(),
-                                 Timestamp.Now - Request.Timestamp,
+                                 stopwatch.Elapsed,
                                  [],
                                  Request,
                                  new StatusCode(
@@ -1577,7 +1577,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                Timestamp.Now,
                                Request.EventTrackingId ?? EventTracking_Id.New,
                                Process_Id.NewRandom(),
-                               Timestamp.Now - Request.Timestamp,
+                               stopwatch.Elapsed,
                                [],
                                Request,
                                new StatusCode(
@@ -1893,7 +1893,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         // It seems that Hubject sometimes returns HTTP 408 or 5xx errors and
-                        // this might be corrected with rotated AWS instances on their side.
+                        // this might be correlated with rotated AWS instances on their side.
                         //
                         // Best is to retry the request after reconnecting...
 
@@ -1914,7 +1914,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                  Timestamp.Now,
                                  Request.EventTrackingId ?? EventTracking_Id.New,
                                  Process_Id.NewRandom(),
-                                 Timestamp.Now - Request.Timestamp,
+                                 stopwatch.Elapsed,
                                  [],
                                  Request,
                                  new StatusCode(
@@ -1933,7 +1933,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                Timestamp.Now,
                                Request.EventTrackingId ?? EventTracking_Id.New,
                                Process_Id.NewRandom(),
-                               Timestamp.Now - Request.Timestamp,
+                               stopwatch.Elapsed,
                                [],
                                Request,
                                new StatusCode(
@@ -2249,7 +2249,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         // It seems that Hubject sometimes returns HTTP 408 or 5xx errors and
-                        // this might be corrected with rotated AWS instances on their side.
+                        // this might be correlated with rotated AWS instances on their side.
                         //
                         // Best is to retry the request after reconnecting...
 
@@ -2270,7 +2270,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                  Timestamp.Now,
                                  Request.EventTrackingId ?? EventTracking_Id.New,
                                  Process_Id.NewRandom(),
-                                 Timestamp.Now - Request.Timestamp,
+                                 stopwatch.Elapsed,
                                  [],
                                  Request,
                                  new StatusCode(
@@ -2289,7 +2289,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                Timestamp.Now,
                                Request.EventTrackingId ?? EventTracking_Id.New,
                                Process_Id.NewRandom(),
-                               Timestamp.Now - Request.Timestamp,
+                               stopwatch.Elapsed,
                                [],
                                Request,
                                new StatusCode(
@@ -2701,7 +2701,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         // It seems that Hubject sometimes returns HTTP 408 or 5xx errors and
-                        // this might be corrected with rotated AWS instances on their side.
+                        // this might be correlated with rotated AWS instances on their side.
                         //
                         // Best is to retry the request after reconnecting...
 
@@ -2722,7 +2722,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                  Timestamp.Now,
                                  Request.EventTrackingId ?? EventTracking_Id.New,
                                  Process_Id.NewRandom(),
-                                 Timestamp.Now - Request.Timestamp,
+                                 stopwatch.Elapsed,
                                  [],
                                  Request,
                                  StatusCode: new StatusCode(
@@ -2741,7 +2741,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                Timestamp.Now,
                                Request.EventTrackingId ?? EventTracking_Id.New,
                                Process_Id.NewRandom(),
-                               Timestamp.Now - Request.Timestamp,
+                               stopwatch.Elapsed,
                                [],
                                Request,
                                StatusCode: new StatusCode(
@@ -3152,7 +3152,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         // It seems that Hubject sometimes returns HTTP 408 or 5xx errors and
-                        // this might be corrected with rotated AWS instances on their side.
+                        // this might be correlated with rotated AWS instances on their side.
                         //
                         // Best is to retry the request after reconnecting...
 
@@ -3173,7 +3173,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                  Timestamp.Now,
                                  Request.EventTrackingId ?? EventTracking_Id.New,
                                  Process_Id.NewRandom(),
-                                 Timestamp.Now - Request.Timestamp,
+                                 stopwatch.Elapsed,
                                  [],
                                  Request,
                                  StatusCode: new StatusCode(
@@ -3192,7 +3192,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                Timestamp.Now,
                                Request.EventTrackingId ?? EventTracking_Id.New,
                                Process_Id.NewRandom(),
-                               Timestamp.Now - Request.Timestamp,
+                               stopwatch.Elapsed,
                                [],
                                Request,
                                StatusCode: new StatusCode(
@@ -3702,7 +3702,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         // It seems that Hubject sometimes returns HTTP 408 or 5xx errors and
-                        // this might be corrected with rotated AWS instances on their side.
+                        // this might be correlated with rotated AWS instances on their side.
                         //
                         // Best is to retry the request after reconnecting...
 
@@ -3723,7 +3723,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                  Timestamp.Now,
                                  Request.EventTrackingId ?? EventTracking_Id.New,
                                  Process_Id.NewRandom(),
-                                 Timestamp.Now - Request.Timestamp,
+                                 stopwatch.Elapsed,
                                  new StatusCode(
                                      StatusCodes.SystemError,
                                      e.Message,
@@ -3747,7 +3747,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                Timestamp.Now,
                                Request.EventTrackingId ?? EventTracking_Id.New,
                                Process_Id.NewRandom(),
-                               Timestamp.Now - Request.Timestamp,
+                               stopwatch.Elapsed,
                                new StatusCode(
                                    StatusCodes.SystemError,
                                    "HTTP request failed!"
@@ -4084,7 +4084,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         // It seems that Hubject sometimes returns HTTP 408 or 5xx errors and
-                        // this might be corrected with rotated AWS instances on their side.
+                        // this might be correlated with rotated AWS instances on their side.
 
                     }
 
@@ -4101,7 +4101,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                  Timestamp.Now,
                                  Request.EventTrackingId ?? EventTracking_Id.New,
                                  Process_Id.NewRandom(),
-                                 Timestamp.Now - Request.Timestamp,
+                                 stopwatch.Elapsed,
                                  new StatusCode(
                                      StatusCodes.SystemError,
                                      e.Message,
@@ -4125,7 +4125,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                Timestamp.Now,
                                Request.EventTrackingId ?? EventTracking_Id.New,
                                Process_Id.NewRandom(),
-                               Timestamp.Now - Request.Timestamp,
+                               stopwatch.Elapsed,
                                new StatusCode(
                                    StatusCodes.SystemError,
                                    "HTTP request failed!"
@@ -4460,7 +4460,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         // It seems that Hubject sometimes returns HTTP 408 or 5xx errors and
-                        // this might be corrected with rotated AWS instances on their side.
+                        // this might be correlated with rotated AWS instances on their side.
 
                     }
 
@@ -4477,7 +4477,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                  Timestamp.Now,
                                  Request.EventTrackingId ?? EventTracking_Id.New,
                                  Process_Id.NewRandom(),
-                                 Timestamp.Now - Request.Timestamp,
+                                 stopwatch.Elapsed,
                                  new StatusCode(
                                      StatusCodes.SystemError,
                                      e.Message,
@@ -4501,7 +4501,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                Timestamp.Now,
                                Request.EventTrackingId ?? EventTracking_Id.New,
                                Process_Id.NewRandom(),
-                               Timestamp.Now - Request.Timestamp,
+                               stopwatch.Elapsed,
                                new StatusCode(
                                    StatusCodes.SystemError,
                                    "HTTP request failed!"
@@ -4836,7 +4836,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         // It seems that Hubject sometimes returns HTTP 408 or 5xx errors and
-                        // this might be corrected with rotated AWS instances on their side.
+                        // this might be correlated with rotated AWS instances on their side.
 
                     }
 
@@ -4853,7 +4853,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                  Timestamp.Now,
                                  Request.EventTrackingId ?? EventTracking_Id.New,
                                  Process_Id.NewRandom(),
-                                 Timestamp.Now - Request.Timestamp,
+                                 stopwatch.Elapsed,
                                  new StatusCode(
                                      StatusCodes.SystemError,
                                      e.Message,
@@ -4877,7 +4877,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                Timestamp.Now,
                                Request.EventTrackingId ?? EventTracking_Id.New,
                                Process_Id.NewRandom(),
-                               Timestamp.Now - Request.Timestamp,
+                               stopwatch.Elapsed,
                                new StatusCode(
                                    StatusCodes.SystemError,
                                    "HTTP request failed!"
@@ -5212,7 +5212,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         // It seems that Hubject sometimes returns HTTP 408 or 5xx errors and
-                        // this might be corrected with rotated AWS instances on their side.
+                        // this might be correlated with rotated AWS instances on their side.
 
                     }
 
@@ -5229,7 +5229,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                  Timestamp.Now,
                                  Request.EventTrackingId ?? EventTracking_Id.New,
                                  Process_Id.NewRandom(),
-                                 Timestamp.Now - Request.Timestamp,
+                                 stopwatch.Elapsed,
                                  new StatusCode(
                                      StatusCodes.SystemError,
                                      e.Message,
@@ -5253,7 +5253,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                Timestamp.Now,
                                Request.EventTrackingId ?? EventTracking_Id.New,
                                Process_Id.NewRandom(),
-                               Timestamp.Now - Request.Timestamp,
+                               stopwatch.Elapsed,
                                new StatusCode(
                                    StatusCodes.SystemError,
                                    "HTTP request failed!"
@@ -5600,7 +5600,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         // It seems that Hubject sometimes returns HTTP 408 or 5xx errors and
-                        // this might be corrected with rotated AWS instances on their side.
+                        // this might be correlated with rotated AWS instances on their side.
                         //
                         // Best is to retry the request after reconnecting...
 
@@ -5621,7 +5621,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                  Timestamp.Now,
                                  Request.EventTrackingId ?? EventTracking_Id.New,
                                  Process_Id.NewRandom(),
-                                 Timestamp.Now - Request.Timestamp,
+                                 stopwatch.Elapsed,
                                  [],
                                  Request,
                                  StatusCode: new StatusCode(
@@ -5640,7 +5640,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                Timestamp.Now,
                                Request.EventTrackingId ?? EventTracking_Id.New,
                                Process_Id.NewRandom(),
-                               Timestamp.Now - Request.Timestamp,
+                               stopwatch.Elapsed,
                                [],
                                Request,
                                StatusCode: new StatusCode(

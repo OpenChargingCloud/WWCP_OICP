@@ -1287,7 +1287,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         {
 
                             // It seems that Hubject sometimes returns HTTP 408 or 5xx errors and
-                            // this might be corrected with rotated AWS instances on their side.
+                            // this might be correlated with rotated AWS instances on their side.
                             //
                             // Best is to retry the request after reconnecting...
 
@@ -1299,6 +1299,29 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     while (TransmissionRetry++ < MaxNumberOfRetries);
 
                 }
+                catch (OperationCanceledException oce)
+                {
+
+                    DebugX.Log($"Hubject.{nameof(CPOClient)}.{nameof(PushEVSEData)} was canceled after {stopwatch.Elapsed.TotalSeconds} seconds!");
+
+                    result = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Canceled(
+                                 Request,
+                                 new Acknowledgement<PushEVSEDataRequest>(
+                                     Timestamp.Now,
+                                     Request.EventTrackingId ?? EventTracking_Id.New,
+                                     Process_Id.NewRandom(),
+                                     stopwatch.Elapsed,
+                                     new StatusCode(
+                                         StatusCodes.Success,
+                                         $"Request canceled after {stopwatch.Elapsed.TotalSeconds} seconds!"
+                                     ),
+                                     Request,
+                                     null,
+                                     false
+                                 )
+                             );
+
+                }
                 catch (Exception e)
                 {
 
@@ -1308,7 +1331,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                      Timestamp.Now,
                                      Request.EventTrackingId ?? EventTracking_Id.New,
                                      Process_Id.NewRandom(),
-                                     Timestamp.Now - Request.Timestamp,
+                                     stopwatch.Elapsed,
                                      new StatusCode(
                                          StatusCodes.SystemError,
                                          e.Message,
@@ -1328,7 +1351,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                    Timestamp.Now,
                                    Request.EventTrackingId ?? EventTracking_Id.New,
                                    Process_Id.NewRandom(),
-                                   Timestamp.Now - Request.Timestamp,
+                                   stopwatch.Elapsed,
                                    new StatusCode(
                                        StatusCodes.SystemError,
                                        statusDescription ?? "HTTP request failed!"
@@ -1787,7 +1810,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         {
 
                             // It seems that Hubject sometimes returns HTTP 408 or 5xx errors and
-                            // this might be corrected with rotated AWS instances on their side.
+                            // this might be correlated with rotated AWS instances on their side.
                             //
                             // Best is to retry the request after reconnecting...
 
@@ -1799,6 +1822,29 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     while (TransmissionRetry++ < MaxNumberOfRetries);
 
                 }
+                catch (OperationCanceledException oce)
+                {
+
+                    DebugX.Log($"Hubject.{nameof(CPOClient)}.{nameof(PushEVSEStatus)} was canceled after {stopwatch.Elapsed.TotalSeconds} seconds!");
+
+                    result = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Canceled(
+                                 Request,
+                                 new Acknowledgement<PushEVSEStatusRequest>(
+                                     Timestamp.Now,
+                                     Request.EventTrackingId ?? EventTracking_Id.New,
+                                     Process_Id.NewRandom(),
+                                     stopwatch.Elapsed,
+                                     new StatusCode(
+                                         StatusCodes.Success,
+                                         $"Request canceled after {stopwatch.Elapsed.TotalSeconds} seconds!"
+                                     ),
+                                     Request,
+                                     null,
+                                     false
+                                 )
+                             );
+
+                }
                 catch (Exception e)
                 {
 
@@ -1808,7 +1854,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                      Timestamp.Now,
                                      Request.EventTrackingId ?? EventTracking_Id.New,
                                      Process_Id.NewRandom(),
-                                     Timestamp.Now - Request.Timestamp,
+                                     stopwatch.Elapsed,
                                      new StatusCode(
                                          StatusCodes.SystemError,
                                          e.Message,
@@ -1828,7 +1874,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                    Timestamp.Now,
                                    Request.EventTrackingId ?? EventTracking_Id.New,
                                    Process_Id.NewRandom(),
-                                   Timestamp.Now - Request.Timestamp,
+                                   stopwatch.Elapsed,
                                    new StatusCode(
                                        StatusCodes.SystemError,
                                        statusDescription ?? "HTTP request failed!"
@@ -2290,7 +2336,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         {
 
                             // It seems that Hubject sometimes returns HTTP 408 or 5xx errors and
-                            // this might be corrected with rotated AWS instances on their side.
+                            // this might be correlated with rotated AWS instances on their side.
                             //
                             // Best is to retry the request after reconnecting...
 
@@ -2302,6 +2348,29 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     while (TransmissionRetry++ < MaxNumberOfRetries);
 
                 }
+                catch (OperationCanceledException oce)
+                {
+
+                    DebugX.Log($"Hubject.{nameof(CPOClient)}.{nameof(PushPricingProductData)} was canceled after {stopwatch.Elapsed.TotalSeconds} seconds!");
+
+                    result = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Canceled(
+                                 Request,
+                                 new Acknowledgement<PushPricingProductDataRequest>(
+                                     Timestamp.Now,
+                                     Request.EventTrackingId ?? EventTracking_Id.New,
+                                     Process_Id.NewRandom(),
+                                     stopwatch.Elapsed,
+                                     new StatusCode(
+                                         StatusCodes.Success,
+                                         $"Request canceled after {stopwatch.Elapsed.TotalSeconds} seconds!"
+                                     ),
+                                     Request,
+                                     null,
+                                     false
+                                 )
+                             );
+
+                }
                 catch (Exception e)
                 {
 
@@ -2311,7 +2380,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                      Timestamp.Now,
                                      Request.EventTrackingId ?? EventTracking_Id.New,
                                      Process_Id.NewRandom(),
-                                     Timestamp.Now - Request.Timestamp,
+                                     stopwatch.Elapsed,
                                      new StatusCode(
                                          StatusCodes.SystemError,
                                          e.Message,
@@ -2331,7 +2400,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                    Timestamp.Now,
                                    Request.EventTrackingId ?? EventTracking_Id.New,
                                    Process_Id.NewRandom(),
-                                   Timestamp.Now - Request.Timestamp,
+                                   stopwatch.Elapsed,
                                    new StatusCode(
                                        StatusCodes.SystemError,
                                        statusDescription ?? "HTTP request failed!"
@@ -2791,7 +2860,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         {
 
                             // It seems that Hubject sometimes returns HTTP 408 or 5xx errors and
-                            // this might be corrected with rotated AWS instances on their side.
+                            // this might be correlated with rotated AWS instances on their side.
                             //
                             // Best is to retry the request after reconnecting...
 
@@ -2803,6 +2872,29 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     while (TransmissionRetry++ < MaxNumberOfRetries);
 
                 }
+                catch (OperationCanceledException oce)
+                {
+
+                    DebugX.Log($"Hubject.{nameof(CPOClient)}.{nameof(PushEVSEPricing)} was canceled after {stopwatch.Elapsed.TotalSeconds} seconds!");
+
+                    result = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Canceled(
+                                 Request,
+                                 new Acknowledgement<PushEVSEPricingRequest>(
+                                     Timestamp.Now,
+                                     Request.EventTrackingId ?? EventTracking_Id.New,
+                                     Process_Id.NewRandom(),
+                                     stopwatch.Elapsed,
+                                     new StatusCode(
+                                         StatusCodes.Success,
+                                         $"Request canceled after {stopwatch.Elapsed.TotalSeconds} seconds!"
+                                     ),
+                                     Request,
+                                     null,
+                                     false
+                                 )
+                             );
+
+                }
                 catch (Exception e)
                 {
 
@@ -2812,7 +2904,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                      Timestamp.Now,
                                      Request.EventTrackingId ?? EventTracking_Id.New,
                                      Process_Id.NewRandom(),
-                                     Timestamp.Now - Request.Timestamp,
+                                     stopwatch.Elapsed,
                                      new StatusCode(
                                          StatusCodes.SystemError,
                                          e.Message,
@@ -2832,7 +2924,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                    Timestamp.Now,
                                    Request.EventTrackingId ?? EventTracking_Id.New,
                                    Process_Id.NewRandom(),
-                                   Timestamp.Now - Request.Timestamp,
+                                   stopwatch.Elapsed,
                                    new StatusCode(
                                        StatusCodes.SystemError,
                                        statusDescription ?? "HTTP request failed!"
@@ -3348,7 +3440,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     {
 
                         // It seems that Hubject sometimes returns HTTP 408 or 5xx errors and
-                        // this might be corrected with rotated AWS instances on their side.
+                        // this might be correlated with rotated AWS instances on their side.
                         //
                         // Best is to retry the request after reconnecting...
 
@@ -3360,6 +3452,28 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 while (TransmissionRetry++ < MaxNumberOfRetries);
 
             }
+            catch (OperationCanceledException oce)
+            {
+
+                DebugX.Log($"Hubject.{nameof(CPOClient)}.{nameof(PullAuthenticationData)} was canceled after {stopwatch.Elapsed.TotalSeconds} seconds!");
+
+                result = OICPResult<PullAuthenticationDataResponse>.Canceled(
+                             Request,
+                             new PullAuthenticationDataResponse(
+                                 Timestamp.Now,
+                                 Request.EventTrackingId ?? EventTracking_Id.New,
+                                 Process_Id.NewRandom(),
+                                 stopwatch.Elapsed,
+                                 [],
+                                 Request,
+                                 StatusCode: new StatusCode(
+                                                 StatusCodes.Success,
+                                                 $"Request canceled after {stopwatch.Elapsed.TotalSeconds} seconds!"
+                                             )
+                             )
+                         );
+
+            }
             catch (Exception e)
             {
 
@@ -3369,7 +3483,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                  Timestamp.Now,
                                  Request.EventTrackingId ?? EventTracking_Id.New,
                                  Process_Id.NewRandom(),
-                                 Timestamp.Now - Request.Timestamp,
+                                 stopwatch.Elapsed,
                                  [],
                                  Request,
                                  StatusCode: new StatusCode(
@@ -3388,7 +3502,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 Timestamp.Now,
                                 Request.EventTrackingId ?? EventTracking_Id.New,
                                 Process_Id.NewRandom(),
-                                Timestamp.Now - Request.Timestamp,
+                                stopwatch.Elapsed,
                                 [],
                                 Request,
                                 StatusCode: new StatusCode(
@@ -3744,7 +3858,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     {
 
                         // It seems that Hubject sometimes returns HTTP 408 or 5xx errors and
-                        // this might be corrected with rotated AWS instances on their side.
+                        // this might be correlated with rotated AWS instances on their side.
 
                     }
 
@@ -3882,7 +3996,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  RequestTimeout:       Request.RequestTimeout ?? RequestTimeout,
                                                  RequestLogDelegate:   OnAuthorizeStopHTTPRequest,
                                                  ResponseLogDelegate:  OnAuthorizeStopHTTPResponse
-                                                 //Seems to have strage side effects...
+                                                 //Seems to have strange side effects...
                                                  //CancellationToken:    Request.CancellationToken
                                              ).
 
@@ -4171,7 +4285,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     {
 
                         // It seems that Hubject sometimes returns HTTP 408 or 5xx errors and
-                        // this might be corrected with rotated AWS instances on their side.
+                        // this might be correlated with rotated AWS instances on their side.
 
                     }
 
@@ -4633,7 +4747,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     {
 
                         // It seems that Hubject sometimes returns HTTP 408 or 5xx errors and
-                        // this might be corrected with rotated AWS instances on their side.
+                        // this might be correlated with rotated AWS instances on their side.
                         //
                         // Best is to retry the request after reconnecting...
 
@@ -4645,6 +4759,29 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 while (TransmissionRetry++ < MaxNumberOfRetries);
 
             }
+            catch (OperationCanceledException oce)
+            {
+
+                DebugX.Log($"Hubject.{nameof(CPOClient)}.{nameof(SendChargingStartNotification)} was canceled after {stopwatch.Elapsed.TotalSeconds} seconds!");
+
+                result = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Canceled(
+                             Request,
+                             new Acknowledgement<ChargingStartNotificationRequest>(
+                                 Timestamp.Now,
+                                 Request.EventTrackingId ?? EventTracking_Id.New,
+                                 Process_Id.NewRandom(),
+                                 stopwatch.Elapsed,
+                                 new StatusCode(
+                                     StatusCodes.Success,
+                                     $"Request canceled after {stopwatch.Elapsed.TotalSeconds} seconds!"
+                                 ),
+                                 Request,
+                                 null,
+                                 false
+                             )
+                         );
+
+            }
             catch (Exception e)
             {
 
@@ -4654,7 +4791,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                  Timestamp.Now,
                                  Request.EventTrackingId ?? EventTracking_Id.New,
                                  Process_Id.NewRandom(),
-                                 Timestamp.Now - Request.Timestamp,
+                                 stopwatch.Elapsed,
                                  new StatusCode(
                                      StatusCodes.SystemError,
                                      e.Message,
@@ -4674,7 +4811,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                Timestamp.Now,
                                Request.EventTrackingId ?? EventTracking_Id.New,
                                Process_Id.NewRandom(),
-                               Timestamp.Now - Request.Timestamp,
+                               stopwatch.Elapsed,
                                new StatusCode(
                                    StatusCodes.SystemError,
                                    "HTTP request failed!",
@@ -5094,7 +5231,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     {
 
                         // It seems that Hubject sometimes returns HTTP 408 or 5xx errors and
-                        // this might be corrected with rotated AWS instances on their side.
+                        // this might be correlated with rotated AWS instances on their side.
                         //
                         // Best is to retry the request after reconnecting...
 
@@ -5106,6 +5243,29 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 while (TransmissionRetry++ < MaxNumberOfRetries);
 
             }
+            catch (OperationCanceledException oce)
+            {
+
+                DebugX.Log($"Hubject.{nameof(CPOClient)}.{nameof(SendChargingProgressNotification)} was canceled after {stopwatch.Elapsed.TotalSeconds} seconds!");
+
+                result = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Canceled(
+                             Request,
+                             new Acknowledgement<ChargingProgressNotificationRequest>(
+                                 Timestamp.Now,
+                                 Request.EventTrackingId ?? EventTracking_Id.New,
+                                 Process_Id.NewRandom(),
+                                 stopwatch.Elapsed,
+                                 new StatusCode(
+                                     StatusCodes.Success,
+                                     $"Request canceled after {stopwatch.Elapsed.TotalSeconds} seconds!"
+                                 ),
+                                 Request,
+                                 null,
+                                 false
+                             )
+                         );
+
+            }
             catch (Exception e)
             {
 
@@ -5115,7 +5275,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                  Timestamp.Now,
                                  Request.EventTrackingId ?? EventTracking_Id.New,
                                  Process_Id.NewRandom(),
-                                 Timestamp.Now - Request.Timestamp,
+                                 stopwatch.Elapsed,
                                  new StatusCode(
                                      StatusCodes.SystemError,
                                      e.Message,
@@ -5135,7 +5295,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                Timestamp.Now,
                                Request.EventTrackingId ?? EventTracking_Id.New,
                                Process_Id.NewRandom(),
-                               Timestamp.Now - Request.Timestamp,
+                               stopwatch.Elapsed,
                                new StatusCode(
                                    StatusCodes.SystemError,
                                    "HTTP request failed!",
@@ -5556,7 +5716,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     {
 
                         // It seems that Hubject sometimes returns HTTP 408 or 5xx errors and
-                        // this might be corrected with rotated AWS instances on their side.
+                        // this might be correlated with rotated AWS instances on their side.
                         //
                         // Best is to retry the request after reconnecting...
 
@@ -5568,6 +5728,29 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 while (TransmissionRetry++ < MaxNumberOfRetries);
 
             }
+            catch (OperationCanceledException oce)
+            {
+
+                DebugX.Log($"Hubject.{nameof(CPOClient)}.{nameof(SendChargingEndNotification)} was canceled after {stopwatch.Elapsed.TotalSeconds} seconds!");
+
+                result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Canceled(
+                             Request,
+                             new Acknowledgement<ChargingEndNotificationRequest>(
+                                 Timestamp.Now,
+                                 Request.EventTrackingId ?? EventTracking_Id.New,
+                                 Process_Id.NewRandom(),
+                                 stopwatch.Elapsed,
+                                 new StatusCode(
+                                     StatusCodes.Success,
+                                     $"Request canceled after {stopwatch.Elapsed.TotalSeconds} seconds!"
+                                 ),
+                                 Request,
+                                 null,
+                                 false
+                             )
+                         );
+
+            }
             catch (Exception e)
             {
 
@@ -5577,7 +5760,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                  Timestamp.Now,
                                  Request.EventTrackingId ?? EventTracking_Id.New,
                                  Process_Id.NewRandom(),
-                                 Timestamp.Now - Request.Timestamp,
+                                 stopwatch.Elapsed,
                                  new StatusCode(
                                      StatusCodes.SystemError,
                                      e.Message,
@@ -5597,7 +5780,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                Timestamp.Now,
                                Request.EventTrackingId ?? EventTracking_Id.New,
                                Process_Id.NewRandom(),
-                               Timestamp.Now - Request.Timestamp,
+                               stopwatch.Elapsed,
                                new StatusCode(
                                    StatusCodes.SystemError,
                                    "HTTP request failed!",
@@ -6093,7 +6276,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     {
 
                         // It seems that Hubject sometimes returns HTTP 408 or 5xx errors and
-                        // this might be corrected with rotated AWS instances on their side.
+                        // this might be correlated with rotated AWS instances on their side.
                         //
                         // Best is to retry the request after reconnecting...
 
@@ -6105,6 +6288,29 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 while (TransmissionRetry++ < MaxNumberOfRetries);
 
             }
+            catch (OperationCanceledException oce)
+            {
+
+                DebugX.Log($"Hubject.{nameof(CPOClient)}.{nameof(SendChargingErrorNotification)} was canceled after {stopwatch.Elapsed.TotalSeconds} seconds!");
+
+                result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Canceled(
+                             Request,
+                             new Acknowledgement<ChargingErrorNotificationRequest>(
+                                 Timestamp.Now,
+                                 Request.EventTrackingId ?? EventTracking_Id.New,
+                                 Process_Id.NewRandom(),
+                                 stopwatch.Elapsed,
+                                 new StatusCode(
+                                     StatusCodes.Success,
+                                     $"Request canceled after {stopwatch.Elapsed.TotalSeconds} seconds!"
+                                 ),
+                                 Request,
+                                 null,
+                                 false
+                             )
+                         );
+
+            }
             catch (Exception e)
             {
 
@@ -6114,7 +6320,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                  Timestamp.Now,
                                  Request.EventTrackingId ?? EventTracking_Id.New,
                                  Process_Id.NewRandom(),
-                                 Timestamp.Now - Request.Timestamp,
+                                 stopwatch.Elapsed,
                                  new StatusCode(
                                      StatusCodes.SystemError,
                                      e.Message,
@@ -6134,7 +6340,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                Timestamp.Now,
                                Request.EventTrackingId ?? EventTracking_Id.New,
                                Process_Id.NewRandom(),
-                               Timestamp.Now - Request.Timestamp,
+                               stopwatch.Elapsed,
                                new StatusCode(
                                    StatusCodes.SystemError,
                                    "HTTP request failed!",
@@ -6480,7 +6686,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     {
 
                         // It seems that Hubject sometimes returns HTTP 408 or 5xx errors and
-                        // this might be corrected with rotated AWS instances on their side.
+                        // this might be correlated with rotated AWS instances on their side.
                         //
                         // Best is to retry the request after reconnecting...
 
@@ -6492,6 +6698,29 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 while (TransmissionRetry++ < MaxNumberOfRetries);
 
             }
+            catch (OperationCanceledException oce)
+            {
+
+                DebugX.Log($"Hubject.{nameof(CPOClient)}.{nameof(SendChargeDetailRecord)} was canceled after {stopwatch.Elapsed.TotalSeconds} seconds!");
+
+                result = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Canceled(
+                             Request,
+                             new Acknowledgement<ChargeDetailRecordRequest>(
+                                 Timestamp.Now,
+                                 Request.EventTrackingId ?? EventTracking_Id.New,
+                                 Process_Id.NewRandom(),
+                                 stopwatch.Elapsed,
+                                 new StatusCode(
+                                     StatusCodes.Success,
+                                     $"Request canceled after {stopwatch.Elapsed.TotalSeconds} seconds!"
+                                 ),
+                                 Request,
+                                 null,
+                                 false
+                             )
+                         );
+
+            }
             catch (Exception e)
             {
 
@@ -6501,7 +6730,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                  Timestamp.Now,
                                  Request.EventTrackingId ?? EventTracking_Id.New,
                                  Process_Id.NewRandom(),
-                                 Timestamp.Now - Request.Timestamp,
+                                 stopwatch.Elapsed,
                                  new StatusCode(
                                      StatusCodes.SystemError,
                                      e.Message,
@@ -6521,7 +6750,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                Timestamp.Now,
                                Request.EventTrackingId ?? EventTracking_Id.New,
                                Process_Id.NewRandom(),
-                               Timestamp.Now - Request.Timestamp,
+                               stopwatch.Elapsed,
                                new StatusCode(
                                    StatusCodes.SystemError,
                                    "HTTP request failed!",
