@@ -3483,8 +3483,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  EventTrackingId:      Request.EventTrackingId,
                                                  RequestTimeout:       Request.RequestTimeout ?? RequestTimeout,
                                                  RequestLogDelegate:   OnAuthorizeStartHTTPRequest,
-                                                 ResponseLogDelegate:  OnAuthorizeStartHTTPResponse,
-                                                 CancellationToken:    Request.CancellationToken
+                                                 ResponseLogDelegate:  OnAuthorizeStartHTTPResponse
+                                                 //Seems to have strage side effects...
+                                                 //CancellationToken:    Request.CancellationToken
                                              ).
 
                                              ConfigureAwait(false);
@@ -3880,8 +3881,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  EventTrackingId:      Request.EventTrackingId,
                                                  RequestTimeout:       Request.RequestTimeout ?? RequestTimeout,
                                                  RequestLogDelegate:   OnAuthorizeStopHTTPRequest,
-                                                 ResponseLogDelegate:  OnAuthorizeStopHTTPResponse,
-                                                 CancellationToken:    Request.CancellationToken
+                                                 ResponseLogDelegate:  OnAuthorizeStopHTTPResponse
+                                                 //Seems to have strage side effects...
+                                                 //CancellationToken:    Request.CancellationToken
                                              ).
 
                                              ConfigureAwait(false);
