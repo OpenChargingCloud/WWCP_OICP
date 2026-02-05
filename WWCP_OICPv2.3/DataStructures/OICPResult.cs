@@ -172,6 +172,26 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
+        #region Canceled  (Request, Result, ProcessId = null)
+
+        /// <summary>
+        /// The request failed.
+        /// </summary>
+        /// <param name="Request">The request.</param>
+        /// <param name="Result">The result.</param>
+        /// <param name="ProcessId">The process identification of the result.</param>
+        public static OICPResult<T> Canceled(Object       Request,
+                                             T            Result,
+                                             Process_Id?  ProcessId   = null)
+
+            => new (Request,
+                    Result,
+                    false,
+                    null,
+                    ProcessId);
+
+        #endregion
+
         #region BadRequest(Request, ValidationErrors = null, ProcessId = null)
 
         /// <summary>

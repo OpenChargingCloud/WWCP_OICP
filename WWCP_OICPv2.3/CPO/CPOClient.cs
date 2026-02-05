@@ -3751,6 +3751,23 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 while (TransmissionRetry++ < MaxNumberOfRetries);
 
             }
+            catch (OperationCanceledException oce)
+            {
+
+                DebugX.Log($"Hubject.{nameof(CPOClient)}.{nameof(AuthorizeStart)} was canceled after {stopwatch.Elapsed.TotalSeconds} seconds!");
+
+                result = OICPResult<AuthorizationStartResponse>.Canceled(
+                             Request,
+                             AuthorizationStartResponse.NotAuthorized(
+                                 Request,
+                                 new StatusCode(
+                                     StatusCodes.Success,
+                                     $"Request canceled after {stopwatch.Elapsed.TotalSeconds} seconds!"
+                                 )
+                             )
+                         );
+
+            }
             catch (Exception e)
             {
 
@@ -4158,6 +4175,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                 }
                 while (TransmissionRetry++ < MaxNumberOfRetries);
+
+            }
+            catch (OperationCanceledException oce)
+            {
+
+                result = OICPResult<AuthorizationStopResponse>.Canceled(
+                             Request,
+                             AuthorizationStopResponse.NotAuthorized(
+                                 Request,
+                                 new StatusCode(
+                                     StatusCodes.Success,
+                                     $"Request canceled after {stopwatch.Elapsed.TotalSeconds} seconds!"
+                                 )
+                             )
+                         );
 
             }
             catch (Exception e)
