@@ -19,13 +19,16 @@
 
 using Newtonsoft.Json.Linq;
 
-using org.GraphDefined.Vanaheimr.Hermod;
-using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
+using org.GraphDefined.Vanaheimr.Hermod.HTTP;
+using org.GraphDefined.Vanaheimr.Hermod.HTTPTest;
 
 using cloud.charging.open.protocols.OICPv2_3.EMP;
 using cloud.charging.open.protocols.OICPv2_3.CPO;
 using cloud.charging.open.protocols.OICPv2_3.CentralService;
+using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod.Logging;
+using System.Reflection;
 
 #endregion
 
@@ -33,21 +36,25 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
 {
 
     /// <summary>
-    /// A HTTP API providing OICP v2.3 data structures and HTTP server side events.
+    /// A HTTP API providing OICP v2.3 Data Structures and
+    /// HTTP Server Sent Events.
     /// </summary>
-    public class OICPWebAPI
+    public class OICPWebAPI : AHTTPExtAPIXExtension<HTTPExtAPIX>
     {
 
         #region Data
 
-        private readonly HTTPAPI httpAPI;
-
         /// <summary>
         /// The default HTTP URI prefix.
         /// </summary>
-        public static readonly HTTPPath             DefaultURLPathPrefix        = HTTPPath.Parse("/");
+        public static readonly  HTTPPath             DefaultURLPathPrefix        = HTTPPath.Parse("/");
 
-        public static readonly HTTPEventSource_Id   DebugLogId                  = HTTPEventSource_Id.Parse("OICPDebugLog");
+        public static readonly  HTTPEventSource_Id   DebugLogId                  = HTTPEventSource_Id.Parse("OICPDebugLog");
+
+        /// <summary>
+        /// The HTTP root for embedded resources.
+        /// </summary>
+        public const            String               HTTPRoot                    = "cloud.charging.open.protocols.OICPv2_3.WebAPI.HTTPRoot.";
 
         #endregion
 
@@ -56,83 +63,69 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
         /// <summary>
         /// The HTTP URI prefix.
         /// </summary>
-        public HTTPPath                                     URLPathPrefix     { get; }
-
-        public Boolean                                      DisableLogging    { get; }
-
-        public String                                       LoggingPath       { get; }
+        public HTTPPath?                 APIURLPathPrefix    { get; }
 
         /// <summary>
-        /// Send debug information via HTTP Server Sent Events.
+        /// Debug information via HTTP Server Sent Events.
         /// </summary>
-        public HTTPEventSource<JObject>                     DebugLog          { get; }
-
-
-        /// <summary>
-        /// The DNS client to use.
-        /// </summary>
-        public DNSClient?                                   DNSClient         { get; }
-
-        #endregion
-
-        #region Events
-
-        #region Generic HTTP/SOAP server logging
-
-        /// <summary>
-        /// An event called whenever a HTTP request came in.
-        /// </summary>
-        public HTTPRequestLogEvent   RequestLog    = new();
-
-        /// <summary>
-        /// An event called whenever a HTTP request could successfully be processed.
-        /// </summary>
-        public HTTPResponseLogEvent  ResponseLog   = new();
-
-        /// <summary>
-        /// An event called whenever a HTTP request resulted in an error.
-        /// </summary>
-        public HTTPErrorLogEvent     ErrorLog      = new();
-
-        #endregion
+        public HTTPEventSource<JObject>  DebugLog            { get; }
 
         #endregion
 
         #region Constructor(s)
 
-        public OICPWebAPI(IPPort?    HTTPPort         = null,
-                          HTTPPath?  URLPathPrefix    = null,
-                          Boolean?   DisableLogging   = null,
-                          String?    LoggingPath      = null,
-                          DNSClient? DNSClient        = null)
+        public OICPWebAPI(HTTPExtAPIX              HTTPExtAPI,
+                          I18NString?              Description            = null,
+                          HTTPPath?                APIURLPathPrefix       = null,
+                          HTTPPath?                WebAPIURLPathPrefix    = null,
+                          HTTPPath?                BasePath               = null,  // For URL prefixes in HTML!
+
+                          String?                  ExternalDNSName        = null,
+                          String?                  HTTPServerName         = DefaultHTTPServerName,
+                          String?                  HTTPServiceName        = DefaultHTTPServiceName,
+                          String?                  APIVersionHash         = null,
+                          JObject?                 APIVersionHashes       = null,
+
+                          Boolean?                 IsDevelopment          = false,
+                          IEnumerable<String>?     DevelopmentServers     = null,
+                          Boolean?                 DisableNotifications   = false,
+                          Boolean?                 DisableLogging         = false,
+                          String?                  LoggingPath            = null,
+                          String?                  LogfileName            = null,
+                          LogfileCreatorDelegate?  LogfileCreator         = null)
+
+            : base(Description     ?? I18NString.Create($"OCPI{Version.String} Web API"),
+                   HTTPExtAPI,
+
+                   WebAPIURLPathPrefix,
+                   BasePath,
+
+                   ExternalDNSName,
+                   HTTPServerName,
+                   HTTPServiceName,
+                   APIVersionHash,
+                   APIVersionHashes,
+
+                   IsDevelopment,
+                   DevelopmentServers,
+                   DisableLogging,
+                   LoggingPath,
+                   LogfileName,
+                   LogfileCreator)
+
         {
 
-            this.httpAPI         = new HTTPAPI(HTTPServerPort: HTTPPort ?? IPPort.Parse(9000));
-            this.URLPathPrefix   = URLPathPrefix ?? DefaultURLPathPrefix;
-            this.DNSClient       = DNSClient;
+            this.APIURLPathPrefix  = APIURLPathPrefix;
 
-            // Logging
-            this.DisableLogging  = this.DisableLogging == false;
-            this.LoggingPath     = LoggingPath    ?? Path.Combine(AppContext.BaseDirectory, "OICPWebAPI");
+            this.DebugLog          = HTTPBaseAPI.AddJSONEventSource(
+                                         EventSourceId:            DebugLogId,
+                                         MaxNumberOfCachedEvents:  1000,
+                                         RetryInterval:            TimeSpan.FromSeconds(5),
+                                         EnableLogging:            true,
+                                         LogfilePath:              this.LoggingPath + "HTTPSSEs" + Path.DirectorySeparatorChar
+                                     );
 
-            if (this.LoggingPath[^1] != Path.DirectorySeparatorChar)
-                this.LoggingPath += Path.DirectorySeparatorChar;
-
-            if (!this.DisableLogging)
-                Directory.CreateDirectory(this.LoggingPath);
-
-
-            // Link HTTP events...
-            httpAPI.HTTPServer.RequestLog   += (HTTPProcessor, ServerTimestamp, Request)                                 => RequestLog. WhenAll(HTTPProcessor, ServerTimestamp, Request);
-            httpAPI.HTTPServer.ResponseLog  += (HTTPProcessor, ServerTimestamp, Request, Response)                       => ResponseLog.WhenAll(HTTPProcessor, ServerTimestamp, Request, Response);
-            httpAPI.HTTPServer.ErrorLog     += (HTTPProcessor, ServerTimestamp, Request, Response, Error, LastException) => ErrorLog.   WhenAll(HTTPProcessor, ServerTimestamp, Request, Response, Error, LastException);
-
-            this.DebugLog        = httpAPI.AddJSONEventSource(EventIdentification:      DebugLogId,
-                                                              URLTemplate:              this.URLPathPrefix + "/" + DebugLogId.ToString(),
-                                                              MaxNumberOfCachedEvents:  10000,
-                                                              RetryInterval:            TimeSpan.FromSeconds(5),
-                                                              EnableLogging:            true,
-                                                              LogfilePath:              this.LoggingPath);
+            RegisterURLTemplates();
 
         }
 
@@ -1309,6 +1302,101 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
 
         #endregion
 
+
+        #region (private) RegisterURLTemplates()
+
+        #region Manage HTTP Resources
+
+        private readonly Tuple<String, Assembly>[] resourceAssemblies = [
+            new Tuple<String, Assembly>(OICPWebAPI.HTTPRoot, typeof(OICPWebAPI).Assembly),
+            new Tuple<String, Assembly>(HTTPAPI.   HTTPRoot, typeof(HTTPAPI).   Assembly)
+        ];
+
+        #region (protected override) GetResourceStream      (ResourceName)
+
+        protected override Stream? GetResourceStream(String ResourceName)
+
+            => GetResourceStream(
+                   ResourceName,
+                   resourceAssemblies
+               );
+
+        #endregion
+
+        #region (protected override) GetResourceMemoryStream(ResourceName)
+
+        protected override MemoryStream? GetResourceMemoryStream(String ResourceName)
+
+            => GetResourceMemoryStream(
+                   ResourceName,
+                   resourceAssemblies
+               );
+
+        #endregion
+
+        #region (protected override) GetResourceString      (ResourceName)
+
+        protected override String GetResourceString(String ResourceName)
+
+            => GetResourceString(
+                   ResourceName,
+                   resourceAssemblies
+               );
+
+        #endregion
+
+        #region (protected override) GetResourceBytes       (ResourceName)
+
+        protected override Byte[] GetResourceBytes(String ResourceName)
+
+            => GetResourceBytes(
+                   ResourceName,
+                   resourceAssemblies
+               );
+
+        #endregion
+
+        #region (protected override) MixWithHTMLTemplate    (ResourceName)
+
+        protected override String MixWithHTMLTemplate(String ResourceName)
+
+            => MixWithHTMLTemplate(
+                   ResourceName,
+                   resourceAssemblies
+               );
+
+        #endregion
+
+        #region (protected override) MixWithHTMLTemplate    (ResourceName, HTMLConverter)
+
+        protected override String MixWithHTMLTemplate(String ResourceName, Func<String, String> HTMLConverter)
+
+            => MixWithHTMLTemplate(
+                   ResourceName,
+                   HTMLConverter,
+                   resourceAssemblies
+               );
+
+        #endregion
+
+        #endregion
+
+
+        /// <summary>
+        /// The following will register HTTP overlays for text/html
+        /// showing a html representation of the OCPI Common API!
+        /// </summary>
+        private void RegisterURLTemplates()
+        {
+
+            HTTPBaseAPI.MapJSONEventSource(
+                DebugLog,
+                URLPathPrefix + DebugLogId.ToString()
+            );
+
+        }
+
+        #endregion
 
     }
 
