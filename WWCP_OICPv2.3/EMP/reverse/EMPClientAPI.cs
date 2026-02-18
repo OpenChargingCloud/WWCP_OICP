@@ -167,7 +167,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         public EMPClientAPILogger?         Logger            { get; }
 
         /// <summary>
-        /// EMP Client API counters.
+        /// API Counters.
         /// </summary>
         public APICounters                 Counters          { get; }
 

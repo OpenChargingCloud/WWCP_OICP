@@ -151,7 +151,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         public CPOClientAPILogger?         Logger            { get; }
 
         /// <summary>
-        /// CPO Client API counters.
+        /// API Counters.
         /// </summary>
         public APICounters                 Counters          { get; }
 
