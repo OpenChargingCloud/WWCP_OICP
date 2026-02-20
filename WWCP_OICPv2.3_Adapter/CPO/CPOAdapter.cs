@@ -377,16 +377,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region OnAuthorizeRemoteReservationStart
 
-            this.CPORoaming.OnAuthorizeRemoteReservationStart += async (Timestamp,
-                                                                        Sender,
-                                                                        Request) => {
+            this.CPORoaming.OnAuthorizeRemoteReservationStart += async (timestamp,
+                                                                        sender,
+                                                                        request) => {
 
 
                 #region Request transformation
 
                 TimeSpan?           Duration               = null;
                 DateTimeOffset?     ReservationStartTime   = null;
-                PartnerProduct_Id?  PartnerProductId       = Request.PartnerProductId;
+                PartnerProduct_Id?  PartnerProductId       = request.PartnerProductId;
 
                 // Analyse the ChargingProductId field and apply the found key/value-pairs
                 if (PartnerProductId?.ToString() is String partnerProductId)
@@ -430,21 +430,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 #endregion
 
                 var response = await RoamingNetwork.Reserve(
-                                         WWCP.ChargingLocation.FromEVSEId(Request.EVSEId.ToWWCP().Value),
+                                         WWCP.ChargingLocation.FromEVSEId(request.EVSEId.ToWWCP().Value),
                                          WWCP.ChargingReservationLevel.EVSE,
                                          ReservationStartTime,
                                          Duration,
 
                                          // Always create a reservation identification usable for OICP!
                                          WWCP.ChargingReservation_Id.Parse(
-                                             Request.EVSEId.OperatorId.ToWWCP().Value,
-                                             Request.SessionId.HasValue
-                                                 ? Request.SessionId.ToString()
+                                             request.EVSEId.OperatorId.ToWWCP().Value,
+                                             request.SessionId.HasValue
+                                                 ? request.SessionId.ToString()
                                                  : Session_Id.NewRandom().ToString()
                                          ),
                                          null,
-                                         Request.ProviderId.    ToWWCP(),
-                                         Request.Identification.ToWWCP(),
+                                         request.ProviderId.    ToWWCP(),
+                                         request.Identification.ToWWCP(),
 
                                          WWCP.Auth_Path.Parse(Id.ToString()),   // Authentication path == CSO Roaming Provider identification!
 
@@ -453,19 +453,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              : null,
 
                                          null,  // AuthTokens
-                                         Request.Identification?.RemoteIdentification           is not null &&
-                                         Request.Identification?.RemoteIdentification?.ToWWCP() is not null
+                                         request.Identification?.RemoteIdentification           is not null &&
+                                         request.Identification?.RemoteIdentification?.ToWWCP() is not null
                                              ? new[] {
-                                                   Request.Identification.RemoteIdentification.ToWWCP().Value
+                                                   request.Identification.RemoteIdentification.ToWWCP().Value
                                                }
                                              : null,
                                          null, // PINs
                                          this,
 
-                                         Request.Timestamp,
-                                         Request.EventTrackingId,
-                                         Request.RequestTimeout,
-                                         Request.CancellationToken
+                                         request.Timestamp,
+                                         request.EventTrackingId,
+                                         request.RequestTimeout,
+                                         request.CancellationToken
                                      ).ConfigureAwait(false);
 
                 #region Response mapping
@@ -477,7 +477,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         case WWCP.ReservationResultType.Success:
                             return Acknowledgement<AuthorizeRemoteReservationStartRequest>.Success(
-                                       Request,
+                                       request,
                                        response.Reservation is not null
                                            ? Session_Id.Parse(response.Reservation.Id.Suffix)
                                            : new Session_Id?(),
@@ -489,31 +489,31 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         case WWCP.ReservationResultType.InvalidCredentials:
                             return Acknowledgement<AuthorizeRemoteReservationStartRequest>.SessionIsInvalid(
-                                       Request,
+                                       request,
                                        SessionId: Session_Id.Parse(response.Reservation.Id.ToString())
                                    );
 
                         case WWCP.ReservationResultType.Timeout:
                         case WWCP.ReservationResultType.CommunicationError:
-                            return Acknowledgement<AuthorizeRemoteReservationStartRequest>.CommunicationToEVSEFailed(Request);
+                            return Acknowledgement<AuthorizeRemoteReservationStartRequest>.CommunicationToEVSEFailed(request);
 
                         case WWCP.ReservationResultType.AlreadyReserved:
-                            return Acknowledgement<AuthorizeRemoteReservationStartRequest>.EVSEAlreadyReserved(Request);
+                            return Acknowledgement<AuthorizeRemoteReservationStartRequest>.EVSEAlreadyReserved(request);
 
                         case WWCP.ReservationResultType.AlreadyInUse:
-                            return Acknowledgement<AuthorizeRemoteReservationStartRequest>.EVSEAlreadyInUse_WrongToken(Request);
+                            return Acknowledgement<AuthorizeRemoteReservationStartRequest>.EVSEAlreadyInUse_WrongToken(request);
 
                         case WWCP.ReservationResultType.UnknownLocation:
-                            return Acknowledgement<AuthorizeRemoteReservationStartRequest>.UnknownEVSEID(Request);
+                            return Acknowledgement<AuthorizeRemoteReservationStartRequest>.UnknownEVSEID(request);
 
                         case WWCP.ReservationResultType.OutOfService:
-                            return Acknowledgement<AuthorizeRemoteReservationStartRequest>.EVSEOutOfService(Request);
+                            return Acknowledgement<AuthorizeRemoteReservationStartRequest>.EVSEOutOfService(request);
 
                     }
                 }
 
                 return Acknowledgement<AuthorizeRemoteReservationStartRequest>.ServiceNotAvailable(
-                           Request,
+                           request,
                            SessionId: Session_Id.Parse(response.Reservation.Id.ToString())
                        );
 
@@ -525,24 +525,24 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region OnAuthorizeRemoteReservationStop
 
-            this.CPORoaming.OnAuthorizeRemoteReservationStop += async (Timestamp,
-                                                                       Sender,
-                                                                       Request) => {
+            this.CPORoaming.OnAuthorizeRemoteReservationStop += async (timestamp,
+                                                                       sender,
+                                                                       request) => {
 
                 var response = await RoamingNetwork.CancelReservation(
                                          WWCP.ChargingReservation_Id.Parse(
-                                             Request.EVSEId.OperatorId.ToWWCP().Value,
-                                             Request.SessionId.ToString()
+                                             request.EVSEId.OperatorId.ToWWCP().Value,
+                                             request.SessionId.ToString()
                                          ),
                                          WWCP.ChargingReservationCancellationReason.Deleted,
                                          //Request.ProviderId.ToWWCP(),
                                          //Request.EVSEId.    ToWWCP(),
-                                         this,
+                                         this,                                  // CSORoamingProvider
 
-                                         Request.Timestamp,
-                                         Request.EventTrackingId,
-                                         Request.RequestTimeout,
-                                         Request.CancellationToken
+                                         request.Timestamp,
+                                         request.EventTrackingId,
+                                         request.RequestTimeout,
+                                         request.CancellationToken
                                      ).ConfigureAwait(false);
 
                 #region Response mapping
@@ -554,33 +554,33 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         case WWCP.CancelReservationResultTypes.Success:
                             return Acknowledgement<AuthorizeRemoteReservationStopRequest>.Success(
-                                       Request,
+                                       request,
                                        StatusCodeDescription: "Reservation deleted!"
                                    );
 
                         case WWCP.CancelReservationResultTypes.UnknownReservationId:
                             return Acknowledgement<AuthorizeRemoteReservationStopRequest>.SessionIsInvalid(
-                                       Request,
-                                       SessionId: Request.SessionId
+                                       request,
+                                       SessionId: request.SessionId
                                    );
 
                         case WWCP.CancelReservationResultTypes.Offline:
                         case WWCP.CancelReservationResultTypes.Timeout:
                         case WWCP.CancelReservationResultTypes.CommunicationError:
-                            return Acknowledgement<AuthorizeRemoteReservationStopRequest>.CommunicationToEVSEFailed(Request);
+                            return Acknowledgement<AuthorizeRemoteReservationStopRequest>.CommunicationToEVSEFailed(request);
 
                         case WWCP.CancelReservationResultTypes.UnknownEVSE:
-                            return Acknowledgement<AuthorizeRemoteReservationStopRequest>.UnknownEVSEID(Request);
+                            return Acknowledgement<AuthorizeRemoteReservationStopRequest>.UnknownEVSEID(request);
 
                         case WWCP.CancelReservationResultTypes.OutOfService:
-                            return Acknowledgement<AuthorizeRemoteReservationStopRequest>.EVSEOutOfService(Request);
+                            return Acknowledgement<AuthorizeRemoteReservationStopRequest>.EVSEOutOfService(request);
 
                     }
                 }
 
                 return Acknowledgement<AuthorizeRemoteReservationStopRequest>.ServiceNotAvailable(
-                           Request,
-                           SessionId: Request.SessionId
+                           request,
+                           SessionId: request.SessionId
                        );
 
                 #endregion
@@ -592,9 +592,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region OnAuthorizeRemoteStart
 
-            this.CPORoaming.OnAuthorizeRemoteStart += async (Timestamp,
-                                                             Sender,
-                                                             Request) => {
+            this.CPORoaming.OnAuthorizeRemoteStart += async (timestamp,
+                                                             sender,
+                                                             request) => {
 
                 try
                 {
@@ -606,7 +606,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     Single?                       PlannedEnergy      = null;
                     WWCP.ChargingProduct_Id?      ProductId          = WWCP.ChargingProduct_Id.Parse("AC1");
                     WWCP.ChargingProduct?         ChargingProduct    = null;
-                    PartnerProduct_Id?            PartnerProductId   = Request.PartnerProductId;
+                    PartnerProduct_Id?            PartnerProductId   = request.PartnerProductId;
 
                     if (PartnerProductId is not null && PartnerProductId.ToString().IsNotNullOrEmpty())
                     {
@@ -622,7 +622,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         else
                         {
 
-                            var operatorId         = Request.EVSEId.OperatorId.ToWWCP();
+                            var operatorId         = request.EVSEId.OperatorId.ToWWCP();
                             var productIdElements  = PartnerProductId?.ToString().DoubleSplit('|', '=') ?? [];
 
                             if (productIdElements.Count != 0)
@@ -680,165 +680,186 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     #endregion
 
-                    var response = await RoamingNetwork.RemoteStart(
-                                             WWCP.ChargingLocation.FromEVSEId(Request.EVSEId.ToWWCP()),
-                                             ChargingProduct,
-                                             ReservationId,
-                                             Request.SessionId.     ToWWCP(),
-                                             Request.ProviderId.    ToWWCP(),
-                                             Request.Identification.ToWWCP(),       // Remote Authentication
-                                             null,
-                                             WWCP.Auth_Path.Parse(Id.ToString()),   // Authentication path == CSO Roaming Provider identification!
-                                             this,                                  // CSORoamingProvider
+                    var chargingLocation  = WWCP.ChargingLocation.FromEVSEId(
+                                                request.EVSEId.ToWWCP()
+                                            );
 
-                                             Request.Timestamp,
-                                             Request.EventTrackingId,
-                                             Request.RequestTimeout,
-                                             Request.CancellationToken
-                                         ).ConfigureAwait(false);
-
-                    #region Response mapping
-
-                    if (response is not null)
+                    if (chargingLocation is not null)
                     {
-                        switch (response.Result)
+
+                        var response = await RoamingNetwork.RemoteStart(
+                                                 chargingLocation,
+                                                 ChargingProduct,
+                                                 ReservationId,
+                                                 request.SessionId.     ToWWCP(),
+                                                 request.ProviderId.    ToWWCP(),
+                                                 request.Identification.ToWWCP(),       // Remote Authentication
+                                                 null,
+                                                 WWCP.Auth_Path.Parse(                  // Authentication path == CSO Roaming Provider identification!
+                                                     Id.ToString()
+                                                 ),
+                                                 this,                                  // CSORoamingProvider
+
+                                                 request.Timestamp,
+                                                 request.EventTrackingId,
+                                                 request.RequestTimeout,
+                                                 request.CancellationToken
+                                             ).ConfigureAwait(false);
+
+                        #region Response mapping
+
+                        if (response is not null)
                         {
+                            switch (response.Result)
+                            {
 
-                            case WWCP.RemoteStartResultTypes.Success:
-                                return Acknowledgement<AuthorizeRemoteStartRequest>.Success(
-                                           Request:                   Request,
-                                           SessionId:                 response.Session.Id.ToOICP(),
-                                           StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : "Ready to charge!",
-                                           StatusCodeAdditionalInfo:  response.AdditionalInfo,
-                                           EMPPartnerSessionId:       Request.EMPPartnerSessionId,
-                                           CPOPartnerSessionId:       Request.CPOPartnerSessionId
-                                       );
+                                case WWCP.RemoteStartResultTypes.Success:
+                                    return Acknowledgement<AuthorizeRemoteStartRequest>.Success(
+                                               Request:                   request,
+                                               SessionId:                 response.Session?.Id.ToOICP(),
+                                               StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : "Ready to charge!",
+                                               StatusCodeAdditionalInfo:  response.AdditionalInfo,
+                                               EMPPartnerSessionId:       request.EMPPartnerSessionId,
+                                               CPOPartnerSessionId:       request.CPOPartnerSessionId
+                                           );
 
-                            case WWCP.RemoteStartResultTypes.AsyncOperation:
-                                return Acknowledgement<AuthorizeRemoteStartRequest>.Success(
-                                           Request:                   Request,
-                                           SessionId:                 response.Session.Id.ToOICP(),
-                                           StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : "Ready to charge (async)!",
-                                           StatusCodeAdditionalInfo:  response.AdditionalInfo,
-                                           EMPPartnerSessionId:       Request.EMPPartnerSessionId,
-                                           CPOPartnerSessionId:       Request.CPOPartnerSessionId
-                                       );
+                                case WWCP.RemoteStartResultTypes.AsyncOperation:
+                                    return Acknowledgement<AuthorizeRemoteStartRequest>.Success(
+                                               Request:                   request,
+                                               SessionId:                 response.Session?.Id.ToOICP(),
+                                               StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : "Ready to charge (async)!",
+                                               StatusCodeAdditionalInfo:  response.AdditionalInfo,
+                                               EMPPartnerSessionId:       request.EMPPartnerSessionId,
+                                               CPOPartnerSessionId:       request.CPOPartnerSessionId
+                                           );
 
-                            case WWCP.RemoteStartResultTypes.InvalidSessionId:
-                                return Acknowledgement<AuthorizeRemoteStartRequest>.SessionIsInvalid(
-                                           Request:                   Request,
-                                           SessionId:                 Request.SessionId,
-                                           StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : null,
-                                           StatusCodeAdditionalInfo:  response.AdditionalInfo,
-                                           EMPPartnerSessionId:       Request.EMPPartnerSessionId,
-                                           CPOPartnerSessionId:       Request.CPOPartnerSessionId
-                                       );
+                                case WWCP.RemoteStartResultTypes.InvalidSessionId:
+                                    return Acknowledgement<AuthorizeRemoteStartRequest>.SessionIsInvalid(
+                                               Request:                   request,
+                                               SessionId:                 request.SessionId,
+                                               StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : null,
+                                               StatusCodeAdditionalInfo:  response.AdditionalInfo,
+                                               EMPPartnerSessionId:       request.EMPPartnerSessionId,
+                                               CPOPartnerSessionId:       request.CPOPartnerSessionId
+                                           );
 
-                            case WWCP.RemoteStartResultTypes.InvalidCredentials:
-                                return Acknowledgement<AuthorizeRemoteStartRequest>.NoValidContract(
-                                           Request:                   Request,
-                                           SessionId:                 Request.SessionId,
-                                           StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : null,
-                                           StatusCodeAdditionalInfo:  response.AdditionalInfo,
-                                           EMPPartnerSessionId:       Request.EMPPartnerSessionId,
-                                           CPOPartnerSessionId:       Request.CPOPartnerSessionId
-                                       );
+                                case WWCP.RemoteStartResultTypes.InvalidCredentials:
+                                    return Acknowledgement<AuthorizeRemoteStartRequest>.NoValidContract(
+                                               Request:                   request,
+                                               SessionId:                 request.SessionId,
+                                               StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : null,
+                                               StatusCodeAdditionalInfo:  response.AdditionalInfo,
+                                               EMPPartnerSessionId:       request.EMPPartnerSessionId,
+                                               CPOPartnerSessionId:       request.CPOPartnerSessionId
+                                           );
 
-                            case WWCP.RemoteStartResultTypes.NoEVConnectedToEVSE:
-                                return Acknowledgement<AuthorizeRemoteStartRequest>.NoEVConnectedToEVSE(
-                                           Request:                   Request,
-                                           SessionId:                 Request.SessionId,
-                                           StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : null,
-                                           StatusCodeAdditionalInfo:  response.AdditionalInfo,
-                                           EMPPartnerSessionId:       Request.EMPPartnerSessionId,
-                                           CPOPartnerSessionId:       Request.CPOPartnerSessionId
-                                       );
+                                case WWCP.RemoteStartResultTypes.NoEVConnectedToEVSE:
+                                    return Acknowledgement<AuthorizeRemoteStartRequest>.NoEVConnectedToEVSE(
+                                               Request:                   request,
+                                               SessionId:                 request.SessionId,
+                                               StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : null,
+                                               StatusCodeAdditionalInfo:  response.AdditionalInfo,
+                                               EMPPartnerSessionId:       request.EMPPartnerSessionId,
+                                               CPOPartnerSessionId:       request.CPOPartnerSessionId
+                                           );
 
-                            case WWCP.RemoteStartResultTypes.Offline:
-                            case WWCP.RemoteStartResultTypes.Timeout:
-                            case WWCP.RemoteStartResultTypes.CommunicationError:
-                            case WWCP.RemoteStartResultTypes.Error:
-                                return Acknowledgement<AuthorizeRemoteStartRequest>.CommunicationToEVSEFailed(
-                                           Request:                   Request,
-                                           SessionId:                 Request.SessionId,
-                                           StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : null,
-                                           StatusCodeAdditionalInfo:  response.AdditionalInfo,
-                                           EMPPartnerSessionId:       Request.EMPPartnerSessionId,
-                                           CPOPartnerSessionId:       Request.CPOPartnerSessionId
-                                       );
+                                case WWCP.RemoteStartResultTypes.Offline:
+                                case WWCP.RemoteStartResultTypes.Timeout:
+                                case WWCP.RemoteStartResultTypes.CommunicationError:
+                                case WWCP.RemoteStartResultTypes.Error:
+                                    return Acknowledgement<AuthorizeRemoteStartRequest>.CommunicationToEVSEFailed(
+                                               Request:                   request,
+                                               SessionId:                 request.SessionId,
+                                               StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : null,
+                                               StatusCodeAdditionalInfo:  response.AdditionalInfo,
+                                               EMPPartnerSessionId:       request.EMPPartnerSessionId,
+                                               CPOPartnerSessionId:       request.CPOPartnerSessionId
+                                           );
 
-                            case WWCP.RemoteStartResultTypes.Reserved:
-                                return Acknowledgement<AuthorizeRemoteStartRequest>.EVSEAlreadyReserved(
-                                           Request:                   Request,
-                                           SessionId:                 Request.SessionId,
-                                           StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : null,
-                                           StatusCodeAdditionalInfo:  response.AdditionalInfo,
-                                           EMPPartnerSessionId:       Request.EMPPartnerSessionId,
-                                           CPOPartnerSessionId:       Request.CPOPartnerSessionId
-                                       );
+                                case WWCP.RemoteStartResultTypes.Reserved:
+                                    return Acknowledgement<AuthorizeRemoteStartRequest>.EVSEAlreadyReserved(
+                                               Request:                   request,
+                                               SessionId:                 request.SessionId,
+                                               StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : null,
+                                               StatusCodeAdditionalInfo:  response.AdditionalInfo,
+                                               EMPPartnerSessionId:       request.EMPPartnerSessionId,
+                                               CPOPartnerSessionId:       request.CPOPartnerSessionId
+                                           );
 
-                            case WWCP.RemoteStartResultTypes.AlreadyInUse:
-                                return Acknowledgement<AuthorizeRemoteStartRequest>.EVSEAlreadyInUse_WrongToken(
-                                           Request:                   Request,
-                                           SessionId:                 Request.SessionId,
-                                           StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : null,
-                                           StatusCodeAdditionalInfo:  response.AdditionalInfo,
-                                           EMPPartnerSessionId:       Request.EMPPartnerSessionId,
-                                           CPOPartnerSessionId:       Request.CPOPartnerSessionId
-                                       );
+                                case WWCP.RemoteStartResultTypes.AlreadyInUse:
+                                    return Acknowledgement<AuthorizeRemoteStartRequest>.EVSEAlreadyInUse_WrongToken(
+                                               Request:                   request,
+                                               SessionId:                 request.SessionId,
+                                               StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : null,
+                                               StatusCodeAdditionalInfo:  response.AdditionalInfo,
+                                               EMPPartnerSessionId:       request.EMPPartnerSessionId,
+                                               CPOPartnerSessionId:       request.CPOPartnerSessionId
+                                           );
 
-                            case WWCP.RemoteStartResultTypes.UnknownLocation:
-                                return Acknowledgement<AuthorizeRemoteStartRequest>.UnknownEVSEID(
-                                           Request:                   Request,
-                                           SessionId:                 Request.SessionId,
-                                           StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : null,
-                                           StatusCodeAdditionalInfo:  response.AdditionalInfo,
-                                           EMPPartnerSessionId:       Request.EMPPartnerSessionId,
-                                           CPOPartnerSessionId:       Request.CPOPartnerSessionId
-                                       );
+                                case WWCP.RemoteStartResultTypes.UnknownLocation:
+                                    return Acknowledgement<AuthorizeRemoteStartRequest>.UnknownEVSEID(
+                                               Request:                   request,
+                                               SessionId:                 request.SessionId,
+                                               StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : null,
+                                               StatusCodeAdditionalInfo:  response.AdditionalInfo,
+                                               EMPPartnerSessionId:       request.EMPPartnerSessionId,
+                                               CPOPartnerSessionId:       request.CPOPartnerSessionId
+                                           );
 
-                            case WWCP.RemoteStartResultTypes.OutOfService:
-                                return Acknowledgement<AuthorizeRemoteStartRequest>.EVSEOutOfService(
-                                           Request:                   Request,
-                                           SessionId:                 Request.SessionId,
-                                           StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : null,
-                                           StatusCodeAdditionalInfo:  response.AdditionalInfo,
-                                           EMPPartnerSessionId:       Request.EMPPartnerSessionId,
-                                           CPOPartnerSessionId:       Request.CPOPartnerSessionId
-                                       );
+                                case WWCP.RemoteStartResultTypes.OutOfService:
+                                    return Acknowledgement<AuthorizeRemoteStartRequest>.EVSEOutOfService(
+                                               Request:                   request,
+                                               SessionId:                 request.SessionId,
+                                               StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : null,
+                                               StatusCodeAdditionalInfo:  response.AdditionalInfo,
+                                               EMPPartnerSessionId:       request.EMPPartnerSessionId,
+                                               CPOPartnerSessionId:       request.CPOPartnerSessionId
+                                           );
 
-                            default:
-                                return Acknowledgement<AuthorizeRemoteStartRequest>.ServiceNotAvailable(
-                                    Request:                   Request,
-                                    StatusCodeAdditionalInfo:  "Unknown WWCP RemoteStart result: " + response.Result.ToString() + Environment.NewLine +
-                                                               response.Description.FirstText()                                 + Environment.NewLine +
-                                                               response.AdditionalInfo,
-                                    SessionId:                 Request.SessionId,
-                                    EMPPartnerSessionId:       Request.EMPPartnerSessionId,
-                                    CPOPartnerSessionId:       Request.CPOPartnerSessionId
-                                );
+                                default:
+                                    return Acknowledgement<AuthorizeRemoteStartRequest>.ServiceNotAvailable(
+                                               Request:                   request,
+                                               StatusCodeAdditionalInfo:  "Unknown WWCP RemoteStart result: " + response.Result.ToString() + Environment.NewLine +
+                                                                          response.Description.FirstText()                                 + Environment.NewLine +
+                                                                          response.AdditionalInfo,
+                                               SessionId:                 request.SessionId,
+                                               EMPPartnerSessionId:       request.EMPPartnerSessionId,
+                                               CPOPartnerSessionId:       request.CPOPartnerSessionId
+                                           );
 
+                            }
                         }
+
+                        return Acknowledgement<AuthorizeRemoteStartRequest>.ServiceNotAvailable(
+                                   Request:                   request,
+                                   StatusCodeAdditionalInfo:  "Invalid WWCP RemoteStart result!",
+                                   SessionId:                 request.SessionId,
+                                   EMPPartnerSessionId:       request.EMPPartnerSessionId,
+                                   CPOPartnerSessionId:       request.CPOPartnerSessionId
+                               );
+
+                        #endregion
+
                     }
 
-                    return Acknowledgement<AuthorizeRemoteStartRequest>.ServiceNotAvailable(
-                               Request:                   Request,
-                               StatusCodeAdditionalInfo:  "Invalid WWCP RemoteStart result!",
-                               SessionId:                 Request.SessionId,
-                               EMPPartnerSessionId:       Request.EMPPartnerSessionId,
-                               CPOPartnerSessionId:       Request.CPOPartnerSessionId
+                    return Acknowledgement<AuthorizeRemoteStartRequest>.UnknownEVSEID(
+                               Request:                request,
+                               SessionId:              request.SessionId,
+                               StatusCodeDescription:  $"The given EVSEId '{request.EVSEId}' could not be mapped to a WWCP ChargingLocation!",
+                               EMPPartnerSessionId:    request.EMPPartnerSessionId,
+                               CPOPartnerSessionId:    request.CPOPartnerSessionId
                            );
-
-                    #endregion
 
                 }
                 catch (Exception e)
                 {
+
                     return Acknowledgement<AuthorizeRemoteStartRequest>.ServiceNotAvailable(
-                        Request:                   Request,
-                        StatusCodeAdditionalInfo:  e.Message + "\n" + e.StackTrace,
-                        SessionId:                 Request.SessionId
-                    );
+                               Request:                   request,
+                               StatusCodeAdditionalInfo:  e.Message + "\n" + e.StackTrace,
+                               SessionId:                 request.SessionId
+                           );
+
                 }
 
             };
@@ -847,129 +868,146 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region OnAuthorizeRemoteStop
 
-            this.CPORoaming.OnAuthorizeRemoteStop += async (Timestamp,
-                                                            Sender,
-                                                            Request) => {
+            this.CPORoaming.OnAuthorizeRemoteStop += async (timestamp,
+                                                            sender,
+                                                            request) => {
 
                 try
                 {
 
-                    var sessionId  = Request.SessionId.ToWWCP();
+                    var sessionId  = request.SessionId.ToWWCP();
 
-                    var response   = await RoamingNetwork.RemoteStop(
-                                               sessionId.Value,
-                                               WWCP.ReservationHandling.Close,
-                                               Request.ProviderId.ToWWCP(),
-                                               null,                                  // Remote Authentication
-                                               WWCP.Auth_Path.Parse(Id.ToString()),   // Authentication path == CSO Roaming Provider identification!
-                                               this,
-
-                                               Request.Timestamp,
-                                               Request.EventTrackingId,
-                                               Request.RequestTimeout,
-                                               Request.CancellationToken
-                                           ).ConfigureAwait(false);
-
-                    #region Response mapping
-
-                    if (response is not null)
+                    if (sessionId is not null)
                     {
-                        switch (response.Result)
+
+                        var response   = await RoamingNetwork.RemoteStop(
+                                                   sessionId.Value,
+                                                   WWCP.ReservationHandling.Close,
+                                                   request.ProviderId.ToWWCP(),
+                                                   null,                                  // Remote Authentication
+                                                   WWCP.Auth_Path.Parse(                  // Authentication path == CSO Roaming Provider identification!
+                                                       Id.ToString()
+                                                   ),
+                                                   this,                                  // CSORoamingProvider
+
+                                                   request.Timestamp,
+                                                   request.EventTrackingId,
+                                                   request.RequestTimeout,
+                                                   request.CancellationToken
+                                               ).ConfigureAwait(false);
+
+                        #region Response mapping
+
+                        if (response is not null)
                         {
+                            switch (response.Result)
+                            {
 
-                            case WWCP.RemoteStopResultTypes.Success:
-                                return Acknowledgement<AuthorizeRemoteStopRequest>.Success(
-                                           Request:                   Request,
-                                           SessionId:                 response.SessionId.ToOICP(),
-                                           StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : "Ready to stop charging!",
-                                           StatusCodeAdditionalInfo:  response.AdditionalInfo,
-                                           EMPPartnerSessionId:       Request.EMPPartnerSessionId,
-                                           CPOPartnerSessionId:       Request.CPOPartnerSessionId
-                                       );
+                                case WWCP.RemoteStopResultTypes.Success:
+                                    return Acknowledgement<AuthorizeRemoteStopRequest>.Success(
+                                               Request:                   request,
+                                               SessionId:                 response.SessionId.ToOICP(),
+                                               StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : "Ready to stop charging!",
+                                               StatusCodeAdditionalInfo:  response.AdditionalInfo,
+                                               EMPPartnerSessionId:       request.EMPPartnerSessionId,
+                                               CPOPartnerSessionId:       request.CPOPartnerSessionId
+                                           );
 
-                            case WWCP.RemoteStopResultTypes.AsyncOperation:
-                                return Acknowledgement<AuthorizeRemoteStopRequest>.Success(
-                                           Request:                   Request,
-                                           SessionId:                 response.SessionId.ToOICP(),
-                                           StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : "Ready to stop charging (async)!",
-                                           StatusCodeAdditionalInfo:  response.AdditionalInfo,
-                                           EMPPartnerSessionId:       Request.EMPPartnerSessionId,
-                                           CPOPartnerSessionId:       Request.CPOPartnerSessionId
-                                       );
+                                case WWCP.RemoteStopResultTypes.AsyncOperation:
+                                    return Acknowledgement<AuthorizeRemoteStopRequest>.Success(
+                                               Request:                   request,
+                                               SessionId:                 response.SessionId.ToOICP(),
+                                               StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : "Ready to stop charging (async)!",
+                                               StatusCodeAdditionalInfo:  response.AdditionalInfo,
+                                               EMPPartnerSessionId:       request.EMPPartnerSessionId,
+                                               CPOPartnerSessionId:       request.CPOPartnerSessionId
+                                           );
 
-                            case WWCP.RemoteStopResultTypes.InvalidSessionId:
-                                return Acknowledgement<AuthorizeRemoteStopRequest>.SessionIsInvalid(
-                                           Request:                   Request,
-                                           SessionId:                 Request.SessionId,
-                                           StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : null,
-                                           StatusCodeAdditionalInfo:  response.AdditionalInfo,
-                                           EMPPartnerSessionId:       Request.EMPPartnerSessionId,
-                                           CPOPartnerSessionId:       Request.CPOPartnerSessionId
-                                       );
+                                case WWCP.RemoteStopResultTypes.InvalidSessionId:
+                                    return Acknowledgement<AuthorizeRemoteStopRequest>.SessionIsInvalid(
+                                               Request:                   request,
+                                               SessionId:                 request.SessionId,
+                                               StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : null,
+                                               StatusCodeAdditionalInfo:  response.AdditionalInfo,
+                                               EMPPartnerSessionId:       request.EMPPartnerSessionId,
+                                               CPOPartnerSessionId:       request.CPOPartnerSessionId
+                                           );
 
-                            case WWCP.RemoteStopResultTypes.Offline:
-                            case WWCP.RemoteStopResultTypes.Timeout:
-                            case WWCP.RemoteStopResultTypes.CommunicationError:
-                                return Acknowledgement<AuthorizeRemoteStopRequest>.CommunicationToEVSEFailed(
-                                           Request:                   Request,
-                                           SessionId:                 Request.SessionId,
-                                           StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : null,
-                                           StatusCodeAdditionalInfo:  response.AdditionalInfo,
-                                           EMPPartnerSessionId:       Request.EMPPartnerSessionId,
-                                           CPOPartnerSessionId:       Request.CPOPartnerSessionId
-                                       );
+                                case WWCP.RemoteStopResultTypes.Offline:
+                                case WWCP.RemoteStopResultTypes.Timeout:
+                                case WWCP.RemoteStopResultTypes.CommunicationError:
+                                    return Acknowledgement<AuthorizeRemoteStopRequest>.CommunicationToEVSEFailed(
+                                               Request:                   request,
+                                               SessionId:                 request.SessionId,
+                                               StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : null,
+                                               StatusCodeAdditionalInfo:  response.AdditionalInfo,
+                                               EMPPartnerSessionId:       request.EMPPartnerSessionId,
+                                               CPOPartnerSessionId:       request.CPOPartnerSessionId
+                                           );
 
-                            case WWCP.RemoteStopResultTypes.UnknownLocation:
-                                return Acknowledgement<AuthorizeRemoteStopRequest>.UnknownEVSEID(
-                                           Request:                   Request,
-                                           SessionId:                 Request.SessionId,
-                                           StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : null,
-                                           StatusCodeAdditionalInfo:  response.AdditionalInfo,
-                                           EMPPartnerSessionId:       Request.EMPPartnerSessionId,
-                                           CPOPartnerSessionId:       Request.CPOPartnerSessionId
-                                       );
+                                case WWCP.RemoteStopResultTypes.UnknownLocation:
+                                    return Acknowledgement<AuthorizeRemoteStopRequest>.UnknownEVSEID(
+                                               Request:                   request,
+                                               SessionId:                 request.SessionId,
+                                               StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : null,
+                                               StatusCodeAdditionalInfo:  response.AdditionalInfo,
+                                               EMPPartnerSessionId:       request.EMPPartnerSessionId,
+                                               CPOPartnerSessionId:       request.CPOPartnerSessionId
+                                           );
 
-                            case WWCP.RemoteStopResultTypes.OutOfService:
-                                return Acknowledgement<AuthorizeRemoteStopRequest>.EVSEOutOfService(
-                                           Request:                   Request,
-                                           SessionId:                 Request.SessionId,
-                                           StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : null,
-                                           StatusCodeAdditionalInfo:  response.AdditionalInfo,
-                                           EMPPartnerSessionId:       Request.EMPPartnerSessionId,
-                                           CPOPartnerSessionId:       Request.CPOPartnerSessionId
-                                       );
+                                case WWCP.RemoteStopResultTypes.OutOfService:
+                                    return Acknowledgement<AuthorizeRemoteStopRequest>.EVSEOutOfService(
+                                               Request:                   request,
+                                               SessionId:                 request.SessionId,
+                                               StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : null,
+                                               StatusCodeAdditionalInfo:  response.AdditionalInfo,
+                                               EMPPartnerSessionId:       request.EMPPartnerSessionId,
+                                               CPOPartnerSessionId:       request.CPOPartnerSessionId
+                                           );
 
-                            default:
-                                return Acknowledgement<AuthorizeRemoteStopRequest>.ServiceNotAvailable(
-                                    Request:                   Request,
-                                    StatusCodeAdditionalInfo:  "Unknown WWCP RemoteStop result: " + response.Result.ToString() + "\n" +
-                                                               response.Description + "\n" +
-                                                               response.AdditionalInfo,
-                                    SessionId:                 Request.SessionId,
-                                    EMPPartnerSessionId:       Request.EMPPartnerSessionId,
-                                    CPOPartnerSessionId:       Request.CPOPartnerSessionId
-                                );
+                                default:
+                                    return Acknowledgement<AuthorizeRemoteStopRequest>.ServiceNotAvailable(
+                                               Request:                   request,
+                                               StatusCodeAdditionalInfo:  String.Concat(
+                                                                              $"Unknown WWCP RemoteStop result: {response.Result}\n",
+                                                                              response.Description, "\n",
+                                                                              response.AdditionalInfo
+                                                                          ),
+                                               SessionId:                 request.SessionId,
+                                               EMPPartnerSessionId:       request.EMPPartnerSessionId,
+                                               CPOPartnerSessionId:       request.CPOPartnerSessionId
+                                           );
 
+                            }
                         }
+
+                        return Acknowledgement<AuthorizeRemoteStopRequest>.ServiceNotAvailable(
+                                   Request:                   request,
+                                   StatusCodeAdditionalInfo:  "Invalid WWCP RemoteStop result!",
+                                   SessionId:                 request.SessionId,
+                                   EMPPartnerSessionId:       request.EMPPartnerSessionId,
+                                   CPOPartnerSessionId:       request.CPOPartnerSessionId
+                               );
+
+                        #endregion
+
                     }
 
-                    return Acknowledgement<AuthorizeRemoteStopRequest>.ServiceNotAvailable(
-                               Request:                   Request,
-                               StatusCodeAdditionalInfo:  "Invalid WWCP RemoteStop result!",
-                               SessionId:                 Request.SessionId,
-                               EMPPartnerSessionId:       Request.EMPPartnerSessionId,
-                               CPOPartnerSessionId:       Request.CPOPartnerSessionId
+                    return Acknowledgement<AuthorizeRemoteStopRequest>.SessionIsInvalid(
+                               Request:                request,
+                               SessionId:              request.SessionId,
+                               StatusCodeDescription:  $"The given SessionId '{request.SessionId}' could not be mapped to a WWCP chargingSessionId!",
+                               EMPPartnerSessionId:    request.EMPPartnerSessionId,
+                               CPOPartnerSessionId:    request.CPOPartnerSessionId
                            );
-
-                    #endregion
 
                 }
                 catch (Exception e)
                 {
                     return Acknowledgement<AuthorizeRemoteStopRequest>.ServiceNotAvailable(
-                        Request:                   Request,
+                        Request:                   request,
                         StatusCodeAdditionalInfo:  e.Message + "\n" + e.StackTrace,
-                        SessionId:                 Request.SessionId
+                        SessionId:                 request.SessionId
                     );
                 }
 
