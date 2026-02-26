@@ -2325,6 +2325,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              WWCP.ReservationHandling?   ReservationHandling,   // = null,
                                              WWCP.EMobilityProvider_Id?  ProviderId,            // = null,
                                              WWCP.RemoteAuthentication?  RemoteAuthentication,  // = null,
+                                             JObject?                    AdditionalSessionInfos,
                                              WWCP.Auth_Path?             AuthenticationPath,    // = null,
                                              WWCP.ICSORoamingProvider?   CSORoamingProvider,
 
