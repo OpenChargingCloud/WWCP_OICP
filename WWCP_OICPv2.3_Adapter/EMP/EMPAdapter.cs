@@ -661,7 +661,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                     sessionId,
                                                     cpoPartnerSessionId,
                                                     [],
-                                                    request.RequestTimeout);
+                                                    request.RequestTimeout,
+                                                    CancellationToken.None);
 
                 }
                 catch (Exception e)
@@ -711,7 +712,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                      [],
                                                      request.RequestTimeout,
                                                      response,
-                                                     endTime - startTime);
+                                                     endTime - startTime,
+                                                     CancellationToken.None);
 
                 }
                 catch (Exception e)

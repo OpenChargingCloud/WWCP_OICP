@@ -3404,7 +3404,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                 SessionId,
                                                 CPOPartnerSessionId,
                                                 [],
-                                                RequestTimeout);
+                                                RequestTimeout,
+                                                CancellationToken);
 
             }
             catch (Exception e)
@@ -3568,7 +3569,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  [],
                                                  RequestTimeout,
                                                  authStartResult,
-                                                 runtime);
+                                                 runtime,
+                                                 CancellationToken);
 
             }
             catch (Exception e)
