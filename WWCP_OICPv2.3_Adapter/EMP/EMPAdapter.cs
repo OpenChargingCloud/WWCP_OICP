@@ -455,12 +455,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever a 'charge detail record' was received.
         /// </summary>
-        public event WWCP.OnSendCDRsRequestDelegate?   OnChargeDetailRecordRequest;
+        public event WWCP.OnChargeDetailRecordsRequestDelegate?   OnChargeDetailRecordRequest;
 
         /// <summary>
         /// An event sent whenever a response to a 'charge detail record' was sent.
         /// </summary>
-        public event WWCP.OnSendCDRsResponseDelegate?  OnChargeDetailRecordResponse;
+        public event WWCP.OnChargeDetailRecordsResponseDelegate?  OnChargeDetailRecordResponse;
 
         #endregion
 
@@ -662,7 +662,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                     cpoPartnerSessionId,
                                                     [],
                                                     request.RequestTimeout,
-                                                    CancellationToken.None);
+                                                    request.CancellationToken);
 
                 }
                 catch (Exception e)
@@ -713,7 +713,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                      request.RequestTimeout,
                                                      response,
                                                      endTime - startTime,
-                                                     CancellationToken.None);
+                                                     request.CancellationToken);
 
                 }
                 catch (Exception e)
@@ -848,7 +848,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                    sessionId,
                                                    CPOPartnerSessionId,
                                                    localAuthentication,
-                                                   request.RequestTimeout);
+                                                   request.RequestTimeout,
+                                                   request.CancellationToken);
 
                 }
                 catch (Exception e)
@@ -895,7 +896,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                     localAuthentication,
                                                     request.RequestTimeout,
                                                     response,
-                                                    endTime - startTime);
+                                                    endTime - startTime,
+                                                    request.CancellationToken);
 
                 }
                 catch (Exception e)
@@ -1010,7 +1012,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                         request.EventTrackingId,
                                                         RoamingNetwork.Id,
                                                         CDRs,
-                                                        request.RequestTimeout);
+                                                        request.RequestTimeout,
+                                                        request.CancellationToken);
 
                 }
                 catch (Exception e)
@@ -1048,7 +1051,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                          CDRs,
                                                          request.RequestTimeout,
                                                          response,
-                                                         endTime - startTime);
+                                                         endTime - startTime,
+                                                         request.CancellationToken);
 
                 }
                 catch (Exception e)
@@ -1206,7 +1210,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="CountryCodeFilter">An optional enumeration of countries whose EVSE's a provider wants to retrieve.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="CancellationToken">A cancellation token to cancel the operation.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<WWCP.POIDataPull<WWCP.EVSE>>
@@ -1380,7 +1384,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="ProviderId">An optional unique identification of e-mobility service provider.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="CancellationToken">A cancellation token to cancel the operation.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<WWCP.StatusPull<WWCP.EVSEStatus>>
@@ -1544,7 +1548,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         ///// <param name="ProviderId">An optional unique identification of e-mobility service provider.</param>
         ///// 
         ///// <param name="Timestamp">The optional timestamp of the request.</param>
-        ///// <param name="CancellationToken">An optional token to cancel this request.</param>
+        ///// <param name="CancellationToken">A cancellation token to cancel the operation.</param>
         ///// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         ///// <param name="RequestTimeout">An optional timeout for this request.</param>
         //public async Task<PushAuthenticationDataResult>
@@ -1699,7 +1703,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="CancellationToken">A cancellation token to cancel the operation.</param>
         async Task<WWCP.ReservationResult>
 
             WWCP.IChargingReservations.Reserve(WWCP.ChargingLocation                   ChargingLocation,
@@ -1941,7 +1945,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="CancellationToken">A cancellation token to cancel the operation.</param>
         async Task<WWCP.CancelReservationResult>
 
             WWCP.IChargingReservations.CancelReservation(WWCP.ChargingReservation_Id                 ReservationId,
@@ -2048,7 +2052,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="RequestTimestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="CancellationToken">A cancellation token to cancel the operation.</param>
         async Task<WWCP.RemoteStartResult>
 
             WWCP.IRemoteStartStop.RemoteStart(WWCP.ChargingLocation         ChargingLocation,
@@ -2101,7 +2105,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                           null,
                           null,
                           ProviderId,
-                          RequestTimeout
+                          RequestTimeout,
+                          CancellationToken
                       )
                   );
 
@@ -2295,7 +2300,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                           ProviderId,
                           RequestTimeout,
                           result,
-                          endTime - startTime
+                          endTime - startTime,
+                          CancellationToken
                       )
                   );
 
@@ -2320,7 +2326,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="RequestTimestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="CancellationToken">A cancellation token to cancel the operation.</param>
         async Task<WWCP.RemoteStopResult>
 
             WWCP.IRemoteStartStop.RemoteStop(WWCP.ChargingSession_Id     SessionId,
@@ -2366,7 +2372,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                           null,
                           ProviderId,
                           RemoteAuthentication,
-                          RequestTimeout
+                          RequestTimeout,
+                          CancellationToken
                       )
                   );
 
@@ -2463,7 +2470,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                           RemoteAuthentication,
                           RequestTimeout,
                           result,
-                          endTime - startTime
+                          endTime - startTime,
+                          CancellationToken
                       )
                   );
 
@@ -2488,7 +2496,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="CancellationToken">A cancellation token to cancel the operation.</param>
         public async Task<IEnumerable<WWCP.ChargeDetailRecord>>
 
             GetChargeDetailRecords(DateTimeOffset              From,

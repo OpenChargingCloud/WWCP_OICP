@@ -789,7 +789,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnAuthorizeRemoteReservationStartResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             try
@@ -798,7 +798,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 if (OnAuthorizeRemoteReservationStartResponse is not null)
                     await Task.WhenAll(OnAuthorizeRemoteReservationStartResponse.GetInvocationList().
                                        Cast<OnAuthorizeRemoteReservationStartClientResponseDelegate>().
-                                       Select(e => e(endtime,
+                                       Select(e => e(endTime,
                                                      this,
                                                      Request,
                                                      result,
@@ -1187,7 +1187,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnAuthorizeRemoteReservationStopResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             try
@@ -1196,7 +1196,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 if (OnAuthorizeRemoteReservationStopResponse is not null)
                     await Task.WhenAll(OnAuthorizeRemoteReservationStopResponse.GetInvocationList().
                                        Cast<OnAuthorizeRemoteReservationStopClientResponseDelegate>().
-                                       Select(e => e(endtime,
+                                       Select(e => e(endTime,
                                                      this,
                                                      Request,
                                                      result,
@@ -1587,7 +1587,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnAuthorizeRemoteStartClientResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             try
@@ -1596,7 +1596,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 if (OnAuthorizeRemoteStartResponse is not null)
                     await Task.WhenAll(OnAuthorizeRemoteStartResponse.GetInvocationList().
                                        Cast<OnAuthorizeRemoteStartClientResponseDelegate>().
-                                       Select(e => e(endtime,
+                                       Select(e => e(endTime,
                                                      this,
                                                      Request,
                                                      result,
@@ -1985,7 +1985,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnAuthorizeRemoteStopResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             try
@@ -1994,7 +1994,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 if (OnAuthorizeRemoteStopResponse is not null)
                     await Task.WhenAll(OnAuthorizeRemoteStopResponse.GetInvocationList().
                                        Cast<OnAuthorizeRemoteStopClientResponseDelegate>().
-                                       Select(e => e(endtime,
+                                       Select(e => e(endTime,
                                                      this,
                                                      Request,
                                                      result,

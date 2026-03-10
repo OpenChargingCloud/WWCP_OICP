@@ -1370,13 +1370,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnPushEVSEDataResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             await LogEvent(
                       OnPushEVSEDataResponse,
                       loggingDelegate => loggingDelegate.Invoke(
-                          endtime,
+                          endTime,
                           this,
                           Request,
                           result,
@@ -1893,13 +1893,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnPushEVSEStatusResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             await LogEvent(
                       OnPushEVSEStatusResponse,
                       loggingDelegate => loggingDelegate.Invoke(
-                          endtime,
+                          endTime,
                           this,
                           Request,
                           result,
@@ -2419,13 +2419,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnPushPricingProductDataResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             await LogEvent(
                       OnPushPricingProductDataResponse,
                       loggingDelegate => loggingDelegate.Invoke(
-                          endtime,
+                          endTime,
                           this,
                           Request,
                           result,
@@ -2943,13 +2943,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnPushEVSEPricingResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             await LogEvent(
                       OnPushEVSEPricingResponse,
                       loggingDelegate => loggingDelegate.Invoke(
-                          endtime,
+                          endTime,
                           this,
                           Request,
                           result,
@@ -3518,13 +3518,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnPullAuthenticationDataResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             await LogEvent(
                       OnPullAuthenticationDataResponse,
                       loggingDelegate => loggingDelegate.Invoke(
-                          endtime,
+                          endTime,
                           this,
                           Request,
                           result,
@@ -3917,13 +3917,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnAuthorizeStartResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             await LogEvent(
                       OnAuthorizeStartResponse,
                       loggingDelegate => loggingDelegate.Invoke(
-                          endtime,
+                          endTime,
                           this,
                           Request,
                           result,
@@ -4342,13 +4342,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnAuthorizeStopResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             await LogEvent(
                       OnAuthorizeStopResponse,
                       loggingDelegate => loggingDelegate.Invoke(
-                          endtime,
+                          endTime,
                           this,
                           Request,
                           result,
@@ -4829,13 +4829,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region  OnChargingStartNotificationResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             await LogEvent(
                       OnChargingStartNotificationResponse,
                       loggingDelegate => loggingDelegate.Invoke(
-                          endtime,
+                          endTime,
                           this,
                           Request,
                           result,
@@ -5313,14 +5313,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region  OnChargingProgressNotificationResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
 
             await LogEvent(
                       OnChargingProgressNotificationResponse,
                       loggingDelegate => loggingDelegate.Invoke(
-                          endtime,
+                          endTime,
                           this,
                           Request,
                           result,
@@ -5798,14 +5798,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region  OnChargingEndNotificationResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
 
             await LogEvent(
                       OnChargingEndNotificationResponse,
                       loggingDelegate => loggingDelegate.Invoke(
-                          endtime,
+                          endTime,
                           this,
                           Request,
                           result,
@@ -6358,14 +6358,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region  OnChargingErrorNotificationResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
 
             await LogEvent(
                       OnChargingErrorNotificationResponse,
                       loggingDelegate => loggingDelegate.Invoke(
-                          endtime,
+                          endTime,
                           this,
                           Request,
                           result,
@@ -6768,13 +6768,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnChargeDetailRecordSent event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             await LogEvent(
                       OnSendChargeDetailRecordResponse,
                       loggingDelegate => loggingDelegate.Invoke(
-                          endtime,
+                          endTime,
                           this,
                           Request,
                           result,

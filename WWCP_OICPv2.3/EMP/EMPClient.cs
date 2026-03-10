@@ -1220,17 +1220,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnPullEVSEDataResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             await LogEvent(
                       OnPullEVSEDataResponse,
                       loggingDelegate => loggingDelegate.Invoke(
-                          endtime,
+                          endTime,
                           this,
                           Request,
                           result,
-                          endtime - startTime
+                          stopwatch.Elapsed
                       )
                   );
 
@@ -1593,17 +1593,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnPullEVSEStatusResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             await LogEvent(
                       OnPullEVSEStatusResponse,
                       loggingDelegate => loggingDelegate.Invoke(
-                          endtime,
+                          endTime,
                           this,
                           Request,
                           result,
-                          endtime - startTime
+                          stopwatch.Elapsed
                       )
                   );
 
@@ -1949,17 +1949,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnPullEVSEStatusByIdResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             await LogEvent(
                       OnPullEVSEStatusByIdResponse,
                       loggingDelegate => loggingDelegate.Invoke(
-                          endtime,
+                          endTime,
                           this,
                           Request,
                           result,
-                          endtime - startTime
+                          stopwatch.Elapsed
                       )
                   );
 
@@ -2305,17 +2305,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnPullEVSEStatusByOperatorIdResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             await LogEvent(
                       OnPullEVSEStatusByOperatorIdResponse,
                       loggingDelegate => loggingDelegate.Invoke(
-                          endtime,
+                          endTime,
                           this,
                           Request,
                           result,
-                          endtime - startTime
+                          stopwatch.Elapsed
                       )
                   );
 
@@ -2757,17 +2757,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnPullPricingProductDataResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             await LogEvent(
                       OnPullPricingProductDataResponse,
                       loggingDelegate => loggingDelegate.Invoke(
-                          endtime,
+                          endTime,
                           this,
                           Request,
                           result,
-                          endtime - startTime
+                          stopwatch.Elapsed
                       )
                   );
 
@@ -3208,17 +3208,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnPullEVSEPricingResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             await LogEvent(
                       OnPullEVSEPricingResponse,
                       loggingDelegate => loggingDelegate.Invoke(
-                          endtime,
+                          endTime,
                           this,
                           Request,
                           result,
-                          endtime - startTime
+                          stopwatch.Elapsed
                       )
                   );
 
@@ -3768,17 +3768,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnPushAuthenticationDataResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             await LogEvent(
                       OnPushAuthenticationDataResponse,
                       loggingDelegate => loggingDelegate.Invoke(
-                          endtime,
+                          endTime,
                           this,
                           Request,
                           result,
-                          endtime - startTime
+                          stopwatch.Elapsed
                       )
                   );
 
@@ -4146,17 +4146,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnAuthorizeRemoteReservationStartResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             await LogEvent(
                       OnAuthorizeRemoteReservationStartResponse,
                       loggingDelegate => loggingDelegate.Invoke(
-                          endtime,
+                          endTime,
                           this,
                           Request,
                           result,
-                          endtime - startTime
+                          stopwatch.Elapsed
                       )
                   );
 
@@ -4522,17 +4522,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnAuthorizeRemoteReservationStopResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             await LogEvent(
                       OnAuthorizeRemoteReservationStopResponse,
                       loggingDelegate => loggingDelegate.Invoke(
-                          endtime,
+                          endTime,
                           this,
                           Request,
                           result,
-                          endtime - startTime
+                          stopwatch.Elapsed
                       )
                   );
 
@@ -4898,17 +4898,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnAuthorizeRemoteStartResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             await LogEvent(
                       OnAuthorizeRemoteStartResponse,
                       loggingDelegate => loggingDelegate.Invoke(
-                          endtime,
+                          endTime,
                           this,
                           Request,
                           result,
-                          endtime - startTime
+                          stopwatch.Elapsed
                       )
                   );
 
@@ -5274,17 +5274,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnAuthorizeRemoteStopResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             await LogEvent(
                       OnAuthorizeRemoteStopResponse,
                       loggingDelegate => loggingDelegate.Invoke(
-                          endtime,
+                          endTime,
                           this,
                           Request,
                           result,
-                          endtime - startTime
+                          stopwatch.Elapsed
                       )
                   );
 
@@ -5656,17 +5656,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnGetChargeDetailRecordsResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             await LogEvent(
                       OnGetChargeDetailRecordsResponse,
                       loggingDelegate => loggingDelegate.Invoke(
-                          endtime,
+                          endTime,
                           this,
                           Request,
                           result,
-                          endtime - startTime
+                          stopwatch.Elapsed
                       )
                   );
 

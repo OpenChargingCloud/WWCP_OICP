@@ -805,7 +805,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
             #region Send OnPushEVSEDataResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             try
@@ -814,11 +814,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                 if (OnPushEVSEDataResponse is not null)
                     await Task.WhenAll(OnPushEVSEDataResponse.GetInvocationList().
                                        Cast<OnPushEVSEDataResponseDelegate>().
-                                       Select(e => e(endtime,
+                                       Select(e => e(endTime,
                                                      this,
                                                      Request,
                                                      result,
-                                                     endtime - startTime))).
+                                                     stopwatch.Elapsed))).
                                        ConfigureAwait(false);
 
             }
@@ -927,7 +927,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
             #region Send OnPushEVSEStatusResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             try
@@ -936,11 +936,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                 if (OnPushEVSEStatusResponse is not null)
                     await Task.WhenAll(OnPushEVSEStatusResponse.GetInvocationList().
                                        Cast<OnPushEVSEStatusResponseDelegate>().
-                                       Select(e => e(endtime,
+                                       Select(e => e(endTime,
                                                      this,
                                                      Request,
                                                      result,
-                                                     endtime - startTime))).
+                                                     stopwatch.Elapsed))).
                                        ConfigureAwait(false);
 
             }
@@ -1050,7 +1050,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
             #region Send OnPushPricingProductDataResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             try
@@ -1059,11 +1059,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                 if (OnPushPricingProductDataResponse is not null)
                     await Task.WhenAll(OnPushPricingProductDataResponse.GetInvocationList().
                                        Cast<OnPushPricingProductDataResponseDelegate>().
-                                       Select(e => e(endtime,
+                                       Select(e => e(endTime,
                                                      this,
                                                      Request,
                                                      result,
-                                                     endtime - startTime))).
+                                                     stopwatch.Elapsed))).
                                        ConfigureAwait(false);
 
             }
@@ -1172,7 +1172,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
             #region Send OnPushEVSEPricingResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             try
@@ -1181,11 +1181,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                 if (OnPushEVSEPricingResponse is not null)
                     await Task.WhenAll(OnPushEVSEPricingResponse.GetInvocationList().
                                        Cast<OnPushEVSEPricingResponseDelegate>().
-                                       Select(e => e(endtime,
+                                       Select(e => e(endTime,
                                                      this,
                                                      Request,
                                                      result,
-                                                     endtime - startTime))).
+                                                     stopwatch.Elapsed))).
                                        ConfigureAwait(false);
 
             }
@@ -1275,7 +1275,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
             #region Send OnPullAuthenticationDataResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             try
@@ -1284,11 +1284,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                 if (OnPullAuthenticationDataResponse is not null)
                     await Task.WhenAll(OnPullAuthenticationDataResponse.GetInvocationList().
                                        Cast<OnPullAuthenticationDataResponseDelegate>().
-                                       Select(e => e(endtime,
+                                       Select(e => e(endTime,
                                                      this,
                                                      Request,
                                                      result,
-                                                     endtime - startTime))).
+                                                     stopwatch.Elapsed))).
                                        ConfigureAwait(false);
 
             }
@@ -1413,7 +1413,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
             #region Send OnAuthorizeStartResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             try
@@ -1422,11 +1422,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                 if (OnAuthorizeStartResponse is not null)
                     await Task.WhenAll(OnAuthorizeStartResponse.GetInvocationList().
                                        Cast<OnAuthorizeStartResponseDelegate>().
-                                       Select(e => e(endtime,
+                                       Select(e => e(endTime,
                                                      this,
                                                      Request,
                                                      result,
-                                                     endtime - startTime))).
+                                                     stopwatch.Elapsed))).
                                        ConfigureAwait(false);
 
             }
@@ -1550,7 +1550,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
             #region Send OnAuthorizeStopResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             try
@@ -1559,11 +1559,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                 if (OnAuthorizeStopResponse is not null)
                     await Task.WhenAll(OnAuthorizeStopResponse.GetInvocationList().
                                        Cast<OnAuthorizeStopResponseDelegate>().
-                                       Select(e => e(endtime,
+                                       Select(e => e(endTime,
                                                      this,
                                                      Request,
                                                      result,
-                                                     endtime - startTime))).
+                                                     stopwatch.Elapsed))).
                                        ConfigureAwait(false);
 
             }
@@ -1644,7 +1644,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
             #region  OnChargingStartNotificationResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             try
@@ -1653,11 +1653,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                 if (OnChargingStartNotificationResponse is not null)
                     await Task.WhenAll(OnChargingStartNotificationResponse.GetInvocationList().
                                        Cast<OnChargingStartNotificationResponseDelegate>().
-                                       Select(e => e(endtime,
+                                       Select(e => e(endTime,
                                                      this,
                                                      Request,
                                                      result,
-                                                     endtime - startTime))).
+                                                     stopwatch.Elapsed))).
                                        ConfigureAwait(false);
 
             }
@@ -1737,7 +1737,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
             #region  OnChargingProgressNotificationResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             try
@@ -1746,11 +1746,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                 if (OnChargingProgressNotificationResponse is not null)
                     await Task.WhenAll(OnChargingProgressNotificationResponse.GetInvocationList().
                                        Cast<OnChargingProgressNotificationResponseDelegate>().
-                                       Select(e => e(endtime,
+                                       Select(e => e(endTime,
                                                      this,
                                                      Request,
                                                      result,
-                                                     endtime - startTime))).
+                                                     stopwatch.Elapsed))).
                                        ConfigureAwait(false);
 
             }
@@ -1830,7 +1830,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
             #region  OnChargingEndNotificationResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             try
@@ -1839,11 +1839,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                 if (OnChargingEndNotificationResponse is not null)
                     await Task.WhenAll(OnChargingEndNotificationResponse.GetInvocationList().
                                        Cast<OnChargingEndNotificationResponseDelegate>().
-                                       Select(e => e(endtime,
+                                       Select(e => e(endTime,
                                                      this,
                                                      Request,
                                                      result,
-                                                     endtime - startTime))).
+                                                     stopwatch.Elapsed))).
                                        ConfigureAwait(false);
 
             }
@@ -1923,7 +1923,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
             #region  OnChargingErrorNotificationResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             try
@@ -1932,11 +1932,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                 if (OnChargingErrorNotificationResponse is not null)
                     await Task.WhenAll(OnChargingErrorNotificationResponse.GetInvocationList().
                                        Cast<OnChargingErrorNotificationResponseDelegate>().
-                                       Select(e => e(endtime,
+                                       Select(e => e(endTime,
                                                      this,
                                                      Request,
                                                      result,
-                                                     endtime - startTime))).
+                                                     stopwatch.Elapsed))).
                                        ConfigureAwait(false);
 
             }
@@ -2017,7 +2017,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
             #region Send OnChargeDetailRecordSent event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             try
@@ -2026,11 +2026,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                 if (OnSendChargeDetailRecordResponse is not null)
                     await Task.WhenAll(OnSendChargeDetailRecordResponse.GetInvocationList().
                                        Cast<OnSendChargeDetailRecordResponseDelegate>().
-                                       Select(e => e(endtime,
+                                       Select(e => e(endTime,
                                                      this,
                                                      Request,
                                                      result,
-                                                     endtime - startTime))).
+                                                     stopwatch.Elapsed))).
                                        ConfigureAwait(false);
 
             }

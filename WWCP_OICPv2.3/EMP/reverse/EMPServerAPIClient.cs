@@ -955,7 +955,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnAuthorizeStartClientResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             try
@@ -964,7 +964,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 if (OnAuthorizeStartResponse is not null)
                     await Task.WhenAll(OnAuthorizeStartResponse.GetInvocationList().
                                        Cast<OnAuthorizeStartClientResponseDelegate>().
-                                       Select(e => e(endtime,
+                                       Select(e => e(endTime,
                                                      this,
                                                      Request,
                                                      result,
@@ -1359,7 +1359,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnAuthorizeStopClientResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             try
@@ -1368,7 +1368,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 if (OnAuthorizeStopResponse is not null)
                     await Task.WhenAll(OnAuthorizeStopResponse.GetInvocationList().
                                        Cast<OnAuthorizeStopClientResponseDelegate>().
-                                       Select(e => e(endtime,
+                                       Select(e => e(endTime,
                                                      this,
                                                      Request,
                                                      result,
@@ -1759,7 +1759,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnChargingStartNotificationResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             try
@@ -1768,7 +1768,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 if (OnChargingStartNotificationResponse is not null)
                     await Task.WhenAll(OnChargingStartNotificationResponse.GetInvocationList().
                                        Cast<OnChargingStartNotificationClientResponseDelegate>().
-                                       Select(e => e(endtime,
+                                       Select(e => e(endTime,
                                                      this,
                                                      Request,
                                                      result,
@@ -2158,7 +2158,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnChargingProgressNotificationResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             try
@@ -2167,7 +2167,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 if (OnChargingProgressNotificationResponse is not null)
                     await Task.WhenAll(OnChargingProgressNotificationResponse.GetInvocationList().
                                        Cast<OnChargingProgressNotificationClientResponseDelegate>().
-                                       Select(e => e(endtime,
+                                       Select(e => e(endTime,
                                                      this,
                                                      Request,
                                                      result,
@@ -2557,7 +2557,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnChargingEndNotificationResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             try
@@ -2566,7 +2566,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 if (OnChargingEndNotificationResponse is not null)
                     await Task.WhenAll(OnChargingEndNotificationResponse.GetInvocationList().
                                        Cast<OnChargingEndNotificationClientResponseDelegate>().
-                                       Select(e => e(endtime,
+                                       Select(e => e(endTime,
                                                      this,
                                                      Request,
                                                      result,
@@ -2956,7 +2956,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnChargingErrorNotificationResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             try
@@ -2965,7 +2965,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 if (OnChargingErrorNotificationResponse is not null)
                     await Task.WhenAll(OnChargingErrorNotificationResponse.GetInvocationList().
                                        Cast<OnChargingErrorNotificationClientResponseDelegate>().
-                                       Select(e => e(endtime,
+                                       Select(e => e(endTime,
                                                      this,
                                                      Request,
                                                      result,
@@ -3359,7 +3359,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnChargeDetailRecordClientResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             try
@@ -3368,7 +3368,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 if (OnChargeDetailRecordResponse is not null)
                     await Task.WhenAll(OnChargeDetailRecordResponse.GetInvocationList().
                                        Cast<OnChargeDetailRecordClientResponseDelegate>().
-                                       Select(e => e(endtime,
+                                       Select(e => e(endTime,
                                                      this,
                                                      Request,
                                                      result,

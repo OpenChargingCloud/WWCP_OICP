@@ -759,7 +759,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
 
             #region Send OnPullEVSEDataResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             try
@@ -768,11 +768,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
                 if (OnPullEVSEDataResponse is not null)
                     await Task.WhenAll(OnPullEVSEDataResponse.GetInvocationList().
                                        Cast<OnPullEVSEDataResponseDelegate>().
-                                       Select(e => e(endtime,
+                                       Select(e => e(endTime,
                                                      this,
                                                      Request,
                                                      result,
-                                                     endtime - startTime))).
+                                                     stopwatch.Elapsed))).
                                        ConfigureAwait(false);
 
             }
@@ -868,7 +868,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
 
             #region Send OnPullEVSEStatusResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             try
@@ -877,11 +877,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
                 if (OnPullEVSEStatusResponse is not null)
                     await Task.WhenAll(OnPullEVSEStatusResponse.GetInvocationList().
                                        Cast<OnPullEVSEStatusResponseDelegate>().
-                                       Select(e => e(endtime,
+                                       Select(e => e(endTime,
                                                      this,
                                                      Request,
                                                      result,
-                                                     endtime - startTime))).
+                                                     stopwatch.Elapsed))).
                                        ConfigureAwait(false);
 
             }
@@ -976,7 +976,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
 
             #region Send OnPullEVSEStatusByIdResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             try
@@ -985,11 +985,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
                 if (OnPullEVSEStatusByIdResponse is not null)
                     await Task.WhenAll(OnPullEVSEStatusByIdResponse.GetInvocationList().
                                        Cast<OnPullEVSEStatusByIdResponseDelegate>().
-                                       Select(e => e(endtime,
+                                       Select(e => e(endTime,
                                                      this,
                                                      Request,
                                                      result,
-                                                     endtime - startTime))).
+                                                     stopwatch.Elapsed))).
                                        ConfigureAwait(false);
 
             }
@@ -1086,7 +1086,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
 
             #region Send OnPullPricingProductDataResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             try
@@ -1095,11 +1095,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
                 if (OnPullPricingProductDataResponse is not null)
                     await Task.WhenAll(OnPullPricingProductDataResponse.GetInvocationList().
                                        Cast<OnPullPricingProductDataResponseDelegate>().
-                                       Select(e => e(endtime,
+                                       Select(e => e(endTime,
                                                      this,
                                                      Request,
                                                      result,
-                                                     endtime - startTime))).
+                                                     stopwatch.Elapsed))).
                                        ConfigureAwait(false);
 
             }
@@ -1195,7 +1195,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
 
             #region Send OnPullEVSEPricingResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             try
@@ -1204,11 +1204,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
                 if (OnPullEVSEPricingResponse is not null)
                     await Task.WhenAll(OnPullEVSEPricingResponse.GetInvocationList().
                                        Cast<OnPullEVSEPricingResponseDelegate>().
-                                       Select(e => e(endtime,
+                                       Select(e => e(endTime,
                                                      this,
                                                      Request,
                                                      result,
-                                                     endtime - startTime))).
+                                                     stopwatch.Elapsed))).
                                        ConfigureAwait(false);
 
             }
@@ -1293,7 +1293,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
 
             #region Send OnPushAuthenticationDataResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             try
@@ -1302,11 +1302,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
                 if (OnPushAuthenticationDataResponse is not null)
                     await Task.WhenAll(OnPushAuthenticationDataResponse.GetInvocationList().
                                        Cast<OnPushAuthenticationDataResponseDelegate>().
-                                       Select(e => e(endtime,
+                                       Select(e => e(endTime,
                                                      this,
                                                      Request,
                                                      result,
-                                                     endtime - startTime))).
+                                                     stopwatch.Elapsed))).
                                        ConfigureAwait(false);
 
             }
@@ -1389,7 +1389,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
 
             #region Send OnAuthorizeRemoteReservationStartResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             try
@@ -1398,11 +1398,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
                 if (OnAuthorizeRemoteReservationStartResponse is not null)
                     await Task.WhenAll(OnAuthorizeRemoteReservationStartResponse.GetInvocationList().
                                        Cast<OnAuthorizeRemoteReservationStartResponseDelegate>().
-                                       Select(e => e(endtime,
+                                       Select(e => e(endTime,
                                                      this,
                                                      Request,
                                                      result,
-                                                     endtime - startTime))).
+                                                     stopwatch.Elapsed))).
                                        ConfigureAwait(false);
 
             }
@@ -1484,7 +1484,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
 
             #region Send OnAuthorizeRemoteReservationStopResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             try
@@ -1493,11 +1493,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
                 if (OnAuthorizeRemoteReservationStopResponse is not null)
                     await Task.WhenAll(OnAuthorizeRemoteReservationStopResponse.GetInvocationList().
                                        Cast<OnAuthorizeRemoteReservationStopResponseDelegate>().
-                                       Select(e => e(endtime,
+                                       Select(e => e(endTime,
                                                      this,
                                                      Request,
                                                      result,
-                                                     endtime - startTime))).
+                                                     stopwatch.Elapsed))).
                                        ConfigureAwait(false);
 
             }
@@ -1580,7 +1580,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
 
             #region Send OnAuthorizeRemoteStartResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             try
@@ -1589,11 +1589,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
                 if (OnAuthorizeRemoteStartResponse is not null)
                     await Task.WhenAll(OnAuthorizeRemoteStartResponse.GetInvocationList().
                                        Cast<OnAuthorizeRemoteStartResponseDelegate>().
-                                       Select(e => e(endtime,
+                                       Select(e => e(endTime,
                                                      this,
                                                      Request,
                                                      result,
-                                                     endtime - startTime))).
+                                                     stopwatch.Elapsed))).
                                        ConfigureAwait(false);
 
             }
@@ -1675,7 +1675,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
 
             #region Send OnAuthorizeRemoteStopResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             try
@@ -1684,11 +1684,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
                 if (OnAuthorizeRemoteStopResponse is not null)
                     await Task.WhenAll(OnAuthorizeRemoteStopResponse.GetInvocationList().
                                        Cast<OnAuthorizeRemoteStopResponseDelegate>().
-                                       Select(e => e(endtime,
+                                       Select(e => e(endTime,
                                                      this,
                                                      Request,
                                                      result,
-                                                     endtime - startTime))).
+                                                     stopwatch.Elapsed))).
                                        ConfigureAwait(false);
 
             }
@@ -1786,7 +1786,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
 
             #region Send OnGetChargeDetailRecordsResponse event
 
-            var endtime = Timestamp.Now;
+            var endTime = Timestamp.Now;
             stopwatch.Stop();
 
             try
@@ -1795,11 +1795,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
                 if (OnGetChargeDetailRecordsResponse is not null)
                     await Task.WhenAll(OnGetChargeDetailRecordsResponse.GetInvocationList().
                                        Cast<OnGetChargeDetailRecordsResponseDelegate>().
-                                       Select(e => e(endtime,
+                                       Select(e => e(endTime,
                                                      this,
                                                      Request,
                                                      result,
-                                                     endtime - startTime))).
+                                                     stopwatch.Elapsed))).
                                        ConfigureAwait(false);
 
             }
