@@ -27,6 +27,8 @@ using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.Logging;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 #endregion
 
@@ -1042,7 +1044,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                          ActionTypes              ServerAction,
                          JObject?                 CustomData          = null,
 
-                         DateTimeOffset?          Timestamp           = null,
+                         DateTimeOffset?          RequestTimestamp    = null,
                          EventTracking_Id?        EventTrackingId     = null,
                          TimeSpan?                RequestTimeout      = null,
                          CancellationToken        CancellationToken   = default)
@@ -1051,9 +1053,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Initial checks
 
-            Timestamp       ??= org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-            EventTrackingId ??= EventTracking_Id.New;
-            RequestTimeout  ??= CPOClient?.RequestTimeout;
+            RequestTimestamp ??= Timestamp.Now;
+            EventTrackingId  ??= EventTracking_Id.New;
+            RequestTimeout   ??= CPOClient?.RequestTimeout;
 
             PushEVSEDataRecordResult? result = null;
 
@@ -1121,30 +1123,26 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnPushEVSEDataWWCPRequest event
 
-            DateTimeOffset endtime;
-            TimeSpan runtime;
+            var startTime  = Timestamp.Now;
+            var stopwatch  = Stopwatch.StartNew();
 
-            var startTime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+            RequestTimestamp ??= startTime;
 
-            try
-            {
-
-                OnPushDataRequest?.Invoke(startTime,
-                                          Timestamp.Value,
-                                          this,
-                                          Id,
-                                          EventTrackingId,
-                                          RoamingNetwork.Id,
-                                          ServerAction,
-                                          evseDataRecords,
-                                          warnings.Where(warning => warning.IsNeitherNullNorEmpty()),
-                                          RequestTimeout);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(CPOAdapter) + "." + nameof(OnPushDataRequest));
-            }
+            await LogEvent(
+                      OnPushDataRequest,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          startTime,
+                          RequestTimestamp.Value,
+                          this,
+                          Id,
+                          EventTrackingId,
+                          RoamingNetwork.Id,
+                          ServerAction,
+                          evseDataRecords,
+                          warnings.Where(warning => warning.IsNeitherNullNorEmpty()),
+                          RequestTimeout
+                      )
+                  );
 
             #endregion
 
@@ -1163,7 +1161,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              null, // ProcessId
                                              CustomData,
 
-                                             Timestamp,
+                                             RequestTimestamp,
                                              EventTrackingId,
                                              RequestTimeout,
                                              CancellationToken
@@ -1175,10 +1173,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     // Success...
                     if (response.Response?.Result == true)
-                    {
-
-                        endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-                        runtime  = endtime - startTime;
                         result   = PushEVSEDataRecordResult.Success(
                                        Id,
                                        evseDataRecords,
@@ -1189,10 +1183,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                            response.Response.StatusCode.AdditionalInfo
                                                                        ))
                                            : warnings,
-                                       runtime
+                                       stopwatch.Elapsed
                                    );
-
-                    }
 
                     // Operation failed... maybe the systems are out of sync?!
                     // Try an automatic fullLoad in order to repair...
@@ -1271,7 +1263,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                  null, // ProcessId
                                                                  CustomData,
 
-                                                                 Timestamp,
+                                                                 RequestTimestamp,
                                                                  EventTrackingId,
                                                                  RequestTimeout,
                                                                  CancellationToken
@@ -1281,9 +1273,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             #endregion
 
                             #region Result mapping
-
-                            endtime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-                            runtime = endtime - startTime;
 
                             if (fullLoadResponse.IsSuccess())
                             {
@@ -1296,7 +1285,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  fullLoadResponse.Response.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
                                                      ? warnings.AddAndReturnList(I18NString.Create(fullLoadResponse.Response.StatusCode.AdditionalInfo))
                                                      : warnings,
-                                                 runtime
+                                                 stopwatch.Elapsed
                                              );
 
                                 else
@@ -1307,7 +1296,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  fullLoadResponse.Response?.StatusCode.AdditionalInfo.IsNotNullOrEmpty() == true
                                                      ? warnings.AddAndReturnList(I18NString.Create(fullLoadResponse.Response.StatusCode.AdditionalInfo))
                                                      : warnings,
-                                                 runtime
+                                                 stopwatch.Elapsed
                                              );
 
                             }
@@ -1320,7 +1309,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              //FullLoadResponse.HTTPBody is not null
                                              //    ? Warnings.AddAndReturnList(I18NString.Create(FullLoadResponse.HTTPBody.ToUTF8String()))
                                              //    : Warnings.AddAndReturnList(I18NString.Create("No HTTP body received!")),
-                                             Runtime: runtime
+                                             Runtime: stopwatch.Elapsed
                                          );
 
                             #endregion
@@ -1329,10 +1318,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         // Or a 'fullLoad' Operation failed...
                         else
-                        {
-
-                            endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-                            runtime  = endtime - startTime;
                             result   = PushEVSEDataRecordResult.Error(
                                            Id,
                                            evseDataRecords.Select(evseDataRecord => new PushSingleEVSEDataResult(evseDataRecord, PushSingleDataResultTypes.Error)),
@@ -1340,75 +1325,61 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                            //response.HTTPBody is not null
                                            //    ? Warnings.AddAndReturnList(I18NString.Create(response.HTTPBody.ToUTF8String()))
                                            //    : Warnings.AddAndReturnList(I18NString.Create("No HTTP body received!")),
-                                           Runtime: runtime
+                                           Runtime: stopwatch.Elapsed
                                        );
-
-                        }
 
                     }
 
                 }
+
                 else
-                {
-
-                    endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-                    runtime  = endtime - startTime;
-                    result   = PushEVSEDataRecordResult.Error(
-                                   Id,
-                                   evseDataRecords.Select(evseDataRecord => new PushSingleEVSEDataResult(evseDataRecord, PushSingleDataResultTypes.Error)),
-                                   //response.HTTPStatusCode.ToString(),
-                                   //response.HTTPBody is not null
-                                   //    ? Warnings.AddAndReturnList(I18NString.Create(response.HTTPBody.ToUTF8String()))
-                                   //    : Warnings.AddAndReturnList(I18NString.Create("No HTTP body received!")),
-                                   Runtime: runtime
-                               );
-
-                }
+                    result = PushEVSEDataRecordResult.Error(
+                                 Id,
+                                 evseDataRecords.Select(evseDataRecord => new PushSingleEVSEDataResult(evseDataRecord, PushSingleDataResultTypes.Error)),
+                                 //response.HTTPStatusCode.ToString(),
+                                 //response.HTTPBody is not null
+                                 //    ? Warnings.AddAndReturnList(I18NString.Create(response.HTTPBody.ToUTF8String()))
+                                 //    : Warnings.AddAndReturnList(I18NString.Create("No HTTP body received!")),
+                                 Runtime: stopwatch.Elapsed
+                             );
 
             }
 
             #region ...or no EVSEs to push...
 
             else
-            {
-
-                endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-                runtime  = endtime - startTime;
-                result   = PushEVSEDataRecordResult.NoOperation(
-                               Id,
-                               evseDataRecords,
-                               "No EVSEDataRecords to push!",
-                               warnings,
-                               runtime
-                           );
-
-            }
+                result = PushEVSEDataRecordResult.NoOperation(
+                             Id,
+                             evseDataRecords,
+                             "No EVSEDataRecords to push!",
+                             warnings,
+                             stopwatch.Elapsed
+                         );
 
             #endregion
 
 
             #region Send OnPushEVSEDataResponse event
 
-            try
-            {
+            var endTime = Timestamp.Now;
+            stopwatch.Stop();
 
-                OnPushDataResponse?.Invoke(endtime,
-                                           Timestamp.Value,
-                                           this,
-                                           Id,
-                                           EventTrackingId,
-                                           RoamingNetwork.Id,
-                                           ServerAction,
-                                           evseDataRecords,
-                                           RequestTimeout,
-                                           result,
-                                           runtime);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(CPOAdapter) + "." + nameof(OnPushDataResponse));
-            }
+            await LogEvent(
+                      OnPushDataResponse,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          endTime,
+                          RequestTimestamp.Value,
+                          this,
+                          Id,
+                          EventTrackingId,
+                          RoamingNetwork.Id,
+                          ServerAction,
+                          evseDataRecords,
+                          RequestTimeout,
+                          result,
+                          stopwatch.Elapsed
+                      )
+                  );
 
             #endregion
 
@@ -1436,7 +1407,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            ActionTypes                         ServerAction,
                            JObject?                            CustomData          = null,
 
-                           DateTimeOffset?                     Timestamp           = null,
+                           DateTimeOffset?                     RequestTimestamp    = null,
                            EventTracking_Id?                   EventTrackingId     = null,
                            TimeSpan?                           RequestTimeout      = null,
                            CancellationToken                   CancellationToken   = default)
@@ -1445,9 +1416,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Initial checks
 
-            Timestamp       ??= org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-            EventTrackingId ??= EventTracking_Id.New;
-            RequestTimeout  ??= CPOClient?.RequestTimeout;
+            RequestTimestamp ??= Timestamp.Now;
+            EventTrackingId  ??= EventTracking_Id.New;
+            RequestTimeout   ??= CPOClient?.RequestTimeout;
 
             WWCP.PushEVSEStatusResult? result = null;
 
@@ -1508,30 +1479,26 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnEVSEStatusPush event
 
-            DateTimeOffset endtime;
-            TimeSpan runtime;
+            var startTime  = Timestamp.Now;
+            var stopwatch  = Stopwatch.StartNew();
 
-            var startTime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+            RequestTimestamp ??= startTime;
 
-            try
-            {
-
-                OnPushEVSEStatusWWCPRequest?.Invoke(startTime,
-                                                    Timestamp.Value,
-                                                    this,
-                                                    Id,
-                                                    EventTrackingId,
-                                                    RoamingNetwork.Id,
-                                                    ServerAction,
-                                                    evseStatusRecords,
-                                                    warnings.Where(warning => warning.IsNeitherNullNorEmpty()),
-                                                    RequestTimeout);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(CPOAdapter) + "." + nameof(OnPushEVSEStatusWWCPRequest));
-            }
+            await LogEvent(
+                      OnPushEVSEStatusWWCPRequest,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          startTime,
+                          RequestTimestamp.Value,
+                          this,
+                          Id,
+                          EventTrackingId,
+                          RoamingNetwork.Id,
+                          ServerAction,
+                          evseStatusRecords,
+                          warnings.Where(warning => warning.IsNeitherNullNorEmpty()),
+                          RequestTimeout
+                      )
+                  );
 
             #endregion
 
@@ -1550,16 +1517,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              null, // ProcessId
                                              CustomData,
 
-                                             Timestamp,
+                                             RequestTimestamp,
                                              EventTrackingId,
                                              RequestTimeout,
                                              CancellationToken
                                          )
                                      );
 
-
-                endtime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-                runtime = endtime - startTime;
 
                 if (response.IsSuccess())
                 {
@@ -1572,7 +1536,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                      response.Response.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
                                          ? warnings.AddAndReturnList(I18NString.Create(response.Response.StatusCode.AdditionalInfo))
                                          : warnings,
-                                     runtime
+                                     stopwatch.Elapsed
                                  );
 
                     else
@@ -1584,7 +1548,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                      response.Response?.StatusCode.AdditionalInfo.IsNotNullOrEmpty() == true
                                          ? warnings.AddAndReturnList(I18NString.Create(response.Response.StatusCode.AdditionalInfo))
                                          : warnings,
-                                     runtime
+                                     stopwatch.Elapsed
                                  );
 
                 }
@@ -1597,7 +1561,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                  //response.HTTPBody is not null
                                  //    ? Warnings.AddAndReturnList(I18NString.Create(response.HTTPBody.ToUTF8String()))
                                  //    : Warnings.AddAndReturnList(I18NString.Create("No HTTP body received!")),
-                                 Runtime: runtime
+                                 Runtime: stopwatch.Elapsed
                              );
 
             }
@@ -1605,10 +1569,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #region ...or no EVSEs to push...
 
             else
-            {
-
-                endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-                runtime  = endtime - startTime;
                 result   = WWCP.PushEVSEStatusResult.NoOperation(
                                Id,
                                this,
@@ -1618,33 +1578,30 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                Runtime: TimeSpan.Zero
                            );
 
-            }
-
             #endregion
 
 
             #region Send OnPushEVSEStatusResponse event
 
-            try
-            {
+            var endTime = Timestamp.Now;
+            stopwatch.Stop();
 
-                OnPushEVSEStatusWWCPResponse?.Invoke(endtime,
-                                                     Timestamp.Value,
-                                                     this,
-                                                     Id,
-                                                     EventTrackingId,
-                                                     RoamingNetwork.Id,
-                                                     ServerAction,
-                                                     evseStatusRecords,
-                                                     RequestTimeout,
-                                                     result,
-                                                     runtime);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(CPOAdapter) + "." + nameof(OnPushEVSEStatusWWCPResponse));
-            }
+            await LogEvent(
+                      OnPushEVSEStatusWWCPResponse,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          endTime,
+                          RequestTimestamp.Value,
+                          this,
+                          Id,
+                          EventTrackingId,
+                          RoamingNetwork.Id,
+                          ServerAction,
+                          evseStatusRecords,
+                          RequestTimeout,
+                          result,
+                          stopwatch.Elapsed
+                      )
+                  );
 
             #endregion
 
@@ -1980,7 +1937,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                        result.SenderId,
                        this,
                        null,
-                       org.GraphDefined.Vanaheimr.Illias.AddedOrUpdated.Add,
+                       AddedOrUpdated.Add,
                        result.Description?.ToI18NString(Languages.en),
                        result.Warnings,
                        result.Runtime
@@ -3366,9 +3323,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            WWCP.ChargingProduct?             ChargingProduct       = null,   // [maxlength: 100]
                            WWCP.ChargingSession_Id?          SessionId             = null,
                            WWCP.ChargingSession_Id?          CPOPartnerSessionId   = null,
-                           WWCP.ChargingStationOperator_Id?  OperatorId            = null,
+                           //WWCP.ChargingStationOperator_Id?  OperatorId            = null,
+                           WWCP.EMobilityProvider_Id?        EMobilityProviderId   = null,
 
-                           DateTimeOffset?                   Timestamp             = null,
+                           DateTimeOffset?                   RequestTimestamp      = null,
                            EventTracking_Id?                 EventTrackingId       = null,
                            TimeSpan?                         RequestTimeout        = null,
                            CancellationToken                 CancellationToken     = default)
@@ -3377,7 +3335,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Initial checks
 
-            Timestamp       ??= org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
             EventTrackingId ??= EventTracking_Id.New;
             RequestTimeout  ??= CPOClient?.RequestTimeout;
 
@@ -3385,34 +3342,34 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnAuthorizeStartRequest event
 
-            var startTime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+            var startTime  = Timestamp.Now;
+            var stopwatch  = Stopwatch.StartNew();
 
-            try
-            {
+            RequestTimestamp ??= startTime;
 
-                OnAuthorizeStartRequest?.Invoke(startTime,
-                                                Timestamp.Value,
-                                                this,
-                                                Id.ToString(),
-                                                EventTrackingId,
-                                                RoamingNetwork.Id,
-                                                null,
-                                                Id,
-                                                OperatorId,
-                                                LocalAuthentication,
-                                                ChargingLocation,
-                                                ChargingProduct,
-                                                SessionId,
-                                                CPOPartnerSessionId,
-                                                [],
-                                                RequestTimeout,
-                                                CancellationToken);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(CPOAdapter) + "." + nameof(OnAuthorizeStartRequest));
-            }
+            await LogEvent(
+                      OnAuthorizeStartRequest,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          startTime,
+                          RequestTimestamp.Value,
+                          this,
+                          Id.ToString(),
+                          EventTrackingId,
+                          RoamingNetwork.Id,
+                          null,
+                          Id,
+                          //ChargingStationOperatorId,
+                          LocalAuthentication,
+                          EMobilityProviderId,
+                          ChargingLocation,
+                          ChargingProduct,
+                          SessionId,
+                          CPOPartnerSessionId,
+                          [],
+                          RequestTimeout,
+                          CancellationToken
+                      )
+                  );
 
             #endregion
 
@@ -3421,13 +3378,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             TimeSpan               runtime;
             WWCP.AuthStartResult?  authStartResult   = null;
 
-            var operatorId      = (OperatorId ?? DefaultOperator.Id).ToOICP(DefaultOperatorIdFormat);
-            var evseId          = ChargingLocation?.EVSEId?.ToOICP(CustomEVSEIdConverter);
-            var identification  = LocalAuthentication.ToOICP();
+            var operatorId      = (ChargingLocation?.ChargingStationOperatorId ?? DefaultOperator.Id).ToOICP(DefaultOperatorIdFormat);
+            var evseId          =  ChargingLocation?.EVSEId?.                                         ToOICP(CustomEVSEIdConverter);
+            var identification  =  LocalAuthentication.                                               ToOICP();
 
             if (!operatorId.HasValue)
             {
-                endtime          = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+                endtime          = Timestamp.Now;
                 runtime          = endtime - startTime;
                 authStartResult  = WWCP.AuthStartResult.AdminDown(Id,
                                                                   this,
@@ -3438,59 +3395,67 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             // An optional EVSE Id is given, but it is invalid!
             else if (ChargingLocation?.EVSEId.HasValue == true && !evseId.HasValue)
             {
-                endtime          = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+                endtime          = Timestamp.Now;
                 runtime          = endtime - startTime;
-                authStartResult  = WWCP.AuthStartResult.UnknownLocation(Id,
-                                                                        this,
-                                                                        SessionId:  SessionId,
-                                                                        Runtime:    runtime);
+                authStartResult  = WWCP.AuthStartResult.UnknownLocation(
+                                       Id,
+                                       this,
+                                       SessionId:  SessionId,
+                                       Runtime:    runtime
+                                   );
             }
 
             else if (identification?.RFIDId is null && identification?.RFIDIdentification is null)
             {
-                endtime          = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+                endtime          = Timestamp.Now;
                 runtime          = endtime - startTime;
-                authStartResult  = WWCP.AuthStartResult.InvalidToken(Id,
-                                                                     this,
-                                                                     SessionId:  SessionId,
-                                                                     Runtime:    runtime);
+                authStartResult  = WWCP.AuthStartResult.InvalidToken(
+                                       Id,
+                                       this,
+                                       SessionId:  SessionId,
+                                       Runtime:    runtime
+                                   );
             }
 
             else if (DisableAuthorization)
             {
-                endtime          = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+                endtime          = Timestamp.Now;
                 runtime          = endtime - startTime;
-                authStartResult  = WWCP.AuthStartResult.AdminDown(Id,
-                                                                  this,
-                                                                  SessionId:  SessionId,
-                                                                  Runtime:    runtime);
+                authStartResult  = WWCP.AuthStartResult.AdminDown(
+                                       Id,
+                                       this,
+                                       SessionId:  SessionId,
+                                       Runtime:    runtime
+                                   );
             }
 
             else
             {
 
                 var response  = await CPORoaming.AuthorizeStart(
-                                      new AuthorizeStartRequest(
-                                           operatorId.Value,
-                                           identification,
-                                           evseId,
-                                           ChargingProduct?.ToOICP(),
-                                           SessionId.       ToOICP(),
-                                           CPOPartnerSessionId.HasValue
-                                               ? CPOPartnerSession_Id.Parse(CPOPartnerSessionId.Value.ToString())
-                                               : null,
-                                           null, // EMPPartnerSessionId
-                                           null, // ProcessId
+                                          new AuthorizeStartRequest(
+                                              operatorId.Value,
+                                              identification,
+                                              evseId,
+                                              ChargingProduct?.ToOICP(),
+                                              SessionId.       ToOICP(),
+                                              CPOPartnerSessionId.HasValue
+                                                  ? CPOPartnerSession_Id.Parse(CPOPartnerSessionId.Value.ToString())
+                                                  : null,
+                                              null, // EMPPartnerSessionId
+                                              null, // ProcessId
 
-                                           null, // CustomData
+                                              null, // CustomData
 
-                                           Timestamp,
-                                           EventTrackingId,
-                                           RequestTimeout,
-                                           CancellationToken));
+                                              RequestTimestamp,
+                                              EventTrackingId,
+                                              RequestTimeout,
+                                              CancellationToken
+                                          )
+                                      );
 
 
-                endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+                endtime  = Timestamp.Now;
                 runtime  = endtime - startTime;
 
                 if (response.IsSuccess()          &&
@@ -3550,34 +3515,34 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnAuthorizeStartResponse event
 
-            try
-            {
+            var endTime = Timestamp.Now;
+            stopwatch.Stop();
 
-                OnAuthorizeStartResponse?.Invoke(endtime,
-                                                 Timestamp.Value,
-                                                 this,
-                                                 Id.ToString(),
-                                                 EventTrackingId,
-                                                 RoamingNetwork.Id,
-                                                 null,
-                                                 Id,
-                                                 OperatorId,
-                                                 LocalAuthentication,
-                                                 ChargingLocation,
-                                                 ChargingProduct,
-                                                 SessionId,
-                                                 CPOPartnerSessionId,
-                                                 [],
-                                                 RequestTimeout,
-                                                 authStartResult,
-                                                 runtime,
-                                                 CancellationToken);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(CPOAdapter) + "." + nameof(OnAuthorizeStartResponse));
-            }
+            await LogEvent(
+                      OnAuthorizeStartResponse,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          endTime,
+                          RequestTimestamp.Value,
+                          this,
+                          Id.ToString(),
+                          EventTrackingId,
+                          RoamingNetwork.Id,
+                          null,
+                          Id,
+                          //ChargingStationOperatorId,
+                          LocalAuthentication,
+                          EMobilityProviderId,
+                          ChargingLocation,
+                          ChargingProduct,
+                          SessionId,
+                          CPOPartnerSessionId,
+                          [],
+                          RequestTimeout,
+                          authStartResult,
+                          stopwatch.Elapsed,
+                          CancellationToken
+                      )
+                  );
 
             #endregion
 
@@ -3608,9 +3573,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                           WWCP.LocalAuthentication          LocalAuthentication,
                           WWCP.ChargingLocation?            ChargingLocation      = null,
                           WWCP.ChargingSession_Id?          CPOPartnerSessionId   = null,
-                          WWCP.ChargingStationOperator_Id?  OperatorId            = null,
+                          //WWCP.ChargingStationOperator_Id?  OperatorId            = null,
+                          WWCP.EMobilityProvider_Id?        EMobilityProviderId   = null,
 
-                          DateTimeOffset?                   Timestamp             = null,
+                          DateTimeOffset?                   RequestTimestamp      = null,
                           EventTracking_Id?                 EventTrackingId       = null,
                           TimeSpan?                         RequestTimeout        = null,
                           CancellationToken                 CancellationToken     = default)
@@ -3618,40 +3584,39 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Initial checks
 
-            Timestamp       ??= org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
             EventTrackingId ??= EventTracking_Id.New;
-            RequestTimeout  ??= CPOClient?.RequestTimeout;
+            RequestTimeout  ??= this.RequestTimeout;
 
             #endregion
 
             #region Send OnAuthorizeStopRequest event
 
-            var startTime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+            var startTime  = Timestamp.Now;
+            var stopwatch  = Stopwatch.StartNew();
 
-            try
-            {
+            RequestTimestamp ??= startTime;
 
-                OnAuthorizeStopRequest?.Invoke(startTime,
-                                               Timestamp.Value,
-                                               this,
-                                               Id.ToString(),
-                                               EventTrackingId,
-                                               RoamingNetwork.Id,
-                                               null,
-                                               Id,
-                                               OperatorId,
-                                               ChargingLocation,
-                                               SessionId,
-                                               CPOPartnerSessionId,
-                                               LocalAuthentication,
-                                               RequestTimeout,
-                                               CancellationToken);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(CPOAdapter) + "." + nameof(OnAuthorizeStopRequest));
-            }
+            await LogEvent(
+                      OnAuthorizeStopRequest,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          startTime,
+                          RequestTimestamp.Value,
+                          this,
+                          Id.ToString(),
+                          EventTrackingId,
+                          RoamingNetwork.Id,
+                          null,
+                          Id,
+                          //ChargingStationOperatorId,
+                          ChargingLocation,
+                          SessionId,
+                          CPOPartnerSessionId,
+                          LocalAuthentication,
+                          EMobilityProviderId,
+                          RequestTimeout,
+                          CancellationToken
+                      )
+                  );
 
             #endregion
 
@@ -3660,60 +3625,70 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             TimeSpan              runtime;
             WWCP.AuthStopResult?  authStopResult   = null;
 
-            var operatorId      = (OperatorId ?? DefaultOperator.Id).ToOICP(DefaultOperatorIdFormat);
-            var sessionId       = SessionId.ToOICP();
-            var evseId          = ChargingLocation?.EVSEId?.ToOICP(CustomEVSEIdConverter);
-            var identification  = LocalAuthentication.ToOICP();
+            var operatorId      = (ChargingLocation?.ChargingStationOperatorId ?? DefaultOperator.Id).ToOICP(DefaultOperatorIdFormat);
+            var sessionId       = SessionId.                                                          ToOICP();
+            var evseId          = ChargingLocation?.EVSEId?.                                          ToOICP(CustomEVSEIdConverter);
+            var identification  = LocalAuthentication.                                                ToOICP();
 
             if (!operatorId.HasValue)
             {
-                endtime         = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+                endtime         = Timestamp.Now;
                 runtime         = endtime - startTime;
-                authStopResult  = WWCP.AuthStopResult.AdminDown(Id,
-                                                                this,
-                                                                SessionId:  SessionId,
-                                                                Runtime:    runtime);
+                authStopResult  = WWCP.AuthStopResult.AdminDown(
+                                      Id,
+                                      this,
+                                      SessionId:  SessionId,
+                                      Runtime:    runtime
+                                  );
             }
 
             else if (!sessionId.HasValue)
             {
-                endtime         = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+                endtime         = Timestamp.Now;
                 runtime         = endtime - startTime;
-                authStopResult  = WWCP.AuthStopResult.InvalidSessionId(Id,
-                                                                       this,
-                                                                       SessionId:  SessionId,
-                                                                       Runtime:    runtime);
+                authStopResult  = WWCP.AuthStopResult.InvalidSessionId(
+                                      Id,
+                                      this,
+                                      SessionId:  SessionId,
+                                      Runtime:    runtime
+                                  );
             }
 
             // An optional EVSE Id is given, but it is invalid!
             else if (ChargingLocation?.EVSEId.HasValue == true && !evseId.HasValue)
             {
-                endtime         = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+                endtime         = Timestamp.Now;
                 runtime         = endtime - startTime;
-                authStopResult  = WWCP.AuthStopResult.UnknownLocation(Id,
-                                                                      this,
-                                                                      SessionId:  SessionId,
-                                                                      Runtime:    runtime);
+                authStopResult  = WWCP.AuthStopResult.UnknownLocation(
+                                      Id,
+                                      this,
+                                      SessionId:  SessionId,
+                                      Runtime:    runtime
+                                  );
             }
 
             else if (identification?.RFIDId is null && identification?.RFIDIdentification is null)
             {
-                endtime         = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+                endtime         = Timestamp.Now;
                 runtime         = endtime - startTime;
-                authStopResult  = WWCP.AuthStopResult.InvalidToken(Id,
-                                                                   this,
-                                                                   SessionId:  SessionId,
-                                                                   Runtime:    runtime);
+                authStopResult  = WWCP.AuthStopResult.InvalidToken(
+                                      Id,
+                                      this,
+                                      SessionId:  SessionId,
+                                      Runtime:    runtime
+                                  );
             }
 
             else if (DisableAuthorization)
             {
-                endtime         = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+                endtime         = Timestamp.Now;
                 runtime         = endtime - startTime;
-                authStopResult  = WWCP.AuthStopResult.AdminDown(Id,
-                                                                this,
-                                                                SessionId:  SessionId,
-                                                                Runtime:    runtime);
+                authStopResult  = WWCP.AuthStopResult.AdminDown(
+                                      Id,
+                                      this,
+                                      SessionId:  SessionId,
+                                      Runtime:    runtime
+                                  );
             }
 
             else
@@ -3733,7 +3708,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                               null, // CustomData
 
-                                              Timestamp,
+                                              RequestTimestamp,
                                               EventTrackingId,
                                               RequestTimeout,
                                               CancellationToken
@@ -3741,7 +3716,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                       );
 
 
-                endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+                endtime  = Timestamp.Now;
                 runtime  = endtime - startTime;
 
                 if (response.IsSuccess()          &&
@@ -3784,32 +3759,32 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnAuthorizeStopResponse event
 
-            try
-            {
+            var endTime = Timestamp.Now;
+            stopwatch.Stop();
 
-                OnAuthorizeStopResponse?.Invoke(endtime,
-                                                Timestamp.Value,
-                                                this,
-                                                Id.ToString(),
-                                                EventTrackingId,
-                                                RoamingNetwork.Id,
-                                                null,
-                                                Id,
-                                                OperatorId,
-                                                ChargingLocation,
-                                                SessionId,
-                                                CPOPartnerSessionId,
-                                                LocalAuthentication,
-                                                RequestTimeout,
-                                                authStopResult,
-                                                runtime,
-                                                CancellationToken);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(CPOAdapter) + "." + nameof(OnAuthorizeStopResponse));
-            }
+            await LogEvent(
+                      OnAuthorizeStopResponse,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          endTime,
+                          RequestTimestamp.Value,
+                          this,
+                          Id.ToString(),
+                          EventTrackingId,
+                          RoamingNetwork.Id,
+                          null,
+                          Id,
+                          //ChargingStationOperatorId,
+                          ChargingLocation,
+                          SessionId,
+                          CPOPartnerSessionId,
+                          LocalAuthentication,
+                          EMobilityProviderId,
+                          RequestTimeout,
+                          authStopResult,
+                          stopwatch.Elapsed,
+                          CancellationToken
+                      )
+                  );
 
             #endregion
 
@@ -3926,26 +3901,25 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnSendCDRsRequest event
 
-            var startTime = Timestamp.Now;
+            var startTime  = Timestamp.Now;
+            var stopwatch  = Stopwatch.StartNew();
 
-            try
-            {
+            RequestTimestamp ??= startTime;
 
-                OnSendCDRsRequest?.Invoke(startTime,
-                                          RequestTimestamp.Value,
-                                          this,
-                                          Id.ToString(),
-                                          EventTrackingId,
-                                          RoamingNetwork.Id,
-                                          ChargeDetailRecords,
-                                          RequestTimeout,
-                                          CancellationToken);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(CPOAdapter) + "." + nameof(OnSendCDRsRequest));
-            }
+            await LogEvent(
+                      OnSendCDRsRequest,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          startTime,
+                          RequestTimestamp.Value,
+                          this,
+                          Id.ToString(),
+                          EventTrackingId,
+                          RoamingNetwork.Id,
+                          ChargeDetailRecords,
+                          RequestTimeout,
+                          CancellationToken
+                      )
+                  );
 
             #endregion
 
@@ -4236,26 +4210,25 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnSendCDRsResponse event
 
-            try
-            {
+            var endTime = Timestamp.Now;
+            stopwatch.Stop();
 
-                OnChargeDetailRecordsResponse?.Invoke(endtime,
-                                                      RequestTimestamp.Value,
-                                                      this,
-                                                      Id.ToString(),
-                                                      EventTrackingId,
-                                                      RoamingNetwork.Id,
-                                                      ChargeDetailRecords,
-                                                      RequestTimeout,
-                                                      sendCDRsResult,
-                                                      runtime,
-                                                      CancellationToken);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(CPOAdapter) + "." + nameof(OnChargeDetailRecordsResponse));
-            }
+            await LogEvent(
+                      OnChargeDetailRecordsResponse,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          endtime,
+                          RequestTimestamp.Value,
+                          this,
+                          Id.ToString(),
+                          EventTrackingId,
+                          RoamingNetwork.Id,
+                          ChargeDetailRecords,
+                          RequestTimeout,
+                          sendCDRsResult,
+                          runtime,
+                          CancellationToken
+                      )
+                  );
 
             #endregion
 
@@ -4744,6 +4717,26 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
 
         // -----------------------------------------------------------------------------------------------------
+
+
+        #region (private) LogEvent (Logger, LogHandler, ...)
+
+        private Task LogEvent<TDelegate>(TDelegate?                                         Logger,
+                                         Func<TDelegate, Task>                              LogHandler,
+                                         [CallerArgumentExpression(nameof(Logger))] String  EventName     = "",
+                                         [CallerMemberName()]                       String  OICPCommand   = "")
+
+            where TDelegate : Delegate
+
+            => LogEvent(
+                   nameof(CPOAdapter),
+                   Logger,
+                   LogHandler,
+                   EventName,
+                   OICPCommand
+               );
+
+        #endregion
 
 
         #region Operator overloading

@@ -62,7 +62,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
     /// <summary>
     /// A delegate called whenever new EVSE data records will be send upstream.
     /// </summary>
-    public delegate void OnPushDataRequestDelegate   (DateTimeOffset                   LogTimestamp,
+    public delegate Task OnPushDataRequestDelegate   (DateTimeOffset                   LogTimestamp,
                                                       DateTimeOffset                   RequestTimestamp,
                                                       Object                           Sender,
                                                       WWCP.CSORoamingProvider_Id       SenderId,
@@ -77,7 +77,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
     /// <summary>
     /// A delegate called whenever new EVSE data records had been send upstream.
     /// </summary>
-    public delegate void OnPushDataResponseDelegate  (DateTimeOffset                   LogTimestamp,
+    public delegate Task OnPushDataResponseDelegate  (DateTimeOffset                   LogTimestamp,
                                                       DateTimeOffset                   RequestTimestamp,
                                                       Object                           Sender,
                                                       WWCP.CSORoamingProvider_Id       SenderId,
@@ -96,7 +96,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
     /// <summary>
     /// A delegate called whenever new EVSE status will be send upstream.
     /// </summary>
-    public delegate void OnPushEVSEStatusWWCPRequestDelegate (DateTimeOffset                   LogTimestamp,
+    public delegate Task OnPushEVSEStatusWWCPRequestDelegate (DateTimeOffset                   LogTimestamp,
                                                               DateTimeOffset                   RequestTimestamp,
                                                               Object                           Sender,
                                                               WWCP.CSORoamingProvider_Id       SenderId,
@@ -111,7 +111,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
     /// <summary>
     /// A delegate called whenever new EVSE status had been send upstream.
     /// </summary>
-    public delegate void OnPushEVSEStatusWWCPResponseDelegate(DateTimeOffset                   LogTimestamp,
+    public delegate Task OnPushEVSEStatusWWCPResponseDelegate(DateTimeOffset                   LogTimestamp,
                                                               DateTimeOffset                   RequestTimestamp,
                                                               Object                           Sender,
                                                               WWCP.CSORoamingProvider_Id       SenderId,
