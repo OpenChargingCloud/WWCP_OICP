@@ -3474,6 +3474,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                      response.Response.EMPPartnerSessionId.ToWWCP(),
                                      null,      // ContractId
                                      null,      // PrintedNumber
+                                     null,      // UILanguage
                                      null,      // ExpiryDate
                                      null,      // MaxkW
                                      null,      // MaxkWh
