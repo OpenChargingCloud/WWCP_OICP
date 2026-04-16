@@ -777,7 +777,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                          HTTPHostname?                                            VirtualHostname              = null,
                          I18NString?                                              Description                  = null,
                          UInt16?                                                  MaxNumberOfPooledClients     = null,
-                         Boolean?                                                 PreferIPv4                   = null,
+                         IPVersionPreference?                                     PreferIPv4                   = null,
                          RemoteTLSServerCertificateValidationHandler<EMPClient>?  RemoteCertificateValidator   = null,
                          LocalCertificateSelectionHandler?                        LocalCertificateSelector     = null,
                          IEnumerable<X509Certificate2>?                           ClientCertificates           = null,

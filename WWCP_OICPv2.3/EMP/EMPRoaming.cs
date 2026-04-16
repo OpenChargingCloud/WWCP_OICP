@@ -122,7 +122,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// Prefer IPv4 instead of IPv6.
         /// </summary>
-        Boolean                                                     IHTTPClient.PreferIPv4
+        IPVersionPreference                                         IHTTPClient.PreferIPv4
             => EMPClient.PreferIPv4;
 
         /// <summary>
