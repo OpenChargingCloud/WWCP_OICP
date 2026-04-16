@@ -544,7 +544,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                    CPOPartnerSessionId?.Clone(),
                    EMPPartnerSessionId?.Clone(),
                    SessionStart,
-                   MeterValueStart?.    Clone(),
+                   MeterValueStart,
                    OperatorId?.         Clone(),
                    PartnerProductId?.   Clone(),
                    ProcessId?.          Clone(),

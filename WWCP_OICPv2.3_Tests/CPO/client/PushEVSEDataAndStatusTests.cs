@@ -150,7 +150,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
                                                                                                 CO2Emission:  400,
                                                                                                 NuclearWaste:   0
                                                                                             ),
-                                                         MaxCapacity:                       WattHour.ParseKWh(350),
+                                                         MaxCapacity:                       WattHour.FromKWh(350),
                                                          AccessibilityLocationType:         AccessibilityLocationTypes.OnStreet,
                                                          AdditionalInfo:                    I18NText.Create(LanguageCode.de, "Wird mit Schokolade betrieben!").
                                                                                                      Add   (LanguageCode.en, "Runs on chocolate!"),
@@ -304,7 +304,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
                                                                                                                   CO2Emission:  400,
                                                                                                                   NuclearWaste:   0
                                                                                                               )));
-                Assert.That(evseData1?.MaxCapacity,                                                       Is.EqualTo(WattHour.ParseKWh(350)));
+                Assert.That(evseData1?.MaxCapacity,                                                       Is.EqualTo(WattHour.FromKWh(350)));
                 Assert.That(evseData1?.AccessibilityLocationType,                                         Is.EqualTo(AccessibilityLocationTypes.OnStreet));
                 Assert.That(evseData1?.AdditionalInfo?[LanguageCode.de],                                  Is.EqualTo("Wird mit Schokolade betrieben!"));
                 Assert.That(evseData1?.AdditionalInfo?[LanguageCode.en],                                  Is.EqualTo("Runs on chocolate!"));
@@ -432,7 +432,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
                                                                                                                   CO2Emission:  400,
                                                                                                                   NuclearWaste:   0
                                                                                                               )));
-                Assert.That(evseData1?.MaxCapacity,                                                       Is.EqualTo(WattHour.ParseKWh(350)));
+                Assert.That(evseData1?.MaxCapacity,                                                       Is.EqualTo(WattHour.FromKWh(350)));
                 Assert.That(evseData1?.AccessibilityLocationType,                                         Is.EqualTo(AccessibilityLocationTypes.OnStreet));
                 Assert.That(evseData1?.AdditionalInfo?[LanguageCode.de],                                  Is.EqualTo("Wird mit Schokolade betrieben!"));
                 Assert.That(evseData1?.AdditionalInfo?[LanguageCode.en],                                  Is.EqualTo("Runs on chocolate!"));

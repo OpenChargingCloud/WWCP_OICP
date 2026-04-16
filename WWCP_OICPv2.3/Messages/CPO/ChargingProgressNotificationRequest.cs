@@ -699,22 +699,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => new (
 
-                   SessionId.              Clone(),
-                   Identification.         Clone(),
-                   EVSEId.                 Clone(),
+                   SessionId.            Clone(),
+                   Identification.       Clone(),
+                   EVSEId.               Clone(),
                    ChargingStart,
                    EventOccurred,
 
-                   CPOPartnerSessionId?.   Clone(),
-                   EMPPartnerSessionId?.   Clone(),
+                   CPOPartnerSessionId?. Clone(),
+                   EMPPartnerSessionId?. Clone(),
                    ChargingDuration,
                    SessionStart,
-                   ConsumedEnergyProgress?.Clone(),
-                   MeterValueStart?.       Clone(),
-                   MeterValuesInBetween?.  Select(meterValueInBetween => meterValueInBetween.Clone()),
-                   OperatorId?.            Clone(),
-                   PartnerProductId?.      Clone(),
-                   ProcessId?.             Clone(),
+                   ConsumedEnergyProgress,
+                   MeterValueStart,
+                   MeterValuesInBetween?.ToArray(),
+                   OperatorId?.          Clone(),
+                   PartnerProductId?.    Clone(),
+                   ProcessId?.           Clone(),
 
                    CustomData is not null
                        ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None))

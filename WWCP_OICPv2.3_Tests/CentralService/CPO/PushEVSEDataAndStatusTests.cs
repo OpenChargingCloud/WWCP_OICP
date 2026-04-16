@@ -283,7 +283,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService.CPO
                                                                                  CO2Emission:  400,
                                                                                  NuclearWaste:   0
                                                                              ),
-                                          MaxCapacity:                       WattHour.ParseKWh(350),
+                                          MaxCapacity:                       WattHour.FromKWh(350),
                                           AccessibilityLocationType:         AccessibilityLocationTypes.OnStreet,
                                           AdditionalInfo:                    I18NText.Create(LanguageCode.de, "Wird mit Schokolade betrieben!").
                                                                                       Add   (LanguageCode.en, "Runs on chocolate!"),
