@@ -3490,6 +3490,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                               response.Response.StatusCode?.AdditionalInfo is not null
                                                   ? response.Response.StatusCode.AdditionalInfo.ToI18NString()
                                                   : I18NString.Empty,
+
+                                              null,      // AdditionalContext
+
                                               0,         // NumberOfRetries
                                               runtime
                                           );
