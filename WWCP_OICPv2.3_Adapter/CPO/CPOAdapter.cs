@@ -3469,6 +3469,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         authStartResult = WWCP.AuthStartResult.Authorized(
                                               Id,
                                               this,
+                                              runtime,
+                                              endtime,
                                               null,
                                               responseSessionId.Value,
                                               response.Response.EMPPartnerSessionId.ToWWCP(),
@@ -3484,6 +3486,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                               null,      // ListOfAuthStopTokens
                                               null,      // ListOfAuthStopPINs
                                               response.Response.ProviderId.ToWWCP(),
+                                              null,      // ProviderName
                                               response.Response.StatusCode?.Description    is not null
                                                   ? response.Response.StatusCode.Description.   ToI18NString()
                                                   : I18NString.Empty,
@@ -3493,8 +3496,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                               null,      // AdditionalContext
 
-                                              0,         // NumberOfRetries
-                                              runtime
+                                              0          // NumberOfRetries
                                           );
 
                 }
@@ -3502,6 +3504,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 authStartResult ??= WWCP.AuthStartResult.NotAuthorized(
                                         Id,
                                         this,
+                                        runtime,
+                                        endtime,
                                         null,
                                         SessionId,
                                         response?.Response?.ProviderId.ToWWCP(),
@@ -3511,8 +3515,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                         response?.Response?.StatusCode?.AdditionalInfo is not null
                                             ? response.Response.StatusCode.AdditionalInfo.ToI18NString()
                                             : I18NString.Empty,
-                                        0,
-                                        runtime
+                                        0
                                     );
 
             }
