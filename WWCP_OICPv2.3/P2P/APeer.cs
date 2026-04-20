@@ -32,17 +32,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
     public abstract class APeer
     {
 
-        #region Data
-
-        /// <summary>
-        /// Some JSON helper as DateTime is not well-defined for JSON!
-        /// </summary>
-        public static readonly IsoDateTimeConverter JSONDateTimeConverter = new() {
-            DateTimeFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss.fffZ"
-        };
-
-        #endregion
-
         #region Properties
 
         /// <summary>
@@ -74,31 +63,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
         }
 
         #endregion
-
-
-        #region GenerateKeys(ECParameters)
-
-        /// <summary>
-        /// Generate a private/public key pair.
-        /// </summary>
-        /// <param name="ECParameters">The elliptic curve parameters to use.</param>
-        public static AsymmetricCipherKeyPair GenerateKeys(X9ECParameters ECParameters)
-        {
-
-            var generator = GeneratorUtilities.GetKeyPairGenerator("ECDH");
-            generator.Init(new ECKeyGenerationParameters(new ECDomainParameters(ECParameters.Curve,
-                                                                                ECParameters.G,
-                                                                                ECParameters.N,
-                                                                                ECParameters.H,
-                                                                                ECParameters.GetSeed()),
-                                                         new SecureRandom()));
-
-            return generator.GenerateKeyPair();
-
-        }
-
-        #endregion
-
 
     }
 

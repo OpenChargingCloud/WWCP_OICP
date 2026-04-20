@@ -31,6 +31,8 @@ using org.GraphDefined.Vanaheimr.Hermod.Sockets.TCP;
 
 using cloud.charging.open.protocols.OICPv2_3.CPO;
 using cloud.charging.open.protocols.OICPv2_3.EMP;
+using org.GraphDefined.Vanaheimr.Hermod.Mail;
+using org.GraphDefined.Vanaheimr.Hermod.SMTP;
 
 #endregion
 
@@ -41,7 +43,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CentralService
     /// The central ev roaming combines the EMPClientAPI, EMPServerAPIClient, CPOClientAPI and CPOServerAPIClient
     /// and adds additional logging for all.
     /// </summary>
-    public class CentralServiceAPI
+    public class CentralServiceAPI : AHTTPExtAPIExtension1<HTTPExtAPI>
     {
 
         #region Data
@@ -86,20 +88,20 @@ namespace cloud.charging.open.protocols.OICPv2_3.CentralService
 
         #region Generic HTTP server logging
 
-        /// <summary>
-        /// An event called whenever a HTTP request came in.
-        /// </summary>
-        public HTTPRequestLogEvent   RequestLog    = new();
+        ///// <summary>
+        ///// An event called whenever a HTTP request came in.
+        ///// </summary>
+        //public HTTPRequestLogEvent   RequestLog    = new();
 
-        /// <summary>
-        /// An event called whenever a HTTP request could successfully be processed.
-        /// </summary>
-        public HTTPResponseLogEvent  ResponseLog   = new();
+        ///// <summary>
+        ///// An event called whenever a HTTP request could successfully be processed.
+        ///// </summary>
+        //public HTTPResponseLogEvent  ResponseLog   = new();
 
-        /// <summary>
-        /// An event called whenever a HTTP request resulted in an error.
-        /// </summary>
-        public HTTPErrorLogEvent     ErrorLog      = new();
+        ///// <summary>
+        ///// An event called whenever a HTTP request resulted in an error.
+        ///// </summary>
+        //public HTTPErrorLogEvent     ErrorLog      = new();
 
         #endregion
 
@@ -112,255 +114,122 @@ namespace cloud.charging.open.protocols.OICPv2_3.CentralService
 
         #region Constructor(s)
 
-        #region CentralServiceAPI(HTTPHostname = null, ...)
-
         /// <summary>
         /// Create a new central ev roaming service.
         /// </summary>
-        public CentralServiceAPI(HTTPHostname?                                              HTTPHostname                 = null,
-                                 String?                                                    ExternalDNSName              = null,
-                                 IPPort?                                                    HTTPServerPort               = null,
-                                 HTTPPath?                                                  BasePath                     = null,
-                                 String?                                                    HTTPServerName               = DefaultHTTPServerName,
+        public CentralServiceAPI(HTTPExtAPI                     HTTPAPI,
 
-                                 HTTPPath?                                                  URLPathPrefix                = null,
-                                 String?                                                    HTTPServiceName              = DefaultHTTPServiceName,
-                                 String?                                                    HTMLTemplate                 = null,
-                                 JObject?                                                   APIVersionHashes             = null,
+                                 IEnumerable<HTTPHostname>?     Hostnames                 = null,
+                                 HTTPPath?                      RootPath                  = null,
+                                 IEnumerable<HTTPContentType>?  HTTPContentTypes          = null,
+                                 I18NString?                    Description               = null,
 
-                                 ServerCertificateSelectorDelegate?                         ServerCertificateSelector    = null,
-                                 RemoteTLSClientCertificateValidationHandler<IHTTPServer>?  ClientCertificateValidator   = null,
-                                 LocalCertificateSelectionHandler?                          ClientCertificateSelector    = null,
-                                 SslProtocols?                                              AllowedTLSProtocols          = null,
-                                 Boolean?                                                   ClientCertificateRequired    = null,
-                                 Boolean?                                                   CheckCertificateRevocation   = null,
+                                 HTTPPath?                      BasePath                  = null,  // For URL prefixes in HTML!
 
-                                 ServerThreadNameCreatorDelegate?                           ServerThreadNameCreator      = null,
-                                 ServerThreadPriorityDelegate?                              ServerThreadPrioritySetter   = null,
-                                 Boolean?                                                   ServerThreadIsBackground     = null,
-                                 ConnectionIdBuilder?                                       ConnectionIdBuilder          = null,
-                                 TimeSpan?                                                  ConnectionTimeout            = null,
-                                 UInt32?                                                    MaxClientConnections         = null,
+                                 String?                        ExternalDNSName           = null,
+                                 String?                        HTTPServerName            = DefaultHTTPServerName,
+                                 String?                        HTTPServiceName           = DefaultHTTPServiceName,
+                                 String?                        APIVersionHash            = null,
+                                 JObject?                       APIVersionHashes          = null,
 
-                                 Boolean?                                                   DisableMaintenanceTasks      = null,
-                                 TimeSpan?                                                  MaintenanceInitialDelay      = null,
-                                 TimeSpan?                                                  MaintenanceEvery             = null,
+                                 EMailAddress?                  APIRobotEMailAddress      = null,
+                                 String?                        APIRobotGPGPassphrase     = null,
+                                 ISMTPClient?                   SMTPClient                = null,
 
-                                 Boolean?                                                   DisableWardenTasks           = null,
-                                 TimeSpan?                                                  WardenInitialDelay           = null,
-                                 TimeSpan?                                                  WardenCheckEvery             = null,
+                                 HTTPPath?                      AdditionalURLPathPrefix   = null,
+                                 Boolean?                       LocationsAsOpenData       = null,
+                                 Boolean?                       TariffsAsOpenData         = null,
+                                 Boolean?                       AllowDowngrades           = null,
 
-                                 Boolean?                                                   IsDevelopment                = null,
-                                 IEnumerable<String>?                                       DevelopmentServers           = null,
-                                 Boolean?                                                   DisableLogging               = null,
-                                 String?                                                    LoggingPath                  = null,
-                                 String?                                                    LogfileName                  = null,
-                                 LogfileCreatorDelegate?                                    LogfileCreator               = null,
-                                 DNSClient?                                                 DNSClient                    = null,
-                                 String?                                                    Description                  = null,
-                                 Boolean                                                    AutoStart                    = false)
+                                 Boolean                        RegisterRootService       = true,
+                                 String?                        RemotePartyDBFileName     = null,
+
+                                 Boolean?                       IsDevelopment             = null,
+                                 IEnumerable<String>?           DevelopmentServers        = null,
+                                 //Boolean?                       SkipURLTemplates          = false,
+                                 String?                        DatabaseFileName          = "DefaultAssetsDBFileName",
+                                 Boolean?                       DisableNotifications      = false,
+
+                                 Boolean?                       DisableLogging            = null,
+                                 String?                        LoggingContext            = null,
+                                 String?                        LoggingPath               = null,
+                                 String?                        LogfileName               = null,
+                                 LogfileCreatorDelegate?        LogfileCreator            = null)
+
+
+            : base(Description ?? I18NString.Create("CentralService API"),
+                   HTTPAPI,
+                   RootPath,
+                   BasePath,
+
+                   ExternalDNSName,
+                   HTTPServerName,
+                   HTTPServiceName,
+                   APIVersionHash,
+                   APIVersionHashes,
+
+                   IsDevelopment,
+                   DevelopmentServers,
+                   DisableLogging,
+                   LoggingPath,
+                   LogfileName,
+                   LogfileCreator is not null
+                       ? (loggingPath, context, logfileName) => LogfileCreator(loggingPath, context, logfileName)
+                       : (loggingPath, context, logfileName) => String.Concat(
+                                                                    loggingPath + Path.DirectorySeparatorChar,
+                                                                 //   remoteParty is not null
+                                                                 //       ? remoteParty.Id.ToString() + Path.DirectorySeparatorChar
+                                                                 //       : null,
+                                                                    context is not null ? context + "_" : "",
+                                                                    logfileName, "_",
+                                                                    Timestamp.Now.Year, "-",
+                                                                    Timestamp.Now.Month.ToString("D2"),
+                                                                    ".log"
+                                                                ))
 
         {
 
-            httpAPI = new HTTPAPI(
-                          HTTPHostname,
-                          ExternalDNSName,
-                          HTTPServerPort,
-                          BasePath,
-                          HTTPServerName,
+            if (RegisterRootService)
+                HTTPBaseAPI.AddHandler(
+                    HTTPPath.Root,
+                    HTTPMethod:    HTTPMethod.GET,
+                    HTTPDelegate:  request => {
+                        return Task.FromResult(
+                            new HTTPResponse.Builder(request) {
+                                HTTPStatusCode  = HTTPStatusCode.OK,
+                                Server          = HTTPServerName,
+                                Date            = Timestamp.Now,
+                                ContentType     = HTTPContentType.Text.PLAIN,
+                                Content         = "This is an OICP v2.3 Central Service HTTP/JSON endpoint!".ToUTF8Bytes(),
+                                CacheControl    = "public, max-age=300"
+                              //  Connection      = this.Connection
+                            }.AsImmutable);
+                    },
+                    AllowReplacement: URLReplacement.Allow
+                );
 
-                          URLPathPrefix,
-                          HTTPServiceName,
-                          HTMLTemplate,
-                          APIVersionHashes,
+            this.EMPClientAPI  = new EMPClientAPI(HTTPBaseAPI);
+            this.CPOClientAPI  = new CPOClientAPI(HTTPBaseAPI);
 
-                          ServerCertificateSelector,
-                          ClientCertificateValidator,
-                          ClientCertificateSelector,
-                          AllowedTLSProtocols,
-                          ClientCertificateRequired,
-                          CheckCertificateRevocation,
+            //// Link HTTP events...
+            //EMPClientAPI.RequestLog   += RequestLog. WhenAll;
+            //EMPClientAPI.ResponseLog  += ResponseLog.WhenAll;
+            //EMPClientAPI.ErrorLog     += ErrorLog.   WhenAll;
 
-                          ServerThreadNameCreator,
-                          ServerThreadPrioritySetter,
-                          ServerThreadIsBackground,
-                          ConnectionIdBuilder,
-                          ConnectionTimeout,
-                          MaxClientConnections,
-
-                          DisableMaintenanceTasks,
-                          MaintenanceInitialDelay,
-                          MaintenanceEvery,
-
-                          DisableWardenTasks,
-                          WardenInitialDelay,
-                          WardenCheckEvery,
-
-                          IsDevelopment,
-                          DevelopmentServers,
-                          DisableLogging,
-                          LoggingPath,
-                          LogfileName,
-                          LogfileCreator,
-                          DNSClient,
-                          Description,
-                          false
-                      );
-
-            httpAPI.AddMethodCallback(org.GraphDefined.Vanaheimr.Hermod.HTTP.HTTPHostname.Any,
-                                      HTTPMethod.GET,
-                                      [
-                                          URLPathPrefix + "/",
-                                          URLPathPrefix + "/{FileName}"
-                                      ],
-                                      HTTPDelegate: Request => {
-                                          return Task.FromResult(
-                                              new HTTPResponse.Builder(Request) {
-                                                  HTTPStatusCode  = HTTPStatusCode.OK,
-                                                  Server          = httpAPI.HTTPServer.DefaultServerName,
-                                                  Date            = Timestamp.Now,
-                                                  ContentType     = HTTPContentType.Text.PLAIN,
-                                                  Content         = "This is an OICP v2.3 Central Service HTTP/JSON endpoint!".ToUTF8Bytes(),
-                                                  CacheControl    = "public, max-age=300",
-                                                  Connection      = ConnectionType.Close
-                                              }.AsImmutable);
-                                      });
-
-            this.EMPClientAPI          = new EMPClientAPI(httpAPI);
-            this.CPOClientAPI          = new CPOClientAPI(httpAPI);
-
-            // Link HTTP events...
-            EMPClientAPI.RequestLog   += RequestLog. WhenAll;
-            EMPClientAPI.ResponseLog  += ResponseLog.WhenAll;
-            EMPClientAPI.ErrorLog     += ErrorLog.   WhenAll;
-
-            CPOClientAPI.RequestLog   += RequestLog. WhenAll;
-            CPOClientAPI.ResponseLog  += ResponseLog.WhenAll;
-            CPOClientAPI.ErrorLog     += ErrorLog.   WhenAll;
+            //CPOClientAPI.RequestLog   += RequestLog. WhenAll;
+            //CPOClientAPI.ResponseLog  += ResponseLog.WhenAll;
+            //CPOClientAPI.ErrorLog     += ErrorLog.   WhenAll;
 
             this.EMPServerAPIClients   = [];
             this.CPOServerAPIClients   = [];
 
-            if (AutoStart)
-                httpAPI.Start();
+            //if (AutoStart)
+            //    httpAPI.Start();
 
         }
 
         #endregion
 
-        #region CentralServiceAPI(EMPClientAPI, CPOClientAPI)
-
-        /// <summary>
-        /// Create a new central ev roaming service.
-        /// </summary>
-        /// <param name="EMPServer">An EMP Server.</param>
-        /// <param name="EMPClient">An EMP client.</param>
-        public CentralServiceAPI(EMPClientAPI  EMPClientAPI,
-                                 CPOClientAPI  CPOClientAPI)
-        {
-
-            this.EMPClientAPI          = EMPClientAPI ?? throw new ArgumentNullException(nameof(EMPClientAPI), "The given EMPClientAPI must not be null!");
-            this.CPOClientAPI          = CPOClientAPI ?? throw new ArgumentNullException(nameof(CPOClientAPI), "The given CPOClientAPI must not be null!");
-
-            // Link HTTP events...
-            EMPClientAPI.RequestLog   += RequestLog. WhenAll;
-            EMPClientAPI.ResponseLog  += ResponseLog.WhenAll;
-            EMPClientAPI.ErrorLog     += ErrorLog.   WhenAll;
-
-            CPOClientAPI.RequestLog   += RequestLog. WhenAll;
-            CPOClientAPI.ResponseLog  += ResponseLog.WhenAll;
-            CPOClientAPI.ErrorLog     += ErrorLog.   WhenAll;
-
-            this.EMPServerAPIClients   = [];
-            this.CPOServerAPIClients   = [];
-
-        }
-
-        #endregion
-
-        #endregion
-
-
-        #region Start()
-
-        public void Start()
-        {
-
-            if (httpAPI is not null)
-                httpAPI.Start();
-
-            else
-            {
-                EMPClientAPI.Start();
-                CPOClientAPI.Start();
-            }
-
-        }
-
-        #endregion
-
-        #region Shutdown(EventTrackingId = null, Message = null, Wait = true)
-
-        /// <summary>
-        /// Shutdown this HTTP API.
-        /// </summary>
-        /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
-        /// <param name="Message">An optional shutdown message.</param>
-        /// <param name="Wait">Whether to wait for the shutdown to complete.</param>
-        public async Task<Boolean> Shutdown(EventTracking_Id?  EventTrackingId   = null,
-                                            String?            Message           = null,
-                                            Boolean            Wait              = true)
-        {
-
-            if (httpAPI is not null)
-                return await httpAPI.Shutdown(
-                                 EventTrackingId ?? EventTracking_Id.New,
-                                 Message,
-                                 Wait
-                             );
-
-
-            var empResult = await EMPClientAPI.Shutdown(
-                                        EventTrackingId ?? EventTracking_Id.New,
-                                        Message,
-                                        Wait
-                                    );
-
-            var cpoResult = await CPOClientAPI.Shutdown(
-                                        EventTrackingId ?? EventTracking_Id.New,
-                                        Message,
-                                        Wait
-                                    );
-
-            return empResult && cpoResult;
-
-        }
-
-        #endregion
-
-        #region Dispose()
-
-        public void Dispose()
-        {
-
-            if (httpAPI is not null)
-                httpAPI.Dispose();
-
-            else
-            {
-                EMPClientAPI?.Dispose();
-                CPOClientAPI?.Dispose();
-            }
-
-            foreach (var empServerAPIClient in EMPServerAPIClients.Values)
-                empServerAPIClient.Dispose();
-
-            foreach (var cpoServerAPIClient in CPOServerAPIClients.Values)
-                cpoServerAPIClient.Dispose();
-
-        }
-
-        #endregion
 
     }
 

@@ -130,7 +130,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                       LogfileCreatorDelegate?  LogfileCreator          = null)
 
-                : base(EMPClientAPI.HTTPServer,
+                : base(EMPClientAPI.HTTPBaseAPI.HTTPServer,
                        LoggingPath,
                        Context,
 

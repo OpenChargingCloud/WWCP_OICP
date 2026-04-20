@@ -29,7 +29,6 @@ using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.Logging;
 using org.GraphDefined.Vanaheimr.Hermod.Sockets;
 using org.GraphDefined.Vanaheimr.Hermod.Sockets.TCP;
-using org.GraphDefined.Vanaheimr.Hermod.HTTPTest;
 
 #endregion
 
@@ -39,7 +38,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// <summary>
     /// The EMP HTTP Server API.
     /// </summary>
-    public partial class EMPServerAPI : AOICPHTTPAPI
+    public partial class EMPServerAPI : AHTTPExtAPIExtension1<HTTPExtAPI>
     {
 
         #region (class) APICounters
@@ -121,6 +120,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// API Counters.
         /// </summary>
         public  APICounters       Counters      { get; }
+
+
+        public Formatting JSONFormatting    { get; } = Formatting.None;
 
         #endregion
 
@@ -292,7 +294,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an AuthorizeStart HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEventX OnAuthorizeStartHTTPRequest = new();
+        public HTTPRequestLogEvent OnAuthorizeStartHTTPRequest = new();
 
         /// <summary>
         /// An event sent whenever an AuthorizeStart HTTP request was received.
@@ -301,7 +303,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="API">The EMP Server HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         protected internal Task logAuthorizeStartHTTPRequest(DateTimeOffset     Timestamp,
-                                                             HTTPAPIX           API,
+                                                             HTTPAPI            API,
                                                              HTTPRequest        Request,
                                                              CancellationToken  CancellationToken)
 
@@ -338,7 +340,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an AuthorizationStart HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEventX OnAuthorizationStartHTTPResponse = new();
+        public HTTPResponseLogEvent OnAuthorizationStartHTTPResponse = new();
 
         /// <summary>
         /// An event sent whenever an AuthorizationStart HTTP response was sent.
@@ -348,7 +350,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
         protected internal Task logAuthorizationStartHTTPResponse(DateTimeOffset     Timestamp,
-                                                                  HTTPAPIX           API,
+                                                                  HTTPAPI            API,
                                                                   HTTPRequest        Request,
                                                                   HTTPResponse       Response,
                                                                   CancellationToken  CancellationToken)
@@ -369,7 +371,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an AuthorizeStop HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEventX OnAuthorizeStopHTTPRequest = new();
+        public HTTPRequestLogEvent OnAuthorizeStopHTTPRequest = new();
 
         /// <summary>
         /// An event sent whenever an AuthorizeStop HTTP request was received.
@@ -378,7 +380,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="API">The EMP Server HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         protected internal Task logAuthorizeStopHTTPRequest(DateTimeOffset     Timestamp,
-                                                            HTTPAPIX           API,
+                                                            HTTPAPI            API,
                                                             HTTPRequest        Request,
                                                             CancellationToken  CancellationToken)
 
@@ -415,7 +417,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an AuthorizationStop HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEventX OnAuthorizationStopHTTPResponse = new();
+        public HTTPResponseLogEvent OnAuthorizationStopHTTPResponse = new();
 
         /// <summary>
         /// An event sent whenever an AuthorizationStop HTTP response was sent.
@@ -425,7 +427,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
         protected internal Task logAuthorizationStopHTTPResponse(DateTimeOffset     Timestamp,
-                                                                 HTTPAPIX           API,
+                                                                 HTTPAPI            API,
                                                                  HTTPRequest        Request,
                                                                  HTTPResponse       Response,
                                                                  CancellationToken  CancellationToken)
@@ -447,7 +449,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever a ChargingNotification HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEventX OnChargingNotificationsHTTPRequest = new();
+        public HTTPRequestLogEvent OnChargingNotificationsHTTPRequest = new();
 
         /// <summary>
         /// An event sent whenever a ChargingNotification HTTP request was received.
@@ -456,7 +458,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="API">The EMP Server HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         protected internal Task logChargingNotificationsHTTPRequest(DateTimeOffset     Timestamp,
-                                                                    HTTPAPIX           API,
+                                                                    HTTPAPI            API,
                                                                     HTTPRequest        Request,
                                                                     CancellationToken  CancellationToken)
 
@@ -494,7 +496,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever a ChargingNotification HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEventX OnChargingNotificationsHTTPResponse = new();
+        public HTTPResponseLogEvent OnChargingNotificationsHTTPResponse = new();
 
         /// <summary>
         /// An event sent whenever a ChargingNotification HTTP response was sent.
@@ -504,7 +506,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
         protected internal Task logChargingNotificationsHTTPResponse(DateTimeOffset     Timestamp,
-                                                                     HTTPAPIX           API,
+                                                                     HTTPAPI            API,
                                                                      HTTPRequest        Request,
                                                                      HTTPResponse       Response,
                                                                      CancellationToken  CancellationToken)
@@ -526,7 +528,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever a ChargeDetailRecord HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEventX OnChargeDetailRecordHTTPRequest = new();
+        public HTTPRequestLogEvent OnChargeDetailRecordHTTPRequest = new();
 
         /// <summary>
         /// An event sent whenever a ChargeDetailRecord HTTP request was received.
@@ -535,7 +537,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="API">The EMP Server HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         protected internal Task logChargeDetailRecordHTTPRequest(DateTimeOffset     Timestamp,
-                                                                 HTTPAPIX           API,
+                                                                 HTTPAPI            API,
                                                                  HTTPRequest        Request,
                                                                  CancellationToken  CancellationToken)
 
@@ -572,7 +574,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever a ChargeDetailRecord HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEventX OnChargeDetailRecordHTTPResponse = new();
+        public HTTPResponseLogEvent OnChargeDetailRecordHTTPResponse = new();
 
         /// <summary>
         /// An event sent whenever a ChargeDetailRecord HTTP response was sent.
@@ -582,7 +584,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
         protected internal Task logChargeDetailRecordHTTPResponse(DateTimeOffset     Timestamp,
-                                                                  HTTPAPIX           API,
+                                                                  HTTPAPI            API,
                                                                   HTTPRequest        Request,
                                                                   HTTPResponse       Response,
                                                                   CancellationToken  CancellationToken)
@@ -604,7 +606,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// Create a new EMP HTTP Server API.
         /// </summary>
-        public EMPServerAPI(HTTPTestServerX                HTTPTestServer,
+        public EMPServerAPI(HTTPExtAPI                     HTTPAPI,
                             IEnumerable<HTTPHostname>?     Hostnames                 = null,
                             HTTPPath?                      RootPath                  = null,
                             IEnumerable<HTTPContentType>?  HTTPContentTypes          = null,
@@ -633,61 +635,64 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             String                         LogfileName               = DefaultHTTPAPI_LogfileName,
                             LogfileCreatorDelegate?        LogfileCreator            = null)
 
-            : base(HTTPTestServer,
-                   Hostnames,
+            : base(Description ?? I18NString.Create("OICP EMP Server API"),
+                   HTTPAPI,
                    RootPath,
-                   HTTPContentTypes,
-                   Description,
-
-                   ExternalDNSName,
                    BasePath,
 
-                   HTTPServerName  ?? DefaultHTTPServerName,
-                   HTTPServiceName ?? DefaultHTTPServiceName,
+                   ExternalDNSName,
+                   HTTPServerName,
+                   HTTPServiceName,
                    APIVersionHash,
                    APIVersionHashes,
-
-                   URLPathPrefix,
-                   JSONFormatting,
-                   Connection,
-
-                   ServiceCheckKeys,
 
                    IsDevelopment,
                    DevelopmentServers,
                    DisableLogging,
                    LoggingPath,
-                   LoggingContext,
                    LogfileName,
-                   LogfileCreator)
+                   LogfileCreator is not null
+                       ? (loggingPath, context, logfileName) => LogfileCreator(loggingPath, context, logfileName)
+                       : (loggingPath, context, logfileName) => String.Concat(
+                                                                    loggingPath + Path.DirectorySeparatorChar,
+                                                                 //   remoteParty is not null
+                                                                 //       ? remoteParty.Id.ToString() + Path.DirectorySeparatorChar
+                                                                 //       : null,
+                                                                    context is not null ? context + "_" : "",
+                                                                    logfileName, "_",
+                                                                    Timestamp.Now.Year, "-",
+                                                                    Timestamp.Now.Month.ToString("D2"),
+                                                                    ".log"
+                                                                ))
 
         {
 
-            this.Counters    = new APICounters();
+            this.Counters        = new APICounters();
+            this.JSONFormatting  = JSONFormatting ?? Formatting.None;
 
-                 HTTPLogger  = this.DisableLogging == false
-                                   ? new HTTP_Logger(
-                                         this,
-                                         LoggingPath,
-                                         LoggingContext ?? DefaultLoggingContext,
-                                         LogfileCreator
-                                     )
-                                   : null;
+            HTTPLogger           = this.DisableLogging == false
+                                       ? new HTTP_Logger(
+                                             this,
+                                             LoggingPath,
+                                             LoggingContext ?? DefaultLoggingContext,
+                                             LogfileCreator
+                                         )
+                                       : null;
 
-            this.Logger      = this.DisableLogging == false
-                                   ? new ServerAPILogger(
-                                         this,
-                                         LoggingPath,
-                                         LoggingContext ?? DefaultLoggingContext,
-                                         LogfileCreator
-                                     )
-                                   : null;
+            this.Logger          = this.DisableLogging == false
+                                       ? new ServerAPILogger(
+                                             this,
+                                             LoggingPath,
+                                             LoggingContext ?? DefaultLoggingContext,
+                                             LogfileCreator
+                                         )
+                                       : null;
 
 
             #region Register root service: / (HTTPRoot)
 
             if (RegisterRootService)
-                AddHandler(
+                HTTPBaseAPI.AddHandler(
                     HTTPPath.Root,
                     HTTPMethod:    HTTPMethod.GET,
                     HTTPDelegate:  request => {
@@ -698,27 +703,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                 Date            = Timestamp.Now,
                                 ContentType     = HTTPContentType.Text.PLAIN,
                                 Content         = $"This is an OICP {Version.String} EMP Server HTTP/JSON endpoint!".ToUTF8Bytes(),
-                                CacheControl    = "public, max-age=300",
-                                Connection      = this.Connection
-                            }.AsImmutable);
-                    },
-                    AllowReplacement: URLReplacement.Allow
-                );
-
-            if (RegisterRootService)
-                AddHandler(
-                    HTTPPath.Parse("/{FileName}"),
-                    HTTPMethod:    HTTPMethod.GET,
-                    HTTPDelegate:  request => {
-                        return Task.FromResult(
-                            new HTTPResponse.Builder(request) {
-                                HTTPStatusCode  = HTTPStatusCode.OK,
-                                Server          = HTTPServerName,
-                                Date            = Timestamp.Now,
-                                ContentType     = HTTPContentType.Text.PLAIN,
-                                Content         = $"This is an OICP {Version.String} CPO Server HTTP/JSON endpoint!".ToUTF8Bytes(),
-                                CacheControl    = "public, max-age=300",
-                                Connection      = this.Connection
+                                CacheControl    = "public, max-age=300"
+                                //Connection      = this.Connection
                             }.AsImmutable);
                     },
                     AllowReplacement: URLReplacement.Allow
@@ -735,7 +721,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             // --------------------------------------------------------------------------------------------------------------------------------------
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/charging/v21/operators/DE*GDF/authorize/start
             // --------------------------------------------------------------------------------------------------------------------------------------
-            AddHandler(
+            HTTPBaseAPI.AddHandler(
+
                 HTTPMethod.POST,
                 URLPathPrefix + HTTPPath.Parse($"/api/oicp/charging/v21/operators/{{{OICPExtensions.OperatorId}}}/authorize/start"),
                 HTTPContentType.Application.JSON_UTF8,
@@ -926,7 +913,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             // -------------------------------------------------------------------------------------------------------------------------------------
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/charging/v21/operators/DE*GDF/authorize/stop
             // -------------------------------------------------------------------------------------------------------------------------------------
-            AddHandler(
+            HTTPBaseAPI.AddHandler(
+
                 HTTPMethod.POST,
                 URLPathPrefix + HTTPPath.Parse($"/api/oicp/charging/v21/operators/{{{OICPExtensions.OperatorId}}}/authorize/stop"),
                 HTTPContentType.Application.JSON_UTF8,
@@ -1118,7 +1106,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             // ------------------------------------------------------------------------------------------------------------------------------------
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/notificationmgmt/v11/charging-notifications
             // ------------------------------------------------------------------------------------------------------------------------------------
-            AddHandler(
+            HTTPBaseAPI.AddHandler(
+
                 HTTPMethod.POST,
                 URLPathPrefix + HTTPPath.Parse("/api/oicp/notificationmgmt/v11/charging-notifications"),
                 HTTPContentType.Application.JSON_UTF8,
@@ -1777,7 +1766,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             // ------------------------------------------------------------------------------------------------------------------------------------------
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/cdrmgmt/v22/operators/DE*GDF/charge-detail-record
             // ------------------------------------------------------------------------------------------------------------------------------------------
-            AddHandler(
+            HTTPBaseAPI.AddHandler(
+
                 HTTPMethod.POST,
                 URLPathPrefix + HTTPPath.Parse($"/api/oicp/cdrmgmt/v22/operators/{{{OICPExtensions.OperatorId}}}/charge-detail-record"),
                 HTTPContentType.Application.JSON_UTF8,
@@ -1974,88 +1964,129 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         public static async Task<EMPServerAPI>
 
-            CreateServer(HTTPHostname?                                              HTTPHostname                 = null,
-                         String?                                                    ExternalDNSName              = null,
-                         IPPort?                                                    HTTPServerPort               = null,
-                         HTTPPath?                                                  BasePath                     = null,
-                         String                                                     HTTPServerName               = DefaultHTTPServerName,
+            CreateServer(IIPAddress?                                               IPAddress                    = null,
+                         IPPort?                                                   HTTPServerPort               = null,
+                         HTTPHostname?                                             HTTPHostname                 = null,
 
-                         HTTPPath?                                                  URLPathPrefix                = null,
-                         String                                                     HTTPServiceName              = DefaultHTTPServiceName,
-                         JObject?                                                   APIVersionHashes             = null,
+                         String?                                                   ExternalDNSName              = null,
+                         HTTPPath?                                                 BasePath                     = null,
 
-                         ServerCertificateSelectorDelegate?                         ServerCertificateSelector    = null,
-                         LocalCertificateSelectionHandler?                          LocalCertificateSelector     = null,
-                         RemoteTLSClientCertificateValidationHandler<IHTTPServer>?  ClientCertificateValidator   = null,
-                         SslProtocols?                                              AllowedTLSProtocols          = null,
-                         Boolean?                                                   ClientCertificateRequired    = null,
-                         Boolean?                                                   CheckCertificateRevocation   = null,
+                         String?                                                   HTTPServerName               = DefaultHTTPServerName,
+                         String?                                                   HTTPServiceName              = DefaultHTTPServiceName,
+                         String?                                                   APIVersionHash               = null,
+                         JObject?                                                  APIVersionHashes             = null,
 
-                         ConnectionIdBuilder?                                       ConnectionIdBuilder          = null,
-                         TimeSpan?                                                  ConnectionTimeout            = null,
-                         UInt32?                                                    MaxClientConnections         = null,
+                         ServerCertificateSelectorDelegate?                        ServerCertificateSelector    = null,
+                         RemoteTLSClientCertificateValidationHandler<ITCPServer>?  ClientCertificateValidator   = null,
+                         LocalCertificateSelectionHandler?                         LocalCertificateSelector     = null,
+                         SslProtocols?                                             AllowedTLSProtocols          = null,
+                         Boolean?                                                  ClientCertificateRequired    = null,
+                         Boolean?                                                  CheckCertificateRevocation   = null,
 
-                         Boolean?                                                   DisableMaintenanceTasks      = false,
-                         TimeSpan?                                                  MaintenanceInitialDelay      = null,
-                         TimeSpan?                                                  MaintenanceEvery             = null,
+                         ConnectionIdBuilder?                                      ConnectionIdBuilder          = null,
+                         TimeSpan?                                                 ConnectionTimeout            = null,
+                         UInt32?                                                   MaxClientConnections         = null,
 
-                         Boolean?                                                   DisableWardenTasks           = false,
-                         TimeSpan?                                                  WardenInitialDelay           = null,
-                         TimeSpan?                                                  WardenCheckEvery             = null,
+                         Boolean?                                                  DisableMaintenanceTasks      = false,
+                         TimeSpan?                                                 MaintenanceInitialDelay      = null,
+                         TimeSpan?                                                 MaintenanceEvery             = null,
 
-                         Boolean?                                                   IsDevelopment                = null,
-                         IEnumerable<String>?                                       DevelopmentServers           = null,
-                         Boolean                                                    DisableLogging               = false,
-                         String                                                     LoggingPath                  = DefaultHTTPAPI_LoggingPath,
-                         String                                                     LoggingContext               = DefaultLoggingContext,
-                         String                                                     LogfileName                  = DefaultHTTPAPI_LogfileName,
-                         LogfileCreatorDelegate?                                    LogfileCreator               = null,
-                         DNSClient?                                                 DNSClient                    = null,
-                         Boolean                                                    AutoStart                    = false,
+                         Boolean?                                                  DisableWardenTasks           = false,
+                         TimeSpan?                                                 WardenInitialDelay           = null,
+                         TimeSpan?                                                 WardenCheckEvery             = null,
 
-                         IEnumerable<HTTPHostname>?                                 Hostnames                    = null,
-                         HTTPPath?                                                  RootPath                     = null,
-                         IEnumerable<HTTPContentType>?                              HTTPContentTypes             = null,
-                         I18NString?                                                Description                  = null)
+                         ServiceCheckKeys?                                         ServiceCheckKeys             = null,
+
+                         Boolean?                                                  IsDevelopment                = null,
+                         IEnumerable<String>?                                      DevelopmentServers           = null,
+                         Boolean                                                   DisableLogging               = false,
+                         String                                                    LoggingPath                  = DefaultHTTPAPI_LoggingPath,
+                         String                                                    LoggingContext               = DefaultLoggingContext,
+                         String                                                    LogfileName                  = DefaultHTTPAPI_LogfileName,
+                         LogfileCreatorDelegate?                                   LogfileCreator               = null,
+                         IDNSClient?                                               DNSClient                    = null,
+                         Boolean                                                   AutoStart                    = false,
+
+                         IEnumerable<HTTPHostname>?                                Hostnames                    = null,
+                         HTTPPath?                                                 RootPath                     = null,
+                         IEnumerable<HTTPContentType>?                             HTTPContentTypes             = null,
+                         I18NString?                                               Description                  = null,
+
+                         Boolean                                                   RegisterRootService          = true,
+                         HTTPPath?                                                 URLPathPrefix                = null,
+                         Formatting?                                               JSONFormatting               = null,
+                         ConnectionType?                                           Connection                   = null)
 
         {
 
             var server  = new HTTPTestServerX(
-                              IPAddress:             null,
-                              TCPPort:               HTTPServerPort,
-                              HTTPServerName:        HTTPServerName,
-                              BufferSize:            null,
-                              ReceiveTimeout:        null,
-                              SendTimeout:           null,
-                              LoggingHandler:        null
+
+                              IPAddress:                    IPAddress,
+                              TCPPort:                      HTTPServerPort,
+                              HTTPServerName:               HTTPServerName,
+                              BufferSize:                   null,
+                              ReceiveTimeout:               null,
+                              SendTimeout:                  null,
+                              LoggingHandler:               null,
+
+                              ServerCertificateSelector:    ServerCertificateSelector,
+                              ClientCertificateValidator:   ClientCertificateValidator,
+                              LocalCertificateSelector:     LocalCertificateSelector,
+                              AllowedTLSProtocols:          AllowedTLSProtocols,
+                              ClientCertificateRequired:    ClientCertificateRequired,
+                              CheckCertificateRevocation:   CheckCertificateRevocation,
+
+                              ConnectionIdBuilder:          ConnectionIdBuilder,
+                              MaxClientConnections:         MaxClientConnections,
+                              DNSClient:                    DNSClient,
+
+                              DisableMaintenanceTasks:      DisableMaintenanceTasks,
+                              MaintenanceInitialDelay:      MaintenanceInitialDelay,
+                              MaintenanceEvery:             MaintenanceEvery,
+
+                              DisableWardenTasks:           DisableWardenTasks,
+                              WardenInitialDelay:           WardenInitialDelay,
+                              WardenCheckEvery:             WardenCheckEvery
+
+                          );
+
+            var extAPI  = new HTTPExtAPI(
+                              server
                           );
 
             var api     = new EMPServerAPI(
 
-                              HTTPTestServer:        server,
-                              Hostnames:             Hostnames,
-                              RootPath:              RootPath,
-                              HTTPContentTypes:      HTTPContentTypes,
-                              Description:           Description,
+                              extAPI,
 
-                              RegisterRootService:   true,
-                              URLPathPrefix:         URLPathPrefix,
+                              Hostnames:                    Hostnames,
+                              RootPath:                     RootPath,
+                              HTTPContentTypes:             HTTPContentTypes,
+                              Description:                  Description,
 
-                              DisableLogging:        DisableLogging,
-                              LoggingPath:           LoggingPath,
-                              LoggingContext:        LoggingContext,
-                              LogfileName:           LogfileName,
-                              LogfileCreator:        LogfileCreator
+                              ExternalDNSName:              ExternalDNSName,
+                              BasePath:                     BasePath,
+
+                              HTTPServerName:               HTTPServerName,
+                              HTTPServiceName:              HTTPServiceName,
+                              APIVersionHash:               APIVersionHash,
+                              APIVersionHashes:             APIVersionHashes,
+
+                              RegisterRootService:          RegisterRootService,
+                              URLPathPrefix:                URLPathPrefix,
+                              JSONFormatting:               JSONFormatting,
+                              Connection:                   Connection,
+
+                              ServiceCheckKeys:             ServiceCheckKeys,
+
+                              IsDevelopment:                IsDevelopment,
+                              DevelopmentServers:           DevelopmentServers,
+                              DisableLogging:               DisableLogging,
+                              LoggingPath:                  LoggingPath,
+                              LoggingContext:               LoggingContext,
+                              LogfileName:                  LogfileName,
+                              LogfileCreator:               LogfileCreator
 
                           );
-
-            server.AddHTTPAPI(
-                HTTPPath.Root,
-                HTTPHostname,
-                (s, p) => api
-            );
-
-            await server.Start();
 
             return api;
 

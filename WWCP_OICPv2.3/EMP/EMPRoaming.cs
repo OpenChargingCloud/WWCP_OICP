@@ -25,7 +25,6 @@ using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
-using org.GraphDefined.Vanaheimr.Hermod.HTTPTest;
 
 #endregion
 
@@ -1160,7 +1159,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an AuthorizeStart HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEventX OnAuthorizeStartHTTPRequest
+        public HTTPRequestLogEvent OnAuthorizeStartHTTPRequest
             => EMPServer.OnAuthorizeStartHTTPRequest;
 
         /// <summary>
@@ -1220,7 +1219,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an AuthorizationStart HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEventX OnAuthorizationStartHTTPResponse
+        public HTTPResponseLogEvent OnAuthorizationStartHTTPResponse
             => EMPServer.OnAuthorizationStartHTTPResponse;
 
         #endregion
@@ -1230,7 +1229,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an AuthorizeStop HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEventX OnAuthorizeStopHTTPRequest
+        public HTTPRequestLogEvent OnAuthorizeStopHTTPRequest
             => EMPServer.OnAuthorizeStopHTTPRequest;
 
         /// <summary>
@@ -1290,7 +1289,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an AuthorizationStop HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEventX OnAuthorizationStopHTTPResponse
+        public HTTPResponseLogEvent OnAuthorizationStopHTTPResponse
             => EMPServer.OnAuthorizationStopHTTPResponse;
 
         #endregion
@@ -1301,7 +1300,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever a ChargingNotification HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEventX OnChargingNotificationsHTTPRequest
+        public HTTPRequestLogEvent OnChargingNotificationsHTTPRequest
             => EMPServer.OnChargingNotificationsHTTPRequest;
 
 
@@ -1492,7 +1491,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever a ChargingNotification HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEventX OnChargingNotificationsHTTPResponse
+        public HTTPResponseLogEvent OnChargingNotificationsHTTPResponse
             => EMPServer.OnChargingNotificationsHTTPResponse;
 
         #endregion
@@ -1503,7 +1502,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever a ChargeDetailRecord HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEventX OnChargeDetailRecordHTTPRequest
+        public HTTPRequestLogEvent OnChargeDetailRecordHTTPRequest
             => EMPServer.OnChargeDetailRecordHTTPRequest;
 
         /// <summary>
@@ -1563,7 +1562,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever a ChargeDetailRecord HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEventX OnChargeDetailRecordHTTPResponse
+        public HTTPResponseLogEvent OnChargeDetailRecordHTTPResponse
             => EMPServer.OnChargeDetailRecordHTTPResponse;
 
         #endregion
@@ -1808,11 +1807,20 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// </summary>
         public void Dispose()
         {
-        //    EMPServer?.Dispose();
+            //EMPServer?.Dispose();
         }
 
         #endregion
 
+        public HTTPRequest.Builder CreateRequest(HTTPMethod HTTPMethod, HTTPPath HTTPPath, QueryString? QueryString = null, AcceptTypes? Accept = null, IHTTPAuthentication? Authentication = null, Byte[]? Content = null, HTTPContentType? ContentType = null, String? UserAgent = null, ConnectionType? Connection = null, Action<HTTPRequest.Builder>? RequestBuilder = null, Boolean? ConsumeRequestChunkedTEImmediately = null, CancellationToken CancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<HTTPResponse> RunRequest(HTTPMethod HTTPMethod, HTTPPath HTTPPath, QueryString? QueryString = null, AcceptTypes? Accept = null, IHTTPAuthentication? Authentication = null, Byte[]? Content = null, HTTPContentType? ContentType = null, String? UserAgent = null, ConnectionType? Connection = null, Action<HTTPRequest.Builder>? RequestBuilder = null, Boolean? ConsumeRequestChunkedTEImmediately = null, Boolean? ConsumeResponseChunkedTEImmediately = null, EventTracking_Id? EventTrackingId = null, TimeSpan? RequestTimeout = null, ClientRequestLogHandler? RequestLogDelegate = null, ClientResponseLogHandler? ResponseLogDelegate = null, CancellationToken CancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
 
     }
 

@@ -28,6 +28,8 @@ using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.Sockets;
 using org.GraphDefined.Vanaheimr.Hermod.Sockets.TCP;
 using org.GraphDefined.Vanaheimr.Hermod.Logging;
+using org.GraphDefined.Vanaheimr.Hermod.Mail;
+using org.GraphDefined.Vanaheimr.Hermod.SMTP;
 
 #endregion
 
@@ -37,7 +39,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <summary>
     /// The CPO HTTP Client API.
     /// </summary>
-    public partial class CPOClientAPI : HTTPAPI
+    public partial class CPOClientAPI : AHTTPExtAPIExtension1<HTTPExtAPI>
     {
 
         #region (class) APICounters
@@ -137,13 +139,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// </summary>
         public new HTTPPath                URLPathPrefix     { get; }
 
-        /// <summary>
-        /// The attached HTTP logger.
-        /// </summary>
-        public new HTTP_Logger             HTTPLogger
-#pragma warning disable CS8603 // Possible null reference return.
-            => base.HTTPLogger as HTTP_Logger;
-#pragma warning restore CS8603 // Possible null reference return.
+//        /// <summary>
+//        /// The attached HTTP logger.
+//        /// </summary>
+//        public new HTTP_Logger             HTTPLogger
+//#pragma warning disable CS8603 // Possible null reference return.
+//            => base.HTTPLogger as HTTP_Logger;
+//#pragma warning restore CS8603 // Possible null reference return.
 
         /// <summary>
         /// The attached Client API logger.
@@ -394,13 +396,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The CPO Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logPushEVSEDataHTTPRequest(DateTimeOffset  Timestamp,
-                                                           HTTPAPI         API,
-                                                           HTTPRequest     Request)
+        protected internal Task logPushEVSEDataHTTPRequest(DateTimeOffset     Timestamp,
+                                                           HTTPAPI            API,
+                                                           HTTPRequest        Request,
+                                                           CancellationToken  CancellationToken)
 
-            => OnPushEVSEDataHTTPRequest.WhenAll(Timestamp,
-                                                 API ?? this,
-                                                 Request);
+            => OnPushEVSEDataHTTPRequest.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -437,15 +443,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="API">The CPO Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logPushEVSEDataHTTPResponse(DateTimeOffset  Timestamp,
-                                                            HTTPAPI         API,
-                                                            HTTPRequest     Request,
-                                                            HTTPResponse    Response)
+        protected internal Task logPushEVSEDataHTTPResponse(DateTimeOffset     Timestamp,
+                                                            HTTPAPI            API,
+                                                            HTTPRequest        Request,
+                                                            HTTPResponse       Response,
+                                                            CancellationToken  CancellationToken)
 
-            => OnPushEVSEDataHTTPResponse.WhenAll(Timestamp,
-                                                  API ?? this,
-                                                  Request,
-                                                  Response);
+            => OnPushEVSEDataHTTPResponse.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   Response,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -463,13 +473,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The CPO Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logPushEVSEStatusHTTPRequest(DateTimeOffset  Timestamp,
-                                                             HTTPAPI         API,
-                                                             HTTPRequest     Request)
+        protected internal Task logPushEVSEStatusHTTPRequest(DateTimeOffset     Timestamp,
+                                                             HTTPAPI            API,
+                                                             HTTPRequest        Request,
+                                                             CancellationToken  CancellationToken)
 
-            => OnPushEVSEStatusHTTPRequest.WhenAll(Timestamp,
-                                                   API ?? this,
-                                                   Request);
+            => OnPushEVSEStatusHTTPRequest.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -506,15 +520,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="API">The CPO Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logPushEVSEStatusHTTPResponse(DateTimeOffset  Timestamp,
-                                                              HTTPAPI         API,
-                                                              HTTPRequest     Request,
-                                                              HTTPResponse    Response)
+        protected internal Task logPushEVSEStatusHTTPResponse(DateTimeOffset     Timestamp,
+                                                              HTTPAPI            API,
+                                                              HTTPRequest        Request,
+                                                              HTTPResponse       Response,
+                                                              CancellationToken  CancellationToken)
 
-            => OnPushEVSEStatusHTTPResponse.WhenAll(Timestamp,
-                                                    API ?? this,
-                                                    Request,
-                                                    Response);
+            => OnPushEVSEStatusHTTPResponse.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   Response,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -533,13 +551,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The CPO Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logPushPricingProductDataHTTPRequest(DateTimeOffset  Timestamp,
-                                                                     HTTPAPI         API,
-                                                                     HTTPRequest     Request)
+        protected internal Task logPushPricingProductDataHTTPRequest(DateTimeOffset     Timestamp,
+                                                                     HTTPAPI            API,
+                                                                     HTTPRequest        Request,
+                                                                     CancellationToken  CancellationToken)
 
-            => OnPushPricingProductDataHTTPRequest.WhenAll(Timestamp,
-                                                           API ?? this,
-                                                           Request);
+            => OnPushPricingProductDataHTTPRequest.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -576,15 +598,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="API">The CPO Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logPushPricingProductDataHTTPResponse(DateTimeOffset  Timestamp,
-                                                                      HTTPAPI         API,
-                                                                      HTTPRequest     Request,
-                                                                      HTTPResponse    Response)
+        protected internal Task logPushPricingProductDataHTTPResponse(DateTimeOffset     Timestamp,
+                                                                      HTTPAPI            API,
+                                                                      HTTPRequest        Request,
+                                                                      HTTPResponse       Response,
+                                                                      CancellationToken  CancellationToken)
 
-            => OnPushPricingProductDataHTTPResponse.WhenAll(Timestamp,
-                                                            API ?? this,
-                                                            Request,
-                                                            Response);
+            => OnPushPricingProductDataHTTPResponse.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   Response,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -602,13 +628,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The CPO Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logPushEVSEPricingHTTPRequest(DateTimeOffset  Timestamp,
-                                                              HTTPAPI         API,
-                                                              HTTPRequest     Request)
+        protected internal Task logPushEVSEPricingHTTPRequest(DateTimeOffset     Timestamp,
+                                                              HTTPAPI            API,
+                                                              HTTPRequest        Request,
+                                                              CancellationToken  CancellationToken)
 
-            => OnPushEVSEPricingHTTPRequest.WhenAll(Timestamp,
-                                                    API ?? this,
-                                                    Request);
+            => OnPushEVSEPricingHTTPRequest.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -645,15 +675,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="API">The CPO Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logPushEVSEPricingHTTPResponse(DateTimeOffset  Timestamp,
-                                                               HTTPAPI         API,
-                                                               HTTPRequest     Request,
-                                                               HTTPResponse    Response)
+        protected internal Task logPushEVSEPricingHTTPResponse(DateTimeOffset     Timestamp,
+                                                               HTTPAPI            API,
+                                                               HTTPRequest        Request,
+                                                               HTTPResponse       Response,
+                                                               CancellationToken  CancellationToken)
 
-            => OnPushEVSEPricingHTTPResponse.WhenAll(Timestamp,
-                                                     API ?? this,
-                                                     Request,
-                                                     Response);
+            => OnPushEVSEPricingHTTPResponse.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   Response,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -672,13 +706,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The CPO Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logPullAuthenticationDataHTTPRequest(DateTimeOffset  Timestamp,
-                                                                     HTTPAPI         API,
-                                                                     HTTPRequest     Request)
+        protected internal Task logPullAuthenticationDataHTTPRequest(DateTimeOffset     Timestamp,
+                                                                     HTTPAPI            API,
+                                                                     HTTPRequest        Request,
+                                                                     CancellationToken  CancellationToken)
 
-            => OnPullAuthenticationDataHTTPRequest.WhenAll(Timestamp,
-                                                           API ?? this,
-                                                           Request);
+            => OnPullAuthenticationDataHTTPRequest.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -715,15 +753,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="API">The CPO Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logPullAuthenticationDataHTTPResponse(DateTimeOffset  Timestamp,
-                                                                      HTTPAPI         API,
-                                                                      HTTPRequest     Request,
-                                                                      HTTPResponse    Response)
+        protected internal Task logPullAuthenticationDataHTTPResponse(DateTimeOffset     Timestamp,
+                                                                      HTTPAPI            API,
+                                                                      HTTPRequest        Request,
+                                                                      HTTPResponse       Response,
+                                                                      CancellationToken  CancellationToken)
 
-            => OnPullAuthenticationDataHTTPResponse.WhenAll(Timestamp,
-                                                            API ?? this,
-                                                            Request,
-                                                            Response);
+            => OnPullAuthenticationDataHTTPResponse.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   Response,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -742,13 +784,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The CPO Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logAuthorizeStartHTTPRequest(DateTimeOffset  Timestamp,
-                                                             HTTPAPI         API,
-                                                             HTTPRequest     Request)
+        protected internal Task logAuthorizeStartHTTPRequest(DateTimeOffset     Timestamp,
+                                                             HTTPAPI            API,
+                                                             HTTPRequest        Request,
+                                                             CancellationToken  CancellationToken)
 
-            => OnAuthorizeStartHTTPRequest.WhenAll(Timestamp,
-                                                   API ?? this,
-                                                   Request);
+            => OnAuthorizeStartHTTPRequest.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -785,15 +831,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="API">The CPO Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logAuthorizationStartHTTPResponse(DateTimeOffset  Timestamp,
-                                                                  HTTPAPI         API,
-                                                                  HTTPRequest     Request,
-                                                                  HTTPResponse    Response)
+        protected internal Task logAuthorizationStartHTTPResponse(DateTimeOffset     Timestamp,
+                                                                  HTTPAPI            API,
+                                                                  HTTPRequest        Request,
+                                                                  HTTPResponse       Response,
+                                                                  CancellationToken  CancellationToken)
 
-            => OnAuthorizationStartHTTPResponse.WhenAll(Timestamp,
-                                                        API ?? this,
-                                                        Request,
-                                                        Response);
+            => OnAuthorizationStartHTTPResponse.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   Response,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -811,13 +861,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The CPO Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logAuthorizeStopHTTPRequest(DateTimeOffset  Timestamp,
-                                                            HTTPAPI         API,
-                                                            HTTPRequest     Request)
+        protected internal Task logAuthorizeStopHTTPRequest(DateTimeOffset     Timestamp,
+                                                            HTTPAPI            API,
+                                                            HTTPRequest        Request,
+                                                            CancellationToken  CancellationToken)
 
-            => OnAuthorizeStopHTTPRequest.WhenAll(Timestamp,
-                                                  API ?? this,
-                                                  Request);
+            => OnAuthorizeStopHTTPRequest.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -854,15 +908,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="API">The CPO Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logAuthorizationStopHTTPResponse(DateTimeOffset  Timestamp,
-                                                                 HTTPAPI         API,
-                                                                 HTTPRequest     Request,
-                                                                 HTTPResponse    Response)
+        protected internal Task logAuthorizationStopHTTPResponse(DateTimeOffset     Timestamp,
+                                                                 HTTPAPI            API,
+                                                                 HTTPRequest        Request,
+                                                                 HTTPResponse       Response,
+                                                                 CancellationToken  CancellationToken)
 
-            => OnAuthorizationStopHTTPResponse.WhenAll(Timestamp,
-                                                       API ?? this,
-                                                       Request,
-                                                       Response);
+            => OnAuthorizationStopHTTPResponse.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   Response,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -881,13 +939,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The CPO Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logChargingNotificationHTTPRequest(DateTimeOffset  Timestamp,
-                                                                   HTTPAPI         API,
-                                                                   HTTPRequest     Request)
+        protected internal Task logChargingNotificationHTTPRequest(DateTimeOffset     Timestamp,
+                                                                   HTTPAPI            API,
+                                                                   HTTPRequest        Request,
+                                                                   CancellationToken  CancellationToken)
 
-            => OnChargingNotificationHTTPRequest.WhenAll(Timestamp,
-                                                         API ?? this,
-                                                         Request);
+            => OnChargingNotificationHTTPRequest.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -981,15 +1043,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="API">The CPO Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logChargingNotificationHTTPResponse(DateTimeOffset  Timestamp,
-                                                                    HTTPAPI         API,
-                                                                    HTTPRequest     Request,
-                                                                    HTTPResponse    Response)
+        protected internal Task logChargingNotificationHTTPResponse(DateTimeOffset     Timestamp,
+                                                                    HTTPAPI            API,
+                                                                    HTTPRequest        Request,
+                                                                    HTTPResponse       Response,
+                                                                    CancellationToken  CancellationToken)
 
-            => OnChargingNotificationHTTPResponse.WhenAll(Timestamp,
-                                                          API ?? this,
-                                                          Request,
-                                                          Response);
+            => OnChargingNotificationHTTPResponse.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   Response,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -1008,13 +1074,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The CPO Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logChargeDetailRecordHTTPRequest(DateTimeOffset  Timestamp,
-                                                                 HTTPAPI         API,
-                                                                 HTTPRequest     Request)
+        protected internal Task logChargeDetailRecordHTTPRequest(DateTimeOffset     Timestamp,
+                                                                 HTTPAPI            API,
+                                                                 HTTPRequest        Request,
+                                                                 CancellationToken  CancellationToken)
 
-            => OnChargeDetailRecordHTTPRequest.WhenAll(Timestamp,
-                                                       API ?? this,
-                                                       Request);
+            => OnChargeDetailRecordHTTPRequest.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -1051,62 +1121,25 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="API">The CPO Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logChargeDetailRecordHTTPResponse(DateTimeOffset  Timestamp,
-                                                                  HTTPAPI         API,
-                                                                  HTTPRequest     Request,
-                                                                  HTTPResponse    Response)
+        protected internal Task logChargeDetailRecordHTTPResponse(DateTimeOffset     Timestamp,
+                                                                  HTTPAPI            API,
+                                                                  HTTPRequest        Request,
+                                                                  HTTPResponse       Response,
+                                                                  CancellationToken  CancellationToken)
 
-            => OnChargeDetailRecordHTTPResponse.WhenAll(Timestamp,
-                                                        API ?? this,
-                                                        Request,
-                                                        Response);
+            => OnChargeDetailRecordHTTPResponse.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   Response,
+                   CancellationToken
+               );
 
         #endregion
 
         #endregion
 
         #region Constructor(s)
-
-        #region CPOClientAPI(HTTPAPI, URLPathPrefix = null, ...)
-
-        public CPOClientAPI(HTTPAPI                  HTTPAPI,
-                            HTTPPath?                URLPathPrefix    = null,
-
-                            String                   LoggingPath      = DefaultHTTPAPI_LoggingPath,
-                            String                   LoggingContext   = DefaultLoggingContext,
-                            LogfileCreatorDelegate?  LogfileCreator   = null)
-
-            : base(HTTPAPI)
-
-        {
-
-            this.URLPathPrefix   = base.URLPathPrefix + (URLPathPrefix ?? HTTPPath.Root);
-
-            this.Counters        = new APICounters();
-
-            this.JSONFormatting  = Newtonsoft.Json.Formatting.None;
-
-            base.HTTPLogger      = this.DisableLogging == false
-                                       ? new HTTP_Logger(this,
-                                                         LoggingPath,
-                                                         LoggingContext ?? DefaultLoggingContext,
-                                                         LogfileCreator)
-                                       : null;
-
-            this.Logger          = this.DisableLogging == false
-                                       ? new CPOClientAPILogger(this,
-                                                                LoggingPath,
-                                                                LoggingContext ?? DefaultLoggingContext,
-                                                                LogfileCreator)
-                                       : null;
-
-            RegisterURLTemplates(false);
-
-        }
-
-        #endregion
-
-        #region CPOClientAPI(HTTPHostname, ...)
 
         /// <summary>
         /// Create a new CPO HTTP Client API.
@@ -1149,107 +1182,88 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="LogfileCreator">A delegate for creating the name of the logfile for this API.</param>
         /// <param name="DNSClient">The DNS client of the API.</param>
         /// <param name="AutoStart">Whether to start the API automatically.</param>
-        public CPOClientAPI(HTTPHostname?                                              HTTPHostname                 = null,
-                            String?                                                    ExternalDNSName              = null,
-                            IPPort?                                                    HTTPServerPort               = null,
-                            HTTPPath?                                                  BasePath                     = null,
-                            String                                                     HTTPServerName               = DefaultHTTPServerName,
+        public CPOClientAPI(HTTPExtAPI                     HTTPAPI,
 
-                            HTTPPath?                                                  URLPathPrefix                = null,
-                            String                                                     HTTPServiceName              = DefaultHTTPServiceName,
-                            Boolean                                                    RegisterRootService          = true,
-                            JObject?                                                   APIVersionHashes             = null,
+                            IEnumerable<HTTPHostname>?     Hostnames                 = null,
+                            HTTPPath?                      RootPath                  = null,
+                            IEnumerable<HTTPContentType>?  HTTPContentTypes          = null,
+                            I18NString?                    Description               = null,
 
-                            ServerCertificateSelectorDelegate?                         ServerCertificateSelector    = null,
-                            RemoteTLSClientCertificateValidationHandler<IHTTPServer>?  ClientCertificateValidator   = null,
-                            LocalCertificateSelectionHandler?                          ClientCertificateSelector    = null,
-                            SslProtocols?                                              AllowedTLSProtocols          = null,
-                            Boolean?                                                   ClientCertificateRequired    = null,
-                            Boolean?                                                   CheckCertificateRevocation   = null,
+                            HTTPPath?                      BasePath                  = null,  // For URL prefixes in HTML!
 
-                            ServerThreadNameCreatorDelegate?                           ServerThreadNameCreator      = null,
-                            ServerThreadPriorityDelegate?                              ServerThreadPrioritySetter   = null,
-                            Boolean?                                                   ServerThreadIsBackground     = null,
-                            ConnectionIdBuilder?                                       ConnectionIdBuilder          = null,
-                            TimeSpan?                                                  ConnectionTimeout            = null,
-                            UInt32?                                                    MaxClientConnections         = null,
+                            String?                        ExternalDNSName           = null,
+                            String?                        HTTPServerName            = DefaultHTTPServerName,
+                            String?                        HTTPServiceName           = DefaultHTTPServiceName,
+                            String?                        APIVersionHash            = null,
+                            JObject?                       APIVersionHashes          = null,
 
-                            Boolean?                                                   DisableMaintenanceTasks      = false,
-                            TimeSpan?                                                  MaintenanceInitialDelay      = null,
-                            TimeSpan?                                                  MaintenanceEvery             = null,
+                            EMailAddress?                  APIRobotEMailAddress      = null,
+                            String?                        APIRobotGPGPassphrase     = null,
+                            ISMTPClient?                   SMTPClient                = null,
 
-                            Boolean?                                                   DisableWardenTasks           = false,
-                            TimeSpan?                                                  WardenInitialDelay           = null,
-                            TimeSpan?                                                  WardenCheckEvery             = null,
+                            HTTPPath?                      AdditionalURLPathPrefix   = null,
+                            Boolean?                       LocationsAsOpenData       = null,
+                            Boolean?                       TariffsAsOpenData         = null,
+                            Boolean?                       AllowDowngrades           = null,
 
-                            Boolean?                                                   IsDevelopment                = null,
-                            IEnumerable<String>?                                       DevelopmentServers           = null,
-                            Boolean                                                    DisableLogging               = false,
-                            String                                                     LoggingPath                  = DefaultHTTPAPI_LoggingPath,
-                            String                                                     LoggingContext               = DefaultLoggingContext,
-                            String                                                     LogfileName                  = DefaultHTTPAPI_LogfileName,
-                            LogfileCreatorDelegate?                                    LogfileCreator               = null,
-                            DNSClient?                                                 DNSClient                    = null,
-                            String?                                                    Description                  = null,
-                            Boolean                                                    AutoStart                    = false)
+                            String?                        RemotePartyDBFileName     = null,
 
-            : base(HTTPHostname,
-                   ExternalDNSName,
-                   HTTPServerPort,
+                            Boolean?                       IsDevelopment             = null,
+                            IEnumerable<String>?           DevelopmentServers        = null,
+                            //Boolean?                       SkipURLTemplates          = false,
+                            String?                        DatabaseFileName          = "DefaultAssetsDBFileName",
+                            Boolean?                       DisableNotifications      = false,
+
+                            Boolean?                       DisableLogging            = null,
+                            String?                        LoggingContext            = null,
+                            String?                        LoggingPath               = null,
+                            String?                        LogfileName               = null,
+                            LogfileCreatorDelegate?        LogfileCreator            = null)
+
+            : base(Description ?? I18NString.Create("CPO Client API"),
+                   HTTPAPI,
+                   RootPath,
                    BasePath,
+
+                   ExternalDNSName,
                    HTTPServerName,
-
-                   URLPathPrefix,
                    HTTPServiceName,
-                   null, //HTMLTemplate,
+                   APIVersionHash,
                    APIVersionHashes,
-
-                   ServerCertificateSelector,
-                   ClientCertificateValidator,
-                   ClientCertificateSelector,
-                   AllowedTLSProtocols,
-                   ClientCertificateRequired,
-                   CheckCertificateRevocation,
-
-                   ServerThreadNameCreator,
-                   ServerThreadPrioritySetter,
-                   ServerThreadIsBackground,
-                   ConnectionIdBuilder,
-                   ConnectionTimeout,
-                   MaxClientConnections,
-
-                   DisableMaintenanceTasks,
-                   MaintenanceInitialDelay,
-                   MaintenanceEvery,
-
-                   DisableWardenTasks,
-                   WardenInitialDelay,
-                   WardenCheckEvery,
 
                    IsDevelopment,
                    DevelopmentServers,
                    DisableLogging,
                    LoggingPath,
                    LogfileName,
-                   LogfileCreator,
-                   DNSClient,
-                   Description,
-                   false) //AutoStart)
+                   LogfileCreator is not null
+                       ? (loggingPath, context, logfileName) => LogfileCreator(loggingPath, context, logfileName)
+                       : (loggingPath, context, logfileName) => String.Concat(
+                                                                    loggingPath + Path.DirectorySeparatorChar,
+                                                                 //   remoteParty is not null
+                                                                 //       ? remoteParty.Id.ToString() + Path.DirectorySeparatorChar
+                                                                 //       : null,
+                                                                    context is not null ? context + "_" : "",
+                                                                    logfileName, "_",
+                                                                    Timestamp.Now.Year, "-",
+                                                                    Timestamp.Now.Month.ToString("D2"),
+                                                                    ".log"
+                                                                ))
 
         {
 
-            this.URLPathPrefix   =  base.URLPathPrefix + (URLPathPrefix ?? HTTPPath.Root);
+            this.URLPathPrefix   = base.URLPathPrefix + URLPathPrefix;
 
             this.Counters        = new APICounters();
 
             this.JSONFormatting  = Newtonsoft.Json.Formatting.None;
 
-            base.HTTPLogger      = this.DisableLogging == false
-                                       ? new HTTP_Logger(this,
-                                                         LoggingPath,
-                                                         LoggingContext ?? DefaultLoggingContext,
-                                                         LogfileCreator)
-                                       : null;
+            //base.HTTPLogger      = this.DisableLogging == false
+            //                           ? new HTTP_Logger(this,
+            //                                             LoggingPath,
+            //                                             LoggingContext ?? DefaultLoggingContext,
+            //                                             LogfileCreator)
+            //                           : null;
 
             this.Logger          = this.DisableLogging == false
                                        ? new CPOClientAPILogger(this,
@@ -1258,14 +1272,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                 LogfileCreator)
                                        : null;
 
-            RegisterURLTemplates(RegisterRootService);
-
-            if (AutoStart)
-                Start();
+            RegisterURLTemplates(RegisterRootService: true);
 
         }
-
-        #endregion
 
         #endregion
 
@@ -1278,17 +1287,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #region ~/ (HTTPRoot)
 
             if (RegisterRootService)
-                AddMethodCallback(HTTPHostname.Any,
+                HTTPBaseAPI.AddHandler(
                                   HTTPMethod.GET,
-                                  [
-                                      URLPathPrefix + "/",
-                                      URLPathPrefix + "/{FileName}"
-                                  ],
+                                  URLPathPrefix + "/",
                                   HTTPDelegate: Request => {
                                       return Task.FromResult(
                                           new HTTPResponse.Builder(Request) {
                                               HTTPStatusCode  = HTTPStatusCode.OK,
-                                              Server          = HTTPServer.DefaultServerName,
+                                              Server          = HTTPServerName,
                                               Date            = Timestamp.Now,
                                               ContentType     = HTTPContentType.Text.PLAIN,
                                               Content         = "This is an OICP v2.3 CPO Client HTTP/JSON endpoint!".ToUTF8Bytes(),
@@ -1308,7 +1314,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             // -----------------------------------------------------------------------------------------------------------------------------------
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/evsepush/v23/operators/DE-GEF/data-records
             // -----------------------------------------------------------------------------------------------------------------------------------
-            AddMethodCallback(HTTPHostname.Any,
+            HTTPBaseAPI.AddHandler(
                               HTTPMethod.POST,
                               URLPathPrefix + "/api/oicp/evsepush/v23/operators/{operatorId}/data-records",
                               HTTPContentType.Application.JSON_UTF8,
@@ -1524,7 +1530,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                   return new HTTPResponse.Builder(Request) {
                                              HTTPStatusCode             = HTTPStatusCode.OK,
-                                             Server                     = HTTPServer.DefaultServerName,
+                                             Server                     = HTTPServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = [ "POST" ],
@@ -1548,7 +1554,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             // -------------------------------------------------------------------------------------------------------------------------------------
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/evsepush/v21/operators/DE-GEF/status-records
             // -------------------------------------------------------------------------------------------------------------------------------------
-            AddMethodCallback(HTTPHostname.Any,
+            HTTPBaseAPI.AddHandler(
                               HTTPMethod.POST,
                               URLPathPrefix + "/api/oicp/evsepush/v21/operators/{operatorId}/status-records",
                               HTTPContentType.Application.JSON_UTF8,
@@ -1764,7 +1770,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                   return new HTTPResponse.Builder(Request) {
                                              HTTPStatusCode             = HTTPStatusCode.OK,
-                                             Server                     = HTTPServer.DefaultServerName,
+                                             Server                     = HTTPServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = [ "POST" ],
@@ -1789,7 +1795,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             // -----------------------------------------------------------------------------------------------------------------------------------
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/dynamicpricing/v10/operators/DE*GEF/pricing-products
             // -----------------------------------------------------------------------------------------------------------------------------------
-            AddMethodCallback(HTTPHostname.Any,
+            HTTPBaseAPI.AddHandler(
                               HTTPMethod.POST,
                               URLPathPrefix + "/api/oicp/dynamicpricing/v10/operators/{operatorId}/pricing-products",
                               HTTPContentType.Application.JSON_UTF8,
@@ -2005,7 +2011,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                   return new HTTPResponse.Builder(Request) {
                                              HTTPStatusCode             = HTTPStatusCode.OK,
-                                             Server                     = HTTPServer.DefaultServerName,
+                                             Server                     = HTTPServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = [ "POST" ],
@@ -2029,7 +2035,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             // -----------------------------------------------------------------------------------------------------------------------------------
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/dynamicpricing/v10/operators/DE-GEF/evse-pricing
             // -----------------------------------------------------------------------------------------------------------------------------------
-            AddMethodCallback(HTTPHostname.Any,
+            HTTPBaseAPI.AddHandler(
                               HTTPMethod.POST,
                               URLPathPrefix + "/api/oicp/dynamicpricing/v10/operators/{operatorId}/evse-pricing",
                               HTTPContentType.Application.JSON_UTF8,
@@ -2245,7 +2251,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                   return new HTTPResponse.Builder(Request) {
                                              HTTPStatusCode             = HTTPStatusCode.OK,
-                                             Server                     = HTTPServer.DefaultServerName,
+                                             Server                     = HTTPServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = [ "POST" ],
@@ -2270,7 +2276,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             // -----------------------------------------------------------------------------------------------------------------------------------
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/authdata/v21/operators/DE*GEF/pull-request
             // -----------------------------------------------------------------------------------------------------------------------------------
-            AddMethodCallback(HTTPHostname.Any,
+            HTTPBaseAPI.AddHandler(
                               HTTPMethod.POST,
                               URLPathPrefix + "/api/oicp/authdata/v21/operators/{operatorId}/pull-request",
                               HTTPContentType.Application.JSON_UTF8,
@@ -2491,7 +2497,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                   return new HTTPResponse.Builder(Request) {
                                              HTTPStatusCode             = HTTPStatusCode.OK,
-                                             Server                     = HTTPServer.DefaultServerName,
+                                             Server                     = HTTPServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = [ "POST" ],
@@ -2518,7 +2524,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             // --------------------------------------------------------------------------------------------------------------------------------------
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/charging/v21/operators/DE*GEF/authorize/start
             // --------------------------------------------------------------------------------------------------------------------------------------
-            AddMethodCallback(HTTPHostname.Any,
+            HTTPBaseAPI.AddHandler(
                               HTTPMethod.POST,
                               URLPathPrefix + "/api/oicp/charging/v21/operators/{operatorId}/authorize/start",
                               HTTPContentType.Application.JSON_UTF8,
@@ -2720,7 +2726,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                   return new HTTPResponse.Builder(Request) {
                                              HTTPStatusCode             = HTTPStatusCode.OK,
-                                             Server                     = HTTPServer.DefaultServerName,
+                                             Server                     = HTTPServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = [ "POST" ],
@@ -2745,7 +2751,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             // --------------------------------------------------------------------------------------------------------------------------------------
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/charging/v21/operators/DE*GEF/authorize/stop
             // --------------------------------------------------------------------------------------------------------------------------------------
-            AddMethodCallback(HTTPHostname.Any,
+            HTTPBaseAPI.AddHandler(
                               HTTPMethod.POST,
                               URLPathPrefix + "/api/oicp/charging/v21/operators/{operatorId}/authorize/stop",
                               HTTPContentType.Application.JSON_UTF8,
@@ -2947,7 +2953,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                   return new HTTPResponse.Builder(Request) {
                                              HTTPStatusCode             = HTTPStatusCode.OK,
-                                             Server                     = HTTPServer.DefaultServerName,
+                                             Server                     = HTTPServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = [ "POST" ],
@@ -2972,7 +2978,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             // ------------------------------------------------------------------------------------------------------------------------------------
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/notificationmgmt/v11/charging-notifications
             // ------------------------------------------------------------------------------------------------------------------------------------
-            AddMethodCallback(HTTPHostname.Any,
+            HTTPBaseAPI.AddHandler(
                               HTTPMethod.POST,
                               URLPathPrefix + "/api/oicp/notificationmgmt/v11/charging-notifications",
                               HTTPContentType.Application.JSON_UTF8,
@@ -3759,7 +3765,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                   return new HTTPResponse.Builder(Request) {
                                              HTTPStatusCode             = HTTPStatusCode.OK,
-                                             Server                     = HTTPServer.DefaultServerName,
+                                             Server                     = HTTPServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = [ "POST" ],
@@ -3784,7 +3790,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             // ------------------------------------------------------------------------------------------------------------------------------------------
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/cdrmgmt/v22/operators/DE-GEF/charge-detail-record
             // ------------------------------------------------------------------------------------------------------------------------------------------
-            AddMethodCallback(HTTPHostname.Any,
+            HTTPBaseAPI.AddHandler(
                               HTTPMethod.POST,
                               URLPathPrefix + "/api/oicp/cdrmgmt/v22/operators/{operatorId}/charge-detail-record",
                               HTTPContentType.Application.JSON_UTF8,
@@ -4000,7 +4006,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                   return new HTTPResponse.Builder(Request) {
                                              HTTPStatusCode             = HTTPStatusCode.OK,
-                                             Server                     = HTTPServer.DefaultServerName,
+                                             Server                     = HTTPServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = [ "POST" ],
@@ -4026,11 +4032,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region Dispose()
 
-        /// <summary>
-        /// Dispose this object.
-        /// </summary>
-        public override void Dispose()
-        { }
+        ///// <summary>
+        ///// Dispose this object.
+        ///// </summary>
+        //public override void Dispose()
+        //{ }
 
         #endregion
 

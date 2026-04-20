@@ -161,30 +161,30 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                           handler => CPOClient.OnPushEVSEDataHTTPRequest += handler,
                           handler => CPOClient.OnPushEVSEDataHTTPRequest -= handler,
                           "PushEVSEData", "push", "requests", "all").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
+                RegisterDefaultConsoleLogTargetX(this).
+                RegisterDefaultDiscLogTargetX(this);
 
             RegisterEvent("PushEVSEDataHTTPResponse",
                           handler => CPOClient.OnPushEVSEDataHTTPResponse += handler,
                           handler => CPOClient.OnPushEVSEDataHTTPResponse -= handler,
                           "PushEVSEData", "push", "responses", "all").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
+                RegisterDefaultConsoleLogTargetX(this).
+                RegisterDefaultDiscLogTargetX(this);
 
 
             RegisterEvent("PushEVSEStatusHTTPRequest",
                           handler => CPOClient.OnPushEVSEStatusHTTPRequest += handler,
                           handler => CPOClient.OnPushEVSEStatusHTTPRequest -= handler,
                           "PushEVSEStatus", "push", "requests", "all").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
+                RegisterDefaultConsoleLogTargetX(this).
+                RegisterDefaultDiscLogTargetX(this);
 
             RegisterEvent("PushEVSEStatusHTTPResponse",
                           handler => CPOClient.OnPushEVSEStatusHTTPResponse += handler,
                           handler => CPOClient.OnPushEVSEStatusHTTPResponse -= handler,
                           "PushEVSEStatus", "push", "responses", "all").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
+                RegisterDefaultConsoleLogTargetX(this).
+                RegisterDefaultDiscLogTargetX(this);
 
             #endregion
 
@@ -194,30 +194,30 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                           handler => CPOClient.OnPushPricingProductDataHTTPRequest += handler,
                           handler => CPOClient.OnPushPricingProductDataHTTPRequest -= handler,
                           "PushPricingProductData", "PushPricing", "push", "requests", "all").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
+                RegisterDefaultConsoleLogTargetX(this).
+                RegisterDefaultDiscLogTargetX(this);
 
             RegisterEvent("PushPricingProductDataHTTPResponse",
                           handler => CPOClient.OnPushPricingProductDataHTTPResponse += handler,
                           handler => CPOClient.OnPushPricingProductDataHTTPResponse -= handler,
                           "PushPricingProductData", "PushPricing", "push", "responses", "all").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
+                RegisterDefaultConsoleLogTargetX(this).
+                RegisterDefaultDiscLogTargetX(this);
 
 
             RegisterEvent("PushEVSEPricingHTTPRequest",
                           handler => CPOClient.OnPushEVSEPricingHTTPRequest += handler,
                           handler => CPOClient.OnPushEVSEPricingHTTPRequest -= handler,
                           "PushEVSEPricing", "PushPricing", "push", "requests", "all").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
+                RegisterDefaultConsoleLogTargetX(this).
+                RegisterDefaultDiscLogTargetX(this);
 
             RegisterEvent("PushEVSEPricingHTTPResponse",
                           handler => CPOClient.OnPushEVSEPricingHTTPResponse += handler,
                           handler => CPOClient.OnPushEVSEPricingHTTPResponse -= handler,
                           "PushEVSEPricing", "PushPricing", "push", "responses", "all").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
+                RegisterDefaultConsoleLogTargetX(this).
+                RegisterDefaultDiscLogTargetX(this);
 
             #endregion
 
@@ -227,30 +227,30 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                           handler => CPOClient.OnAuthorizeStartHTTPRequest += handler,
                           handler => CPOClient.OnAuthorizeStartHTTPRequest -= handler,
                           "authorizeStart", "authorize", "requests", "all").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
+                RegisterDefaultConsoleLogTargetX(this).
+                RegisterDefaultDiscLogTargetX(this);
 
             RegisterEvent("AuthorizeStartHTTPResponse",
                           handler => CPOClient.OnAuthorizeStartHTTPResponse += handler,
                           handler => CPOClient.OnAuthorizeStartHTTPResponse -= handler,
                           "authorizeStart", "authorize", "responses", "all").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
+                RegisterDefaultConsoleLogTargetX(this).
+                RegisterDefaultDiscLogTargetX(this);
 
 
             RegisterEvent("AuthorizeStopHTTPRequest",
                           handler => CPOClient.OnAuthorizeStopHTTPRequest += handler,
                           handler => CPOClient.OnAuthorizeStopHTTPRequest -= handler,
                           "authorizeStop", "authorize", "requests", "all").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
+                RegisterDefaultConsoleLogTargetX(this).
+                RegisterDefaultDiscLogTargetX(this);
 
             RegisterEvent("AuthorizeStopHTTPResponse",
                           handler => CPOClient.OnAuthorizeStopHTTPResponse += handler,
                           handler => CPOClient.OnAuthorizeStopHTTPResponse -= handler,
                           "authorizeStop", "authorize", "responses", "all").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
+                RegisterDefaultConsoleLogTargetX(this).
+                RegisterDefaultDiscLogTargetX(this);
 
             #endregion
 
@@ -260,60 +260,60 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                           handler => CPOClient.OnChargingStartNotificationHTTPRequest += handler,
                           handler => CPOClient.OnChargingStartNotificationHTTPRequest -= handler,
                           "chargingStartNotification", "chargingNotifications", "requests", "all").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
+                RegisterDefaultConsoleLogTargetX(this).
+                RegisterDefaultDiscLogTargetX(this);
 
             RegisterEvent("ChargingStartNotificationHTTPResponse",
                           handler => CPOClient.OnChargingStartNotificationHTTPResponse += handler,
                           handler => CPOClient.OnChargingStartNotificationHTTPResponse -= handler,
                           "chargingStartNotification", "chargingNotifications", "responses", "all").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
+                RegisterDefaultConsoleLogTargetX(this).
+                RegisterDefaultDiscLogTargetX(this);
 
 
             RegisterEvent("ChargingProgressNotificationHTTPRequest",
                           handler => CPOClient.OnChargingProgressNotificationHTTPRequest += handler,
                           handler => CPOClient.OnChargingProgressNotificationHTTPRequest -= handler,
                           "chargingProgressNotification", "chargingNotifications", "requests", "all").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
+                RegisterDefaultConsoleLogTargetX(this).
+                RegisterDefaultDiscLogTargetX(this);
 
             RegisterEvent("ChargingProgressNotificationHTTPResponse",
                           handler => CPOClient.OnChargingProgressNotificationHTTPResponse += handler,
                           handler => CPOClient.OnChargingProgressNotificationHTTPResponse -= handler,
                           "chargingProgressNotification", "chargingNotifications", "responses", "all").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
+                RegisterDefaultConsoleLogTargetX(this).
+                RegisterDefaultDiscLogTargetX(this);
 
 
             RegisterEvent("ChargingEndNotificationHTTPRequest",
                           handler => CPOClient.OnChargingEndNotificationHTTPRequest += handler,
                           handler => CPOClient.OnChargingEndNotificationHTTPRequest -= handler,
                           "chargingEndNotification", "chargingNotifications", "requests", "all").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
+                RegisterDefaultConsoleLogTargetX(this).
+                RegisterDefaultDiscLogTargetX(this);
 
             RegisterEvent("ChargingEndNotificationHTTPResponse",
                           handler => CPOClient.OnChargingEndNotificationHTTPResponse += handler,
                           handler => CPOClient.OnChargingEndNotificationHTTPResponse -= handler,
                           "chargingEndNotification", "chargingNotifications", "responses", "all").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
+                RegisterDefaultConsoleLogTargetX(this).
+                RegisterDefaultDiscLogTargetX(this);
 
 
             RegisterEvent("ChargingErrorNotificationHTTPRequest",
                           handler => CPOClient.OnChargingErrorNotificationHTTPRequest += handler,
                           handler => CPOClient.OnChargingErrorNotificationHTTPRequest -= handler,
                           "authorizeStop", "chargingNotifications", "requests", "all").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
+                RegisterDefaultConsoleLogTargetX(this).
+                RegisterDefaultDiscLogTargetX(this);
 
             RegisterEvent("ChargingErrorNotificationHTTPResponse",
                           handler => CPOClient.OnChargingErrorNotificationHTTPResponse += handler,
                           handler => CPOClient.OnChargingErrorNotificationHTTPResponse -= handler,
                           "chargingErrorNotification", "chargingNotifications", "responses", "all").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
+                RegisterDefaultConsoleLogTargetX(this).
+                RegisterDefaultDiscLogTargetX(this);
 
             #endregion
 
@@ -323,15 +323,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                           handler => CPOClient.OnSendChargeDetailRecordHTTPRequest += handler,
                           handler => CPOClient.OnSendChargeDetailRecordHTTPRequest -= handler,
                           "sendChargeDetailRecord", "cdr", "requests", "all").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
+                RegisterDefaultConsoleLogTargetX(this).
+                RegisterDefaultDiscLogTargetX(this);
 
             RegisterEvent("SendChargeDetailRecordHTTPResponse",
                           handler => CPOClient.OnSendChargeDetailRecordHTTPResponse += handler,
                           handler => CPOClient.OnSendChargeDetailRecordHTTPResponse -= handler,
                           "sendChargeDetailRecord", "cdr", "responses", "all").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
+                RegisterDefaultConsoleLogTargetX(this).
+                RegisterDefaultDiscLogTargetX(this);
 
             #endregion
 

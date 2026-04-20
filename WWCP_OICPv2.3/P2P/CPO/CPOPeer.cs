@@ -34,6 +34,12 @@ using org.GraphDefined.Vanaheimr.Hermod.Sockets.TCP;
 
 using cloud.charging.open.protocols.OICPv2_3.CPO;
 using cloud.charging.open.protocols.OICPv2_3.EMP;
+using Org.BouncyCastle.Asn1.X9;
+using Org.BouncyCastle.Security;
+using Org.BouncyCastle.Crypto.Parameters;
+using Newtonsoft.Json.Converters;
+using org.GraphDefined.Vanaheimr.Hermod.Mail;
+using org.GraphDefined.Vanaheimr.Hermod.SMTP;
 
 #endregion
 
@@ -44,7 +50,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
     /// The CPO p2p combines CPOClient(s) and the EMPClientAPI,
     /// and adds additional logging for all.
     /// </summary>
-    public class CPOPeer : APeer, ICPOPeer
+    public class CPOPeer : AHTTPExtAPIExtension1<HTTPExtAPI>, ICPOPeer
     {
 
         #region (class) APICounters
@@ -118,6 +124,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
         #region Data
 
         /// <summary>
+        /// Some JSON helper as DateTime is not well-defined for JSON!
+        /// </summary>
+        public static readonly IsoDateTimeConverter JSONDateTimeConverter = new() {
+            DateTimeFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss.fffZ"
+        };
+
+        /// <summary>
         /// The default HTTP server name.
         /// </summary>
         public  const              String                    DefaultHTTPServerName           = "Open Charging Cloud - CPO p2p HTTP API";
@@ -127,7 +140,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
         /// </summary>
         public  const              String                    DefaultHTTPServiceName          = "Open Charging Cloud - CPO p2p HTTP API";
 
-        private readonly HTTPAPI?                            httpAPI;
+        private readonly HTTPExtAPI?                         httpAPI;
 
         private readonly Dictionary<Provider_Id, CPOClient>  cpoClients;
 
@@ -150,29 +163,39 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
         /// </summary>
         public EMPClientAPI  EMPClientAPI    { get; }
 
+        /// <summary>
+        /// The main private key of this OICP peer.
+        /// </summary>
+        public ECPrivateKeyParameters?  PrivateKey    { get; set; }
+
+        /// <summary>
+        /// The main public key of this OICP peer.
+        /// </summary>
+        public ECPublicKeyParameters?   PublicKey     { get; set; }
+
         #endregion
 
         #region Events
 
         #region Generic HTTP server logging
 
-        /// <summary>
-        /// An event called whenever a HTTP request came in.
-        /// </summary>
-        public HTTPRequestLogEvent?   RequestLog
-            => httpAPI?.RequestLog;
+        ///// <summary>
+        ///// An event called whenever a HTTP request came in.
+        ///// </summary>
+        //public HTTPRequestLogEvent?   RequestLog
+        //    => httpAPI?.RequestLog;
 
-        /// <summary>
-        /// An event called whenever a HTTP request could successfully be processed.
-        /// </summary>
-        public HTTPResponseLogEvent?  ResponseLog
-            => httpAPI?.ResponseLog;
+        ///// <summary>
+        ///// An event called whenever a HTTP request could successfully be processed.
+        ///// </summary>
+        //public HTTPResponseLogEvent?  ResponseLog
+        //    => httpAPI?.ResponseLog;
 
-        /// <summary>
-        /// An event called whenever a HTTP request resulted in an error.
-        /// </summary>
-        public HTTPErrorLogEvent?     ErrorLog
-            => httpAPI?.ErrorLog;
+        ///// <summary>
+        ///// An event called whenever a HTTP request resulted in an error.
+        ///// </summary>
+        //public HTTPErrorLogEvent?     ErrorLog
+        //    => httpAPI?.ErrorLog;
 
         #endregion
 
@@ -479,177 +502,98 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
         #region Constructor(s)
 
-        #region CPOPeer(OperatorId, KeyPair = null, ...)
-
-        /// <summary>
-        /// Create a new CPO p2p service.
-        /// </summary>
-        public CPOPeer(Operator_Id                                                OperatorId,
-                       AsymmetricCipherKeyPair?                                   KeyPair                      = null,
-
-                       HTTPHostname?                                              HTTPHostname                 = null,
-                       String?                                                    ExternalDNSName              = null,
-                       IPPort?                                                    HTTPServerPort               = null,
-                       HTTPPath?                                                  BasePath                     = null,
-                       String?                                                    HTTPServerName               = DefaultHTTPServerName,
-
-                       HTTPPath?                                                  URLPathPrefix                = null,
-                       String?                                                    HTTPServiceName              = DefaultHTTPServiceName,
-                       String?                                                    HTMLTemplate                 = null,
-                       JObject?                                                   APIVersionHashes             = null,
-
-                       ServerCertificateSelectorDelegate?                         ServerCertificateSelector    = null,
-                       RemoteTLSClientCertificateValidationHandler<IHTTPServer>?  ClientCertificateValidator   = null,
-                       LocalCertificateSelectionHandler?                          ClientCertificateSelector    = null,
-                       SslProtocols?                                              AllowedTLSProtocols          = null,
-                       Boolean?                                                   ClientCertificateRequired    = null,
-                       Boolean?                                                   CheckCertificateRevocation   = null,
-
-                       ServerThreadNameCreatorDelegate?                           ServerThreadNameCreator      = null,
-                       ServerThreadPriorityDelegate?                              ServerThreadPrioritySetter   = null,
-                       Boolean?                                                   ServerThreadIsBackground     = null,
-                       ConnectionIdBuilder?                                       ConnectionIdBuilder          = null,
-                       TimeSpan?                                                  ConnectionTimeout            = null,
-                       UInt32?                                                    MaxClientConnections         = null,
-
-                       Boolean?                                                   DisableMaintenanceTasks      = null,
-                       TimeSpan?                                                  MaintenanceInitialDelay      = null,
-                       TimeSpan?                                                  MaintenanceEvery             = null,
-
-                       Boolean?                                                   DisableWardenTasks           = null,
-                       TimeSpan?                                                  WardenInitialDelay           = null,
-                       TimeSpan?                                                  WardenCheckEvery             = null,
-
-                       Boolean?                                                   IsDevelopment                = null,
-                       IEnumerable<String>?                                       DevelopmentServers           = null,
-                       Boolean?                                                   DisableLogging               = null,
-                       String?                                                    LoggingPath                  = null,
-                       String?                                                    LogfileName                  = null,
-                       LogfileCreatorDelegate?                                    LogfileCreator               = null,
-                       DNSClient?                                                 DNSClient                    = null,
-                       String?                                                    Description                  = null,
-                       Boolean                                                    AutoStart                    = false)
-
-            : base(KeyPair)
-
-        {
-
-            httpAPI = new HTTPAPI(
-                          HTTPHostname,
-                          ExternalDNSName,
-                          HTTPServerPort,
-                          BasePath,
-                          HTTPServerName,
-
-                          URLPathPrefix,
-                          HTTPServiceName,
-                          HTMLTemplate,
-                          APIVersionHashes,
-
-                          ServerCertificateSelector,
-                          ClientCertificateValidator,
-                          ClientCertificateSelector,
-                          AllowedTLSProtocols,
-                          ClientCertificateRequired,
-                          CheckCertificateRevocation,
-
-                          ServerThreadNameCreator,
-                          ServerThreadPrioritySetter,
-                          ServerThreadIsBackground,
-                          ConnectionIdBuilder,
-                          ConnectionTimeout,
-                          MaxClientConnections,
-
-                          DisableMaintenanceTasks,
-                          MaintenanceInitialDelay,
-                          MaintenanceEvery,
-
-                          DisableWardenTasks,
-                          WardenInitialDelay,
-                          WardenCheckEvery,
-
-                          IsDevelopment,
-                          DevelopmentServers,
-                          DisableLogging,
-                          LoggingPath,
-                          LogfileName,
-                          LogfileCreator,
-                          DNSClient,
-                          Description,
-                          false
-                      );
-
-            this.OperatorId    = OperatorId;
-            this.EMPClientAPI  = new EMPClientAPI(httpAPI);
-            this.cpoClients    = [];
-            this.Counters      = new APICounters();
-
-            httpAPI.AddMethodCallback(org.GraphDefined.Vanaheimr.Hermod.HTTP.HTTPHostname.Any,
-                                      HTTPMethod.GET,
-                                      [
-                                          URLPathPrefix + "/",
-                                          URLPathPrefix + "/{FileName}"
-                                      ],
-                                      HTTPDelegate: Request => {
-                                          return Task.FromResult(
-                                              new HTTPResponse.Builder(Request) {
-                                                  HTTPStatusCode  = HTTPStatusCode.OK,
-                                                  Server          = httpAPI.HTTPServer.DefaultServerName,
-                                                  Date            = Timestamp.Now,
-                                                  ContentType     = HTTPContentType.Text.PLAIN,
-                                                  Content         = "This is an OICP v2.3 CPO p2p HTTP/JSON endpoint!".ToUTF8Bytes(),
-                                                  CacheControl    = "public, max-age=300",
-                                                  Connection      = ConnectionType.Close
-                                              }.AsImmutable);
-                                      });
-
-            if (AutoStart)
-                httpAPI.Start();
-
-        }
-
-        #endregion
-
-        #region CPOPeer(OperatorId, HTTPAPI, KeyPair = null, ...)
-
         /// <summary>
         /// Attach a CPO p2p service to the given HTTP API.
         /// </summary>
-        public CPOPeer(Operator_Id                           OperatorId,
-                       HTTPAPI                               HTTPAPI,
-                       HTTPPath?                             URLPathPrefix                      = null,
+        public CPOPeer(Operator_Id                    OperatorId,
+                       HTTPExtAPI                     HTTPAPI,
+                       HTTPPath?                      URLPathPrefix             = null,
 
-                       AsymmetricCipherKeyPair?              KeyPair                            = null,
+                       AsymmetricCipherKeyPair?       KeyPair                   = null,
 
-                       HTTPHostname?                         HTTPHostname                       = null,
-                       String?                               ExternalDNSName                    = null,
-                       HTTPPath?                             BasePath                           = null,
+                       IEnumerable<HTTPHostname>?     Hostnames                 = null,
+                       HTTPPath?                      RootPath                  = null,
+                       IEnumerable<HTTPContentType>?  HTTPContentTypes          = null,
+                       I18NString?                    Description               = null,
 
-                       String?                               HTMLTemplate                       = null,
-                       JObject?                              APIVersionHashes                   = null)
+                       HTTPPath?                      BasePath                  = null,  // For URL prefixes in HTML!
 
-            : base(KeyPair)
+                       String?                        ExternalDNSName           = null,
+                       String?                        HTTPServerName            = DefaultHTTPServerName,
+                       String?                        HTTPServiceName           = DefaultHTTPServiceName,
+                       String?                        APIVersionHash            = null,
+                       JObject?                       APIVersionHashes          = null,
+
+                       EMailAddress?                  APIRobotEMailAddress      = null,
+                       String?                        APIRobotGPGPassphrase     = null,
+                       ISMTPClient?                   SMTPClient                = null,
+
+                       HTTPPath?                      AdditionalURLPathPrefix   = null,
+                       Boolean?                       LocationsAsOpenData       = null,
+                       Boolean?                       TariffsAsOpenData         = null,
+                       Boolean?                       AllowDowngrades           = null,
+
+                       String?                        RemotePartyDBFileName     = null,
+
+                       Boolean?                       IsDevelopment             = null,
+                       IEnumerable<String>?           DevelopmentServers        = null,
+                       //Boolean?                       SkipURLTemplates          = false,
+                       String?                        DatabaseFileName          = "DefaultAssetsDBFileName",
+                       Boolean?                       DisableNotifications      = false,
+
+                       Boolean?                       DisableLogging            = null,
+                       String?                        LoggingContext            = null,
+                       String?                        LoggingPath               = null,
+                       String?                        LogfileName               = null,
+                       LogfileCreatorDelegate?        LogfileCreator            = null)
+
+            : base(Description ?? I18NString.Create("OICP CPO Peer HTTP API"),
+                   HTTPAPI,
+                   RootPath,
+                   BasePath,
+
+                   ExternalDNSName,
+                   HTTPServerName,
+                   HTTPServiceName,
+                   APIVersionHash,
+                   APIVersionHashes,
+
+                   IsDevelopment,
+                   DevelopmentServers,
+                   DisableLogging,
+                   LoggingPath,
+                   LogfileName,
+                   LogfileCreator is not null
+                       ? (loggingPath, context, logfileName) => LogfileCreator(loggingPath, context, logfileName)
+                       : (loggingPath, context, logfileName) => String.Concat(
+                                                                    loggingPath + Path.DirectorySeparatorChar,
+                                                                 //   remoteParty is not null
+                                                                 //       ? remoteParty.Id.ToString() + Path.DirectorySeparatorChar
+                                                                 //       : null,
+                                                                    context is not null ? context + "_" : "",
+                                                                    logfileName, "_",
+                                                                    Timestamp.Now.Year, "-",
+                                                                    Timestamp.Now.Month.ToString("D2"),
+                                                                    ".log"
+                                                                ))
 
         {
 
             this.OperatorId    = OperatorId;
             this.httpAPI       = HTTPAPI;
-            this.EMPClientAPI  = new EMPClientAPI(httpAPI);
+            this.EMPClientAPI  = new EMPClientAPI(HTTPAPI);
             this.cpoClients    = [];
             this.Counters      = new APICounters();
 
             if (URLPathPrefix.HasValue)
-                httpAPI.AddMethodCallback(org.GraphDefined.Vanaheimr.Hermod.HTTP.HTTPHostname.Any,
+                HTTPBaseAPI.AddHandler(
                                           HTTPMethod.GET,
-                                          [
-                                              URLPathPrefix + "/",
-                                              URLPathPrefix + "/{FileName}"
-                                          ],
+                                          URLPathPrefix + "/",
                                           HTTPDelegate: Request => {
                                               return Task.FromResult(
                                                   new HTTPResponse.Builder(Request) {
                                                       HTTPStatusCode  = HTTPStatusCode.OK,
-                                                      Server          = httpAPI.HTTPServer.DefaultServerName,
+                                                      Server          = httpAPI.HTTPServer.HTTPServerName,
                                                       Date            = Timestamp.Now,
                                                       ContentType     = HTTPContentType.Text.PLAIN,
                                                       Content         = "This is an OICP v2.3 CPO p2p HTTP/JSON endpoint!".ToUTF8Bytes(),
@@ -661,6 +605,28 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
         }
 
         #endregion
+
+
+        #region GenerateKeys(ECParameters)
+
+        /// <summary>
+        /// Generate a private/public key pair.
+        /// </summary>
+        /// <param name="ECParameters">The elliptic curve parameters to use.</param>
+        public static AsymmetricCipherKeyPair GenerateKeys(X9ECParameters ECParameters)
+        {
+
+            var generator = GeneratorUtilities.GetKeyPairGenerator("ECDH");
+            generator.Init(new ECKeyGenerationParameters(new ECDomainParameters(ECParameters.Curve,
+                                                                                ECParameters.G,
+                                                                                ECParameters.N,
+                                                                                ECParameters.H,
+                                                                                ECParameters.GetSeed()),
+                                                         new SecureRandom()));
+
+            return generator.GenerateKeyPair();
+
+        }
 
         #endregion
 
@@ -2047,72 +2013,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
         #endregion
 
-
-        #region Start(EventTrackingId = null)
-
-        /// <summary>
-        /// Start this peer.
-        /// </summary>
-        /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
-        public async Task<Boolean> Start(EventTracking_Id? EventTrackingId = null)
-        {
-
-            if (httpAPI is not null)
-                return await httpAPI.Start(EventTrackingId);
-
-            return await EMPClientAPI.Start(EventTrackingId);
-
-        }
-
-        #endregion
-
-        #region Shutdown(Message = null, Wait = true)
-
-        /// <summary>
-        /// Shutdown this peer.
-        /// </summary>
-        /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
-        /// <param name="Message">An optional shutdown message.</param>
-        /// <param name="Wait">Whether to wait for the shutdown to complete.</param>
-        public async Task<Boolean> Shutdown(EventTracking_Id?  EventTrackingId   = null,
-                                            String?            Message           = null,
-                                            Boolean            Wait              = true)
-        {
-
-            if (httpAPI is not null)
-                return await httpAPI.Shutdown(
-                                 EventTrackingId ?? EventTracking_Id.New,
-                                 Message,
-                                 Wait
-                             );
-
-            return await EMPClientAPI.Shutdown(
-                             EventTrackingId ?? EventTracking_Id.New,
-                             Message,
-                             Wait
-                         );
-
-        }
-
-        #endregion
-
-        #region Dispose()
-
-        public void Dispose()
-        {
-
-            if (httpAPI is not null)
-                httpAPI.Dispose();
-
-            else
-                EMPClientAPI?.Dispose();
-
-            foreach (var cpoClient in cpoClients.Values)
-                cpoClient.Dispose();
-
-        }
-
-        #endregion
 
     }
 

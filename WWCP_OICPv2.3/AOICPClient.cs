@@ -45,7 +45,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// The HTTP client.
         /// </summary>
-        protected HTTPTestClient  newHTTPClient;
+        protected HTTPClient  newHTTPClient;
 
         /// <summary>
         /// A HTTP client pool for low-latency HTTP requests.
@@ -80,6 +80,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            AcceptTypes?                                               Accept                       = null,
                            IHTTPAuthentication?                                       HTTPAuthentication           = null,
                            TOTPConfig?                                                TOTPConfig                   = null,
+
                            String?                                                    HTTPUserAgent                = null,
                            ConnectionType?                                            Connection                   = null,
                            TimeSpan?                                                  RequestTimeout               = null,
@@ -87,49 +88,63 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            UInt16?                                                    MaxNumberOfRetries           = null,
                            UInt32?                                                    InternalBufferSize           = null,
                            Boolean?                                                   UseHTTPPipelining            = null,
+
                            Boolean?                                                   DisableLogging               = null,
                            IDNSClient?                                                DNSClient                    = null)
 
             : base(RemoteURL,
-                   VirtualHostname,
                    Description,
-                   PreferIPv4,
+                   HTTPUserAgent,
+                   Accept,
+                   ContentType,
+                   Connection,
+                   null, //DefaultRequestBuilder,
+
                    RemoteCertificateValidator,
                    LocalCertificateSelector,
                    ClientCertificates,
                    ClientCertificateContext,
                    ClientCertificateChain,
                    TLSProtocols,
-                   ContentType,
-                   Accept,
-                   HTTPAuthentication,
+                   null, //CipherSuitesPolicy,
+                   null, //CertificateChainPolicy,
+                   null, //CertificateRevocationCheckMode,
+                   null, //ApplicationProtocols,
+                   null, //AllowRenegotiation,
+                   null, //AllowTLSResume,
                    TOTPConfig,
-                   HTTPUserAgent,
-                   Connection,
-                   RequestTimeout,
+
+                   HTTPAuthentication,
+
+                   PreferIPv4,
+                   null, //ConnectTimeout,
+                   null, //ReceiveTimeout,
+                   null, //SendTimeout,
                    TransmissionRetryDelay,
                    MaxNumberOfRetries,
-                   InternalBufferSize,
-                   UseHTTPPipelining,
+                   null, //BufferSize,
+
+                   null, //ConsumeRequestChunkedTEImmediately
+                   null, //ConsumeResponseChunkedTEImmediately
+
                    DisableLogging,
-                   null,
                    DNSClient)
 
         {
 
-            this.newHTTPClient   = new HTTPTestClient(
+            this.newHTTPClient   = new HTTPClient(
 
                                        URL:                              base.RemoteURL,
                                        Description:                      Description,
 
                                        HTTPUserAgent:                    HTTPUserAgent,
-                                       DefaultRequestBuilder:            () => new HTTPRequest.Builder(this, CancellationToken.None) {
-                                                                                   Host         = this.RemoteURL.Hostname,
-                                                                                   Accept       = AcceptTypes.FromHTTPContentTypes(HTTPContentType.Application.JSON_UTF8),
-                                                                                   ContentType  = HTTPContentType.Application.JSON_UTF8,
-                                                                                   UserAgent    = this.HTTPUserAgent ?? DefaultHTTPUserAgent,
-                                                                                   Connection   = ConnectionType.KeepAlive
-                                                                               },
+                                       DefaultRequestBuilder:            (httpClient) => new HTTPRequest.Builder(this, CancellationToken.None) {
+                                                                                             Host         = this.RemoteURL.Hostname,
+                                                                                             Accept       = AcceptTypes.FromHTTPContentTypes(HTTPContentType.Application.JSON_UTF8),
+                                                                                             ContentType  = HTTPContentType.Application.JSON_UTF8,
+                                                                                             UserAgent    = httpClient.HTTPUserAgent,
+                                                                                             Connection   = ConnectionType.KeepAlive
+                                                                                         },
 
                                        RemoteCertificateValidator:       RemoteCertificateValidator is not null
                                                                              ? (sender,
@@ -170,13 +185,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                        Description:                      Description,
 
                                        HTTPUserAgent:                    HTTPUserAgent,
-                                       DefaultRequestBuilder:            () => new HTTPRequest.Builder(this, CancellationToken.None) {
-                                                                                   Host         = this.RemoteURL.Hostname,
-                                                                                   Accept       = AcceptTypes.FromHTTPContentTypes(HTTPContentType.Application.JSON_UTF8),
-                                                                                   ContentType  = HTTPContentType.Application.JSON_UTF8,
-                                                                                   UserAgent    = this.HTTPUserAgent ?? DefaultHTTPUserAgent,
-                                                                                   Connection   = ConnectionType.KeepAlive
-                                                                               },
+                                       DefaultRequestBuilder:            (httpClient) => new HTTPRequest.Builder(this, CancellationToken.None) {
+                                                                                             Host         = this.RemoteURL.Hostname,
+                                                                                             Accept       = AcceptTypes.FromHTTPContentTypes(HTTPContentType.Application.JSON_UTF8),
+                                                                                             ContentType  = HTTPContentType.Application.JSON_UTF8,
+                                                                                             UserAgent    = httpClient.HTTPUserAgent,
+                                                                                             Connection   = ConnectionType.KeepAlive
+                                                                                         },
 
                                        RemoteCertificateValidator:       RemoteCertificateValidator is not null
                                                                              ? (sender,

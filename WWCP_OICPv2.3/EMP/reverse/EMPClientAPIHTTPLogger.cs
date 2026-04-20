@@ -34,7 +34,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// A EMP HTTP Client API logger.
         /// </summary>
-        public class HTTP_Logger : HTTPServerLogger
+        public class HTTP_Logger : HTTPServerLoggerX
         {
 
             #region Data
@@ -130,7 +130,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                LogfileCreatorDelegate?      LogfileCreator              = null)
 
-                : base(EMPClientAPI.HTTPServer,
+                : base(EMPClientAPI.HTTPBaseAPI.HTTPServer,
                        LoggingPath,
                        Context,
 
@@ -161,60 +161,60 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                handler => EMPClientAPI.OnPullEVSEDataHTTPRequest += handler,
                                handler => EMPClientAPI.OnPullEVSEDataHTTPRequest -= handler,
                                "PullEVSEData", "pull", "requests", "all").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
+                    RegisterDefaultConsoleLogTargetX(this).
+                    RegisterDefaultDiscLogTargetX(this);
 
                 RegisterEvent2("PullEVSEDataResponse",
                                handler => EMPClientAPI.OnPullEVSEDataHTTPResponse += handler,
                                handler => EMPClientAPI.OnPullEVSEDataHTTPResponse -= handler,
                                "PullEVSEData", "pull", "responses", "all").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
+                    RegisterDefaultConsoleLogTargetX(this).
+                    RegisterDefaultDiscLogTargetX(this);
 
 
                 RegisterEvent2("PullEVSEStatusRequest",
                                handler => EMPClientAPI.OnPullEVSEStatusHTTPRequest += handler,
                                handler => EMPClientAPI.OnPullEVSEStatusHTTPRequest -= handler,
                                "PullEVSEStatus", "pull", "requests", "all").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
+                    RegisterDefaultConsoleLogTargetX(this).
+                    RegisterDefaultDiscLogTargetX(this);
 
                 RegisterEvent2("PullEVSEStatusResponse",
                                handler => EMPClientAPI.OnPullEVSEStatusHTTPResponse += handler,
                                handler => EMPClientAPI.OnPullEVSEStatusHTTPResponse -= handler,
                                "PullEVSEStatus", "pull", "responses", "all").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
+                    RegisterDefaultConsoleLogTargetX(this).
+                    RegisterDefaultDiscLogTargetX(this);
 
 
                 RegisterEvent2("PullEVSEStatusByIdRequest",
                                handler => EMPClientAPI.OnPullEVSEStatusByIdHTTPRequest += handler,
                                handler => EMPClientAPI.OnPullEVSEStatusByIdHTTPRequest -= handler,
                                "PullEVSEStatusById", "pull", "requests", "all").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
+                    RegisterDefaultConsoleLogTargetX(this).
+                    RegisterDefaultDiscLogTargetX(this);
 
                 RegisterEvent2("PullEVSEStatusByIdResponse",
                                handler => EMPClientAPI.OnPullEVSEStatusByIdHTTPResponse += handler,
                                handler => EMPClientAPI.OnPullEVSEStatusByIdHTTPResponse -= handler,
                                "PullEVSEStatusById", "pull", "responses", "all").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
+                    RegisterDefaultConsoleLogTargetX(this).
+                    RegisterDefaultDiscLogTargetX(this);
 
 
                 RegisterEvent2("PullEVSEStatusByOperatorIdRequest",
                                handler => EMPClientAPI.OnPullEVSEStatusByOperatorIdHTTPRequest += handler,
                                handler => EMPClientAPI.OnPullEVSEStatusByOperatorIdHTTPRequest -= handler,
                                "PullEVSEStatusByOperatorId", "pull", "requests", "all").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
+                    RegisterDefaultConsoleLogTargetX(this).
+                    RegisterDefaultDiscLogTargetX(this);
 
                 RegisterEvent2("PullEVSEStatusByOperatorIdResponse",
                                handler => EMPClientAPI.OnPullEVSEStatusByOperatorIdHTTPResponse += handler,
                                handler => EMPClientAPI.OnPullEVSEStatusByOperatorIdHTTPResponse -= handler,
                                "PullEVSEStatusByOperatorId", "pull", "responses", "all").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
+                    RegisterDefaultConsoleLogTargetX(this).
+                    RegisterDefaultDiscLogTargetX(this);
 
                 #endregion
 
@@ -224,30 +224,30 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                handler => EMPClientAPI.OnPullPricingProductDataHTTPRequest += handler,
                                handler => EMPClientAPI.OnPullPricingProductDataHTTPRequest -= handler,
                                "PullPricingProductData", "PullPricing", "pull", "requests", "all").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
+                    RegisterDefaultConsoleLogTargetX(this).
+                    RegisterDefaultDiscLogTargetX(this);
 
                 RegisterEvent2("PullPricingProductDataResponse",
                                handler => EMPClientAPI.OnPullPricingProductDataHTTPResponse += handler,
                                handler => EMPClientAPI.OnPullPricingProductDataHTTPResponse -= handler,
                                "PullPricingProductData", "PullPricing", "pull", "responses", "all").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
+                    RegisterDefaultConsoleLogTargetX(this).
+                    RegisterDefaultDiscLogTargetX(this);
 
 
                 RegisterEvent2("PullEVSEPricingRequest",
                                handler => EMPClientAPI.OnPullEVSEPricingHTTPRequest += handler,
                                handler => EMPClientAPI.OnPullEVSEPricingHTTPRequest -= handler,
                                "PullEVSEPricing", "PullPricing", "pull", "requests", "all").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
+                    RegisterDefaultConsoleLogTargetX(this).
+                    RegisterDefaultDiscLogTargetX(this);
 
                 RegisterEvent2("PullEVSEPricingResponse",
                                handler => EMPClientAPI.OnPullEVSEPricingHTTPResponse += handler,
                                handler => EMPClientAPI.OnPullEVSEPricingHTTPResponse -= handler,
                                "PullEVSEPricing", "PullPricing", "pull", "responses", "all").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
+                    RegisterDefaultConsoleLogTargetX(this).
+                    RegisterDefaultDiscLogTargetX(this);
 
                 #endregion
 
@@ -257,15 +257,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                handler => EMPClientAPI.OnPushAuthenticationDataHTTPRequest += handler,
                                handler => EMPClientAPI.OnPushAuthenticationDataHTTPRequest -= handler,
                                "PushAuthenticationData", "push", "requests", "all").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
+                    RegisterDefaultConsoleLogTargetX(this).
+                    RegisterDefaultDiscLogTargetX(this);
 
                 RegisterEvent2("PushAuthenticationDataResponse",
                                handler => EMPClientAPI.OnPushAuthenticationDataHTTPResponse += handler,
                                handler => EMPClientAPI.OnPushAuthenticationDataHTTPResponse -= handler,
                                "PushAuthenticationData", "push", "responses", "all").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
+                    RegisterDefaultConsoleLogTargetX(this).
+                    RegisterDefaultDiscLogTargetX(this);
 
                 #endregion
 
@@ -275,30 +275,30 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                handler => EMPClientAPI.OnAuthorizeRemoteReservationStartHTTPRequest  += handler,
                                handler => EMPClientAPI.OnAuthorizeRemoteReservationStartHTTPRequest  -= handler,
                                "AuthorizeRemoteReservationStart", "push", "requests", "all").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
+                    RegisterDefaultConsoleLogTargetX(this).
+                    RegisterDefaultDiscLogTargetX(this);
 
                 RegisterEvent2("AuthorizeRemoteReservationStartResponse",
                                handler => EMPClientAPI.OnAuthorizeRemoteReservationStartHTTPResponse += handler,
                                handler => EMPClientAPI.OnAuthorizeRemoteReservationStartHTTPResponse -= handler,
                                "AuthorizeRemoteReservationStart", "push", "responses", "all").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
+                    RegisterDefaultConsoleLogTargetX(this).
+                    RegisterDefaultDiscLogTargetX(this);
 
 
                 RegisterEvent2("AuthorizeRemoteReservationStopRequest",
                                handler => EMPClientAPI.OnAuthorizeRemoteReservationStopHTTPRequest   += handler,
                                handler => EMPClientAPI.OnAuthorizeRemoteReservationStopHTTPRequest   -= handler,
                                "AuthorizeRemoteReservationStop", "push", "requests", "all").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
+                    RegisterDefaultConsoleLogTargetX(this).
+                    RegisterDefaultDiscLogTargetX(this);
 
                 RegisterEvent2("AuthorizeRemoteReservationStopResponse",
                                handler => EMPClientAPI.OnAuthorizeRemoteReservationStopHTTPResponse  += handler,
                                handler => EMPClientAPI.OnAuthorizeRemoteReservationStopHTTPResponse  -= handler,
                                "AuthorizeRemoteReservationStop", "push", "responses", "all").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
+                    RegisterDefaultConsoleLogTargetX(this).
+                    RegisterDefaultDiscLogTargetX(this);
 
                 #endregion
 
@@ -308,30 +308,30 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                handler => EMPClientAPI.OnAuthorizeRemoteStartHTTPRequest  += handler,
                                handler => EMPClientAPI.OnAuthorizeRemoteStartHTTPRequest  -= handler,
                                "AuthorizeRemoteStart", "push", "requests", "all").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
+                    RegisterDefaultConsoleLogTargetX(this).
+                    RegisterDefaultDiscLogTargetX(this);
 
                 RegisterEvent2("AuthorizeRemoteStartResponse",
                                handler => EMPClientAPI.OnAuthorizeRemoteStartHTTPResponse += handler,
                                handler => EMPClientAPI.OnAuthorizeRemoteStartHTTPResponse -= handler,
                                "AuthorizeRemoteStart", "push", "responses", "all").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
+                    RegisterDefaultConsoleLogTargetX(this).
+                    RegisterDefaultDiscLogTargetX(this);
 
 
                 RegisterEvent2("AuthorizeRemoteStopRequest",
                                handler => EMPClientAPI.OnAuthorizeRemoteStopHTTPRequest   += handler,
                                handler => EMPClientAPI.OnAuthorizeRemoteStopHTTPRequest   -= handler,
                                "AuthorizeRemoteStop", "push", "requests", "all").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
+                    RegisterDefaultConsoleLogTargetX(this).
+                    RegisterDefaultDiscLogTargetX(this);
 
                 RegisterEvent2("AuthorizeRemoteStopResponse",
                                handler => EMPClientAPI.OnAuthorizeRemoteStopHTTPResponse  += handler,
                                handler => EMPClientAPI.OnAuthorizeRemoteStopHTTPResponse  -= handler,
                                "AuthorizeRemoteStop", "push", "responses", "all").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
+                    RegisterDefaultConsoleLogTargetX(this).
+                    RegisterDefaultDiscLogTargetX(this);
 
                 #endregion
 
@@ -341,15 +341,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                handler => EMPClientAPI.OnGetChargeDetailRecordsHTTPRequest += handler,
                                handler => EMPClientAPI.OnGetChargeDetailRecordsHTTPRequest -= handler,
                                "GetChargeDetailRecords", "requests", "all").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
+                    RegisterDefaultConsoleLogTargetX(this).
+                    RegisterDefaultDiscLogTargetX(this);
 
                 RegisterEvent2("GetChargeDetailRecordsResponse",
                                handler => EMPClientAPI.OnGetChargeDetailRecordsHTTPResponse += handler,
                                handler => EMPClientAPI.OnGetChargeDetailRecordsHTTPResponse -= handler,
                                "GetChargeDetailRecords", "responses", "all").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
+                    RegisterDefaultConsoleLogTargetX(this).
+                    RegisterDefaultDiscLogTargetX(this);
 
                 #endregion
 

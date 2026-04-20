@@ -17,18 +17,17 @@
 
 #region Usings
 
+using System.Reflection;
+
 using Newtonsoft.Json.Linq;
 
-using org.GraphDefined.Vanaheimr.Hermod.DNS;
+using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
-using org.GraphDefined.Vanaheimr.Hermod.HTTPTest;
+using org.GraphDefined.Vanaheimr.Hermod.Logging;
 
 using cloud.charging.open.protocols.OICPv2_3.EMP;
 using cloud.charging.open.protocols.OICPv2_3.CPO;
 using cloud.charging.open.protocols.OICPv2_3.CentralService;
-using org.GraphDefined.Vanaheimr.Illias;
-using org.GraphDefined.Vanaheimr.Hermod.Logging;
-using System.Reflection;
 
 #endregion
 
@@ -39,7 +38,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
     /// A HTTP API providing OICP v2.3 Data Structures and
     /// HTTP Server Sent Events.
     /// </summary>
-    public class OICPWebAPI : AHTTPExtAPIXExtension<HTTPExtAPIX>
+    public class OICPWebAPI : AHTTPExtAPIExtension1<HTTPExtAPI>
     {
 
         #region Data
@@ -74,7 +73,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
 
         #region Constructor(s)
 
-        public OICPWebAPI(HTTPExtAPIX              HTTPExtAPI,
+        public OICPWebAPI(HTTPExtAPI              HTTPExtAPI,
                           I18NString?              Description            = null,
                           HTTPPath?                APIURLPathPrefix       = null,
                           HTTPPath?                WebAPIURLPathPrefix    = null,
@@ -847,7 +846,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
 
             #region OnPullEVSEData
 
-            EMPClientAPI.OnPullEVSEDataHTTPRequest   += (timestamp, httpAPI, httpRequest)                      => DebugLog.SubmitEvent("OnPullEVSEDataHTTPRequest",    httpRequest);
+            EMPClientAPI.OnPullEVSEDataHTTPRequest   += (timestamp, httpAPI, httpRequest, ct)                  => DebugLog.SubmitEvent("OnPullEVSEDataHTTPRequest",    httpRequest, ct);
 
             EMPClientAPI.OnPullEVSEDataRequest       += (timestamp, empClientAPI, request)                     => DebugLog.SubmitEvent("OnPullEVSEDataRequest",        request.ToJSON(//CPOServerAPI.CustomPullEVSEDataRequestSerializer,
                                                                                                                                                                                       //CPOServerAPI.CustomIdentificationSerializer
@@ -869,13 +868,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
                                                                                                                                                                                                  EMPClientAPI.CustomOpeningTimesSerializer,
                                                                                                                                                                                                  EMPClientAPI.CustomStatusCodeSerializer)));
 
-            EMPClientAPI.OnPullEVSEDataHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse)        => DebugLog.SubmitEvent("OnPullEVSEDataHTTPResponse",   httpResponse);
+            EMPClientAPI.OnPullEVSEDataHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse, ct)    => DebugLog.SubmitEvent("OnPullEVSEDataHTTPResponse",   httpResponse, ct);
 
             #endregion
 
             #region OnPullEVSEStatus
 
-            EMPClientAPI.OnPullEVSEStatusHTTPRequest   += (timestamp, httpAPI, httpRequest)                      => DebugLog.SubmitEvent("OnPullEVSEStatusHTTPRequest",    httpRequest);
+            EMPClientAPI.OnPullEVSEStatusHTTPRequest   += (timestamp, httpAPI, httpRequest, ct)                  => DebugLog.SubmitEvent("OnPullEVSEStatusHTTPRequest",    httpRequest, ct);
 
             EMPClientAPI.OnPullEVSEStatusRequest       += (timestamp, empClientAPI, request)                     => DebugLog.SubmitEvent("OnPullEVSEStatusRequest",        request.ToJSON(//CPOServerAPI.CustomPullEVSEStatusRequestSerializer,
                                                                                                                                                                                       //CPOServerAPI.CustomIdentificationSerializer
@@ -889,13 +888,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
                                                                                                                                                                                                      EMPClientAPI.CustomEVSEStatusRecordSerializer,
                                                                                                                                                                                                      EMPClientAPI.CustomStatusCodeSerializer)));
 
-            EMPClientAPI.OnPullEVSEStatusHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse)        => DebugLog.SubmitEvent("OnPullEVSEStatusHTTPResponse",   httpResponse);
+            EMPClientAPI.OnPullEVSEStatusHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse, ct)    => DebugLog.SubmitEvent("OnPullEVSEStatusHTTPResponse",   httpResponse, ct);
 
             #endregion
 
             #region OnPullEVSEStatusById
 
-            EMPClientAPI.OnPullEVSEStatusByIdHTTPRequest   += (timestamp, httpAPI, httpRequest)                      => DebugLog.SubmitEvent("OnPullEVSEStatusByIdHTTPRequest",    httpRequest);
+            EMPClientAPI.OnPullEVSEStatusByIdHTTPRequest   += (timestamp, httpAPI, httpRequest, ct)                  => DebugLog.SubmitEvent("OnPullEVSEStatusByIdHTTPRequest",    httpRequest, ct);
 
             EMPClientAPI.OnPullEVSEStatusByIdRequest       += (timestamp, empClientAPI, request)                     => DebugLog.SubmitEvent("OnPullEVSEStatusByIdRequest",        request.ToJSON(//CPOServerAPI.CustomPullEVSEStatusByIdRequestSerializer,
                                                                                                                                                                                       //CPOServerAPI.CustomIdentificationSerializer
@@ -907,13 +906,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
                                                                                                                                                                                    response.Response?.ToJSON(EMPClientAPI.CustomPullEVSEStatusByIdResponseSerializer,
                                                                                                                                                                                                              EMPClientAPI.CustomEVSEStatusRecordSerializer)));
 
-            EMPClientAPI.OnPullEVSEStatusByIdHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse)        => DebugLog.SubmitEvent("OnPullEVSEStatusByIdHTTPResponse",   httpResponse);
+            EMPClientAPI.OnPullEVSEStatusByIdHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse, ct)    => DebugLog.SubmitEvent("OnPullEVSEStatusByIdHTTPResponse",   httpResponse, ct);
 
             #endregion
 
             #region OnPullEVSEStatusByOperatorId
 
-            EMPClientAPI.OnPullEVSEStatusByOperatorIdHTTPRequest   += (timestamp, httpAPI, httpRequest)                      => DebugLog.SubmitEvent("OnPullEVSEStatusByOperatorIdHTTPRequest",    httpRequest);
+            EMPClientAPI.OnPullEVSEStatusByOperatorIdHTTPRequest   += (timestamp, httpAPI, httpRequest, ct)                  => DebugLog.SubmitEvent("OnPullEVSEStatusByOperatorIdHTTPRequest",    httpRequest, ct);
 
             EMPClientAPI.OnPullEVSEStatusByOperatorIdRequest       += (timestamp, empClientAPI, request)                     => DebugLog.SubmitEvent("OnPullEVSEStatusByOperatorIdRequest",        request.ToJSON(//CPOServerAPI.CustomPullEVSEStatusByOperatorIdRequestSerializer,
                                                                                                                                                                                                                   //CPOServerAPI.CustomIdentificationSerializer
@@ -927,14 +926,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
                                                                                                                                                                                                                              EMPClientAPI.CustomEVSEStatusRecordSerializer,
                                                                                                                                                                                                                              EMPClientAPI.CustomStatusCodeSerializer)));
 
-            EMPClientAPI.OnPullEVSEStatusByOperatorIdHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse)        => DebugLog.SubmitEvent("OnPullEVSEStatusByOperatorIdHTTPResponse",   httpResponse);
+            EMPClientAPI.OnPullEVSEStatusByOperatorIdHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse, ct)    => DebugLog.SubmitEvent("OnPullEVSEStatusByOperatorIdHTTPResponse",   httpResponse, ct);
 
             #endregion
 
 
             #region OnPullPricingProductData
 
-            EMPClientAPI.OnPullPricingProductDataHTTPRequest   += (timestamp, httpAPI, httpRequest)                      => DebugLog.SubmitEvent("OnPullPricingProductDataHTTPRequest",    httpRequest);
+            EMPClientAPI.OnPullPricingProductDataHTTPRequest   += (timestamp, httpAPI, httpRequest, ct)                  => DebugLog.SubmitEvent("OnPullPricingProductDataHTTPRequest",    httpRequest, ct);
 
             EMPClientAPI.OnPullPricingProductDataRequest       += (timestamp, empClientAPI, request)                     => DebugLog.SubmitEvent("OnPullPricingProductDataRequest",        request.ToJSON(//CPOServerAPI.CustomPullPricingProductDataRequestSerializer,
                                                                                                                                                                                                           //CPOServerAPI.CustomIdentificationSerializer
@@ -948,13 +947,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
                                                                                                                                                                                                                      EMPClientAPI.CustomPricingProductDataRecordSerializer,
                                                                                                                                                                                                                      EMPClientAPI.CustomStatusCodeSerializer)));
 
-            EMPClientAPI.OnPullPricingProductDataHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse)        => DebugLog.SubmitEvent("OnPullPricingProductDataHTTPResponse",   httpResponse);
+            EMPClientAPI.OnPullPricingProductDataHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse, ct)    => DebugLog.SubmitEvent("OnPullPricingProductDataHTTPResponse",   httpResponse, ct);
 
             #endregion
 
             #region OnPullEVSEPricing
 
-            EMPClientAPI.OnPullEVSEPricingHTTPRequest   += (timestamp, httpAPI, httpRequest)                      => DebugLog.SubmitEvent("OnPullEVSEPricingHTTPRequest",    httpRequest);
+            EMPClientAPI.OnPullEVSEPricingHTTPRequest   += (timestamp, httpAPI, httpRequest, ct)                  => DebugLog.SubmitEvent("OnPullEVSEPricingHTTPRequest",    httpRequest, ct);
 
             EMPClientAPI.OnPullEVSEPricingRequest       += (timestamp, empClientAPI, request)                     => DebugLog.SubmitEvent("OnPullEVSEPricingRequest",        request.ToJSON(//CPOServerAPI.CustomPullEVSEPricingRequestSerializer,
                                                                                                                                                                                             //CPOServerAPI.CustomIdentificationSerializer
@@ -968,14 +967,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
                                                                                                                                                                                                        EMPClientAPI.CustomEVSEPricingSerializer,
                                                                                                                                                                                                        EMPClientAPI.CustomStatusCodeSerializer)));
 
-            EMPClientAPI.OnPullEVSEPricingHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse)        => DebugLog.SubmitEvent("OnPullEVSEPricingHTTPResponse",   httpResponse);
+            EMPClientAPI.OnPullEVSEPricingHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse, ct)    => DebugLog.SubmitEvent("OnPullEVSEPricingHTTPResponse",   httpResponse, ct);
 
             #endregion
 
 
             #region OnPushAuthenticationData
 
-            EMPClientAPI.OnPushAuthenticationDataHTTPRequest   += (timestamp, httpAPI, httpRequest)                      => DebugLog.SubmitEvent("OnPushAuthenticationDataHTTPRequest",    httpRequest);
+            EMPClientAPI.OnPushAuthenticationDataHTTPRequest   += (timestamp, httpAPI, httpRequest, ct)                  => DebugLog.SubmitEvent("OnPushAuthenticationDataHTTPRequest",    httpRequest, ct);
 
             EMPClientAPI.OnPushAuthenticationDataRequest       += (timestamp, empClientAPI, request)                     => DebugLog.SubmitEvent("OnPushAuthenticationDataRequest",        request.ToJSON(//CPOServerAPI.CustomPushAuthenticationDataRequestSerializer,
                                                                                                                                                                                                           //CPOServerAPI.CustomIdentificationSerializer
@@ -987,14 +986,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
                                                                                                                                                                                            response.Response?.ToJSON(EMPClientAPI.CustomAcknowledgementSerializer,
                                                                                                                                                                                                                      EMPClientAPI.CustomStatusCodeSerializer)));
 
-            EMPClientAPI.OnPushAuthenticationDataHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse)        => DebugLog.SubmitEvent("OnPushAuthenticationDataHTTPResponse",   httpResponse);
+            EMPClientAPI.OnPushAuthenticationDataHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse, ct)    => DebugLog.SubmitEvent("OnPushAuthenticationDataHTTPResponse",   httpResponse, ct);
 
             #endregion
 
 
             #region OnAuthorizeRemoteReservationStart
 
-            EMPClientAPI.OnAuthorizeRemoteReservationStartHTTPRequest   += (timestamp, httpAPI, httpRequest)                      => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStartHTTPRequest",    httpRequest);
+            EMPClientAPI.OnAuthorizeRemoteReservationStartHTTPRequest   += (timestamp, httpAPI, httpRequest, ct)                  => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStartHTTPRequest",    httpRequest, ct);
 
             EMPClientAPI.OnAuthorizeRemoteReservationStartRequest       += (timestamp, empClientAPI, request)                     => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStartRequest",        request.ToJSON(//CPOServerAPI.CustomAuthorizeRemoteReservationStartRequestSerializer,
                                                                                                                                                                                                                             //CPOServerAPI.CustomIdentificationSerializer
@@ -1006,13 +1005,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
                                                                                                                                                                                                              response.Response?.ToJSON(EMPClientAPI.CustomAcknowledgementSerializer,
                                                                                                                                                                                                                                        EMPClientAPI.CustomStatusCodeSerializer)));
 
-            EMPClientAPI.OnAuthorizeRemoteReservationStartHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse)        => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStartHTTPResponse",   httpResponse);
+            EMPClientAPI.OnAuthorizeRemoteReservationStartHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse, ct)    => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStartHTTPResponse",   httpResponse, ct);
 
             #endregion
 
             #region OnAuthorizeRemoteReservationStop
 
-            EMPClientAPI.OnAuthorizeRemoteReservationStopHTTPRequest    += (timestamp, httpAPI, httpRequest)                      => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStopHTTPRequest",     httpRequest);
+            EMPClientAPI.OnAuthorizeRemoteReservationStopHTTPRequest    += (timestamp, httpAPI, httpRequest, ct)                  => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStopHTTPRequest",     httpRequest, ct);
 
             EMPClientAPI.OnAuthorizeRemoteReservationStopRequest        += (timestamp, empClientAPI, request)                     => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStopRequest",         request.ToJSON(//CPOServerAPI.CustomAuthorizeRemoteReservationStopRequestSerializer,
                                                                                                                                                                                                                             //CPOServerAPI.CustomIdentificationSerializer
@@ -1024,13 +1023,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
                                                                                                                                                                                                              response.Response?.ToJSON(EMPClientAPI.CustomAcknowledgementSerializer,
                                                                                                                                                                                                                                        EMPClientAPI.CustomStatusCodeSerializer)));
 
-            EMPClientAPI.OnAuthorizeRemoteReservationStopHTTPResponse   += (timestamp, httpAPI, httpRequest, httpResponse)        => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStopHTTPResponse",    httpResponse);
+            EMPClientAPI.OnAuthorizeRemoteReservationStopHTTPResponse   += (timestamp, httpAPI, httpRequest, httpResponse, ct)    => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStopHTTPResponse",    httpResponse, ct);
 
             #endregion
 
             #region OnAuthorizeRemoteStart
 
-            EMPClientAPI.OnAuthorizeRemoteStartHTTPRequest   += (timestamp, httpAPI, httpRequest)                      => DebugLog.SubmitEvent("OnAuthorizeRemoteStartHTTPRequest",    httpRequest);
+            EMPClientAPI.OnAuthorizeRemoteStartHTTPRequest   += (timestamp, httpAPI, httpRequest, ct)                  => DebugLog.SubmitEvent("OnAuthorizeRemoteStartHTTPRequest",    httpRequest, ct);
 
             EMPClientAPI.OnAuthorizeRemoteStartRequest       += (timestamp, empClientAPI, request)                     => DebugLog.SubmitEvent("OnAuthorizeRemoteStartRequest",        request.ToJSON(//CPOServerAPI.CustomAuthorizeRemoteStartRequestSerializer,
                                                                                                                                                                                                       //CPOServerAPI.CustomIdentificationSerializer
@@ -1042,13 +1041,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
                                                                                                                                                                                        response.Response?.ToJSON(EMPClientAPI.CustomAcknowledgementSerializer,
                                                                                                                                                                                                                  EMPClientAPI.CustomStatusCodeSerializer)));
 
-            EMPClientAPI.OnAuthorizeRemoteStartHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse)        => DebugLog.SubmitEvent("OnAuthorizeRemoteStartHTTPResponse",   httpResponse);
+            EMPClientAPI.OnAuthorizeRemoteStartHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse, ct)    => DebugLog.SubmitEvent("OnAuthorizeRemoteStartHTTPResponse",   httpResponse, ct);
 
             #endregion
 
             #region OnAuthorizeRemoteStop
 
-            EMPClientAPI.OnAuthorizeRemoteStopHTTPRequest    += (timestamp, httpAPI, httpRequest)                      => DebugLog.SubmitEvent("OnAuthorizeRemoteStopHTTPRequest",     httpRequest);
+            EMPClientAPI.OnAuthorizeRemoteStopHTTPRequest    += (timestamp, httpAPI, httpRequest, ct)                  => DebugLog.SubmitEvent("OnAuthorizeRemoteStopHTTPRequest",     httpRequest, ct);
 
             EMPClientAPI.OnAuthorizeRemoteStopRequest        += (timestamp, empClientAPI, request)                     => DebugLog.SubmitEvent("OnAuthorizeRemoteStopRequest",         request.ToJSON(//CPOServerAPI.CustomAuthorizeRemoteStopRequestSerializer,
                                                                                                                                                                                                       //CPOServerAPI.CustomIdentificationSerializer
@@ -1060,14 +1059,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
                                                                                                                                                                                        response.Response?.ToJSON(EMPClientAPI.CustomAcknowledgementSerializer,
                                                                                                                                                                                                                  EMPClientAPI.CustomStatusCodeSerializer)));
 
-            EMPClientAPI.OnAuthorizeRemoteStopHTTPResponse   += (timestamp, httpAPI, httpRequest, httpResponse)        => DebugLog.SubmitEvent("OnAuthorizeRemoteStopHTTPResponse",    httpResponse);
+            EMPClientAPI.OnAuthorizeRemoteStopHTTPResponse   += (timestamp, httpAPI, httpRequest, httpResponse, ct)    => DebugLog.SubmitEvent("OnAuthorizeRemoteStopHTTPResponse",    httpResponse, ct);
 
             #endregion
 
 
             #region OnGetChargeDetailRecords
 
-            EMPClientAPI.OnGetChargeDetailRecordsHTTPRequest   += (timestamp, httpAPI, httpRequest)                      => DebugLog.SubmitEvent("OnGetChargeDetailRecordsHTTPRequest",    httpRequest);
+            EMPClientAPI.OnGetChargeDetailRecordsHTTPRequest   += (timestamp, httpAPI, httpRequest, ct)                  => DebugLog.SubmitEvent("OnGetChargeDetailRecordsHTTPRequest",    httpRequest, ct);
 
             EMPClientAPI.OnGetChargeDetailRecordsRequest       += (timestamp, empClientAPI, request)                     => DebugLog.SubmitEvent("OnGetChargeDetailRecordsRequest",        request.ToJSON(//CPOServerAPI.CustomGetChargeDetailRecordsRequestSerializer,
                                                                                                                                                                                                           //CPOServerAPI.CustomIdentificationSerializer
@@ -1084,7 +1083,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
                                                                                                                                                                                                                      EMPClientAPI.CustomCalibrationLawVerificationSerializer,
                                                                                                                                                                                                                      EMPClientAPI.CustomStatusCodeSerializer)));
 
-            EMPClientAPI.OnGetChargeDetailRecordsHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse)        => DebugLog.SubmitEvent("OnGetChargeDetailRecordsHTTPResponse",   httpResponse);
+            EMPClientAPI.OnGetChargeDetailRecordsHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse, ct)    => DebugLog.SubmitEvent("OnGetChargeDetailRecordsHTTPResponse",   httpResponse, ct);
 
             #endregion
 
@@ -1095,7 +1094,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
 
             #region OnPushEVSEData
 
-            CPOClientAPI.OnPushEVSEDataHTTPRequest   += (timestamp, httpAPI, httpRequest)                      => DebugLog.SubmitEvent("OnPushEVSEDataHTTPRequest",    httpRequest);
+            CPOClientAPI.OnPushEVSEDataHTTPRequest   += (timestamp, httpAPI, httpRequest, ct)                  => DebugLog.SubmitEvent("OnPushEVSEDataHTTPRequest",    httpRequest, ct);
 
             CPOClientAPI.OnPushEVSEDataRequest       += (timestamp, cpoClientAPI, request)                     => DebugLog.SubmitEvent("OnPushEVSEDataRequest",        request.ToJSON(//CPOServerAPI.CustomPushEVSEDataRequestSerializer,
                                                                                                                                                                                       //CPOServerAPI.CustomIdentificationSerializer
@@ -1107,13 +1106,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
                                                                                                                                                                        response.Response?.ToJSON(CPOClientAPI.CustomAcknowledgementSerializer,
                                                                                                                                                                                                  CPOClientAPI.CustomStatusCodeSerializer)));
 
-            CPOClientAPI.OnPushEVSEDataHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse)        => DebugLog.SubmitEvent("OnPushEVSEDataHTTPResponse",   httpResponse);
+            CPOClientAPI.OnPushEVSEDataHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse, ct)    => DebugLog.SubmitEvent("OnPushEVSEDataHTTPResponse",   httpResponse, ct);
 
             #endregion
 
             #region OnPushEVSEStatus
 
-            CPOClientAPI.OnPushEVSEStatusHTTPRequest   += (timestamp, httpAPI, httpRequest)                      => DebugLog.SubmitEvent("OnPushEVSEStatusHTTPRequest",    httpRequest);
+            CPOClientAPI.OnPushEVSEStatusHTTPRequest   += (timestamp, httpAPI, httpRequest, ct)                  => DebugLog.SubmitEvent("OnPushEVSEStatusHTTPRequest",    httpRequest, ct);
 
             CPOClientAPI.OnPushEVSEStatusRequest       += (timestamp, cpoClientAPI, request)                     => DebugLog.SubmitEvent("OnPushEVSEStatusRequest",        request.ToJSON(//CPOServerAPI.CustomPushEVSEStatusRequestSerializer,
                                                                                                                                                                                           //CPOServerAPI.CustomIdentificationSerializer
@@ -1125,14 +1124,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
                                                                                                                                                                                            response.Response?.ToJSON(CPOClientAPI.CustomAcknowledgementSerializer,
                                                                                                                                                                                                                      CPOClientAPI.CustomStatusCodeSerializer)));
 
-            CPOClientAPI.OnPushEVSEStatusHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse)        => DebugLog.SubmitEvent("OnPushEVSEStatusHTTPResponse",   httpResponse);
+            CPOClientAPI.OnPushEVSEStatusHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse, ct)    => DebugLog.SubmitEvent("OnPushEVSEStatusHTTPResponse",   httpResponse, ct);
 
             #endregion
 
 
             #region OnPushPricingProductData
 
-            CPOClientAPI.OnPushPricingProductDataHTTPRequest   += (timestamp, httpAPI, httpRequest)                      => DebugLog.SubmitEvent("OnPushPricingProductDataHTTPRequest",    httpRequest);
+            CPOClientAPI.OnPushPricingProductDataHTTPRequest   += (timestamp, httpAPI, httpRequest, ct)                  => DebugLog.SubmitEvent("OnPushPricingProductDataHTTPRequest",    httpRequest, ct);
 
             CPOClientAPI.OnPushPricingProductDataRequest       += (timestamp, cpoClientAPI, request)                     => DebugLog.SubmitEvent("OnPushPricingProductDataRequest",        request.ToJSON(//CPOServerAPI.CustomPushPricingProductDataRequestSerializer,
                                                                                                                                                                                                           //CPOServerAPI.CustomIdentificationSerializer
@@ -1144,13 +1143,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
                                                                                                                                                                                            response.Response?.ToJSON(CPOClientAPI.CustomAcknowledgementSerializer,
                                                                                                                                                                                                                      CPOClientAPI.CustomStatusCodeSerializer)));
 
-            CPOClientAPI.OnPushPricingProductDataHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse)        => DebugLog.SubmitEvent("OnPushPricingProductDataHTTPResponse",   httpResponse);
+            CPOClientAPI.OnPushPricingProductDataHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse, ct)    => DebugLog.SubmitEvent("OnPushPricingProductDataHTTPResponse",   httpResponse, ct);
 
             #endregion
 
             #region OnPushEVSEPricing
 
-            CPOClientAPI.OnPushEVSEPricingHTTPRequest   += (timestamp, httpAPI, httpRequest)                      => DebugLog.SubmitEvent("OnPushEVSEPricingHTTPRequest",    httpRequest);
+            CPOClientAPI.OnPushEVSEPricingHTTPRequest   += (timestamp, httpAPI, httpRequest, ct)                  => DebugLog.SubmitEvent("OnPushEVSEPricingHTTPRequest",    httpRequest, ct);
 
             CPOClientAPI.OnPushEVSEPricingRequest       += (timestamp, cpoClientAPI, request)                     => DebugLog.SubmitEvent("OnPushEVSEPricingRequest",        request.ToJSON(//CPOServerAPI.CustomPushEVSEPricingRequestSerializer,
                                                                                                                                                                                             //CPOServerAPI.CustomIdentificationSerializer
@@ -1162,14 +1161,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
                                                                                                                                                                              response.Response?.ToJSON(CPOClientAPI.CustomAcknowledgementSerializer,
                                                                                                                                                                                                        CPOClientAPI.CustomStatusCodeSerializer)));
 
-            CPOClientAPI.OnPushEVSEPricingHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse)        => DebugLog.SubmitEvent("OnPushEVSEPricingHTTPResponse",   httpResponse);
+            CPOClientAPI.OnPushEVSEPricingHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse, ct)    => DebugLog.SubmitEvent("OnPushEVSEPricingHTTPResponse",   httpResponse, ct);
 
             #endregion
 
 
             #region OnPullAuthenticationData
 
-            CPOClientAPI.OnPullAuthenticationDataHTTPRequest   += (timestamp, httpAPI, httpRequest)                      => DebugLog.SubmitEvent("OnPullAuthenticationDataHTTPRequest",    httpRequest);
+            CPOClientAPI.OnPullAuthenticationDataHTTPRequest   += (timestamp, httpAPI, httpRequest, ct)                  => DebugLog.SubmitEvent("OnPullAuthenticationDataHTTPRequest",    httpRequest, ct);
 
             CPOClientAPI.OnPullAuthenticationDataRequest       += (timestamp, cpoClientAPI, request)                     => DebugLog.SubmitEvent("OnPullAuthenticationDataRequest",        request.ToJSON(//CPOServerAPI.CustomPullAuthenticationDataRequestSerializer,
                                                                                                                                                                                                           //CPOServerAPI.CustomIdentificationSerializer
@@ -1183,14 +1182,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
                                                                                                                                                                                                                      CPOClientAPI.CustomIdentificationSerializer,
                                                                                                                                                                                                                      CPOClientAPI.CustomStatusCodeSerializer)));
 
-            CPOClientAPI.OnPullAuthenticationDataHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse)        => DebugLog.SubmitEvent("OnPullAuthenticationDataHTTPResponse",   httpResponse);
+            CPOClientAPI.OnPullAuthenticationDataHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse, ct)    => DebugLog.SubmitEvent("OnPullAuthenticationDataHTTPResponse",   httpResponse, ct);
 
             #endregion
 
 
             #region OnAuthorizeStart
 
-            CPOClientAPI.OnAuthorizeStartHTTPRequest      += (timestamp, httpAPI, httpRequest)                      => DebugLog.SubmitEvent("OnAuthorizeStartHTTPRequest",    httpRequest);
+            CPOClientAPI.OnAuthorizeStartHTTPRequest      += (timestamp, httpAPI, httpRequest, ct)                  => DebugLog.SubmitEvent("OnAuthorizeStartHTTPRequest",    httpRequest, ct);
 
             CPOClientAPI.OnAuthorizeStartRequest          += (timestamp, cpoClientAPI, request)                     => DebugLog.SubmitEvent("OnAuthorizeStartRequest",        request.ToJSON(//CPOServerAPI.CustomAuthorizeStartRequestSerializer,
                                                                                                                                                                                              //CPOServerAPI.CustomIdentificationSerializer
@@ -1203,13 +1202,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
                                                                                                                                                                                                         CPOClientAPI.CustomStatusCodeSerializer,
                                                                                                                                                                                                         CPOClientAPI.CustomIdentificationSerializer)));
 
-            CPOClientAPI.OnAuthorizationStartHTTPResponse += (timestamp, httpAPI, httpRequest, httpResponse)        => DebugLog.SubmitEvent("OnAuthorizeStartHTTPResponse",   httpResponse);
+            CPOClientAPI.OnAuthorizationStartHTTPResponse += (timestamp, httpAPI, httpRequest, httpResponse, ct)    => DebugLog.SubmitEvent("OnAuthorizeStartHTTPResponse",   httpResponse, ct);
 
             #endregion
 
             #region OnAuthorizeStop
 
-            CPOClientAPI.OnAuthorizeStopHTTPRequest       += (timestamp, httpAPI, httpRequest)                      => DebugLog.SubmitEvent("OnAuthorizeStopHTTPRequest",     httpRequest);
+            CPOClientAPI.OnAuthorizeStopHTTPRequest       += (timestamp, httpAPI, httpRequest, ct)                  => DebugLog.SubmitEvent("OnAuthorizeStopHTTPRequest",     httpRequest, ct);
 
             CPOClientAPI.OnAuthorizeStopRequest           += (timestamp, cpoClientAPI, request)                     => DebugLog.SubmitEvent("OnAuthorizeStopRequest",         request.ToJSON(//CPOServerAPI.CustomAuthorizeStopRequestSerializer,
                                                                                                                                                                                              //CPOServerAPI.CustomIdentificationSerializer
@@ -1221,14 +1220,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
                                                                                                                                                                               response.Response?.ToJSON(CPOClientAPI.CustomAuthorizationStopSerializer,
                                                                                                                                                                                                         CPOClientAPI.CustomStatusCodeSerializer)));
 
-            CPOClientAPI.OnAuthorizationStopHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse)        => DebugLog.SubmitEvent("OnAuthorizeStopHTTPResponse",    httpResponse);
+            CPOClientAPI.OnAuthorizationStopHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse, ct)    => DebugLog.SubmitEvent("OnAuthorizeStopHTTPResponse",    httpResponse, ct);
 
             #endregion
 
 
             #region OnChargingNotifications
 
-            CPOClientAPI.OnChargingNotificationHTTPRequest      += (timestamp, httpAPI, httpRequest)                      => DebugLog.SubmitEvent("OnChargingNotificationHTTPRequest",        httpRequest);
+            CPOClientAPI.OnChargingNotificationHTTPRequest      += (timestamp, httpAPI, httpRequest, ct)                  => DebugLog.SubmitEvent("OnChargingNotificationHTTPRequest",        httpRequest, ct);
 
 
             CPOClientAPI.OnChargingStartNotificationRequest     += (timestamp, cpoClientAPI, request)                     => DebugLog.SubmitEvent("OnChargingStartNotificationRequest",       request.ToJSON(//CPOServerAPI.CustomPushEVSEDataRequestSerializer,
@@ -1275,14 +1274,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
                                                                                                                                                                                                                         CPOClientAPI.CustomStatusCodeSerializer)));
 
 
-            CPOClientAPI.OnChargingNotificationHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse)        => DebugLog.SubmitEvent("OnChargingNotificationHTTPResponse",          httpResponse);
+            CPOClientAPI.OnChargingNotificationHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse, ct)    => DebugLog.SubmitEvent("OnChargingNotificationHTTPResponse",          httpResponse, ct);
 
             #endregion
 
 
             #region OnChargeDetailRecord
 
-            CPOClientAPI.OnChargeDetailRecordHTTPRequest   += (timestamp, httpAPI, httpRequest)                      => DebugLog.SubmitEvent("OnChargeDetailRecordHTTPRequest",    httpRequest);
+            CPOClientAPI.OnChargeDetailRecordHTTPRequest   += (timestamp, httpAPI, httpRequest, ct)                  => DebugLog.SubmitEvent("OnChargeDetailRecordHTTPRequest",    httpRequest, ct);
 
             CPOClientAPI.OnChargeDetailRecordRequest       += (timestamp, cpoClientAPI, request)                     => DebugLog.SubmitEvent("OnChargeDetailRecordRequest",        request.ToJSON(//CPOServerAPI.CustomChargeDetailRecordRequestSerializer,
                                                                                                                                                                                                   //CPOServerAPI.CustomIdentificationSerializer
@@ -1294,7 +1293,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
                                                                                                                                                                                    response.Response?.ToJSON(CPOClientAPI.CustomAcknowledgementSerializer,
                                                                                                                                                                                                              CPOClientAPI.CustomStatusCodeSerializer)));
 
-            CPOClientAPI.OnChargeDetailRecordHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse)        => DebugLog.SubmitEvent("OnChargeDetailRecordHTTPResponse",   httpResponse);
+            CPOClientAPI.OnChargeDetailRecordHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse, ct)    => DebugLog.SubmitEvent("OnChargeDetailRecordHTTPResponse",   httpResponse, ct);
 
             #endregion
 

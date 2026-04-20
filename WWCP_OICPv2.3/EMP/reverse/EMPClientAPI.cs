@@ -29,6 +29,8 @@ using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.Sockets;
 using org.GraphDefined.Vanaheimr.Hermod.Sockets.TCP;
 using org.GraphDefined.Vanaheimr.Hermod.Logging;
+using org.GraphDefined.Vanaheimr.Hermod.Mail;
+using org.GraphDefined.Vanaheimr.Hermod.SMTP;
 
 #endregion
 
@@ -38,7 +40,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// <summary>
     /// The EMP HTTP Client API.
     /// </summary>
-    public partial class EMPClientAPI : HTTPAPI
+    public partial class EMPClientAPI : AHTTPExtAPIExtension1<HTTPExtAPI>
     {
 
         #region (class) APICounters
@@ -153,13 +155,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// </summary>
         public new HTTPPath                URLPathPrefix     { get; }
 
-        /// <summary>
-        /// The attached HTTP logger.
-        /// </summary>
-        public new HTTP_Logger             HTTPLogger
-#pragma warning disable CS8603 // Possible null reference return.
-            => base.HTTPLogger as HTTP_Logger;
-#pragma warning restore CS8603 // Possible null reference return.
+//        /// <summary>
+//        /// The attached HTTP logger.
+//        /// </summary>
+//        public new HTTP_Logger             HTTPLogger
+//#pragma warning disable CS8603 // Possible null reference return.
+//            => base.HTTPLogger as HTTP_Logger;
+//#pragma warning restore CS8603 // Possible null reference return.
 
         /// <summary>
         /// The attached Client API logger.
@@ -493,13 +495,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logPullEVSEDataHTTPRequest(DateTimeOffset  Timestamp,
-                                                           HTTPAPI         API,
-                                                           HTTPRequest     Request)
+        protected internal Task logPullEVSEDataHTTPRequest(DateTimeOffset     Timestamp,
+                                                           HTTPAPI            API,
+                                                           HTTPRequest        Request,
+                                                           CancellationToken  CancellationToken)
 
-            => OnPullEVSEDataHTTPRequest.WhenAll(Timestamp,
-                                                 API ?? this,
-                                                 Request);
+            => OnPullEVSEDataHTTPRequest.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -536,15 +542,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logPullEVSEDataHTTPResponse(DateTimeOffset  Timestamp,
-                                                            HTTPAPI         API,
-                                                            HTTPRequest     Request,
-                                                            HTTPResponse    Response)
+        protected internal Task logPullEVSEDataHTTPResponse(DateTimeOffset     Timestamp,
+                                                            HTTPAPI            API,
+                                                            HTTPRequest        Request,
+                                                            HTTPResponse       Response,
+                                                            CancellationToken  CancellationToken)
 
-            => OnPullEVSEDataHTTPResponse.WhenAll(Timestamp,
-                                                  API ?? this,
-                                                  Request,
-                                                  Response);
+            => OnPullEVSEDataHTTPResponse.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   Response,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -562,13 +572,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logPullEVSEStatusHTTPRequest(DateTimeOffset  Timestamp,
-                                                             HTTPAPI         API,
-                                                             HTTPRequest     Request)
+        protected internal Task logPullEVSEStatusHTTPRequest(DateTimeOffset     Timestamp,
+                                                             HTTPAPI            API,
+                                                             HTTPRequest        Request,
+                                                             CancellationToken  CancellationToken)
 
-            => OnPullEVSEStatusHTTPRequest.WhenAll(Timestamp,
-                                                   API ?? this,
-                                                   Request);
+            => OnPullEVSEStatusHTTPRequest.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -605,15 +619,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logPullEVSEStatusHTTPResponse(DateTimeOffset  Timestamp,
-                                                              HTTPAPI         API,
-                                                              HTTPRequest     Request,
-                                                              HTTPResponse    Response)
+        protected internal Task logPullEVSEStatusHTTPResponse(DateTimeOffset     Timestamp,
+                                                              HTTPAPI            API,
+                                                              HTTPRequest        Request,
+                                                              HTTPResponse       Response,
+                                                              CancellationToken  CancellationToken)
 
-            => OnPullEVSEStatusHTTPResponse.WhenAll(Timestamp,
-                                                    API ?? this,
-                                                    Request,
-                                                    Response);
+            => OnPullEVSEStatusHTTPResponse.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   Response,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -631,13 +649,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logPullEVSEStatusByIdHTTPRequest(DateTimeOffset  Timestamp,
-                                                                 HTTPAPI         API,
-                                                                 HTTPRequest     Request)
+        protected internal Task logPullEVSEStatusByIdHTTPRequest(DateTimeOffset     Timestamp,
+                                                                 HTTPAPI            API,
+                                                                 HTTPRequest        Request,
+                                                                 CancellationToken  CancellationToken)
 
-            => OnPullEVSEStatusByIdHTTPRequest.WhenAll(Timestamp,
-                                                       API ?? this,
-                                                       Request);
+            => OnPullEVSEStatusByIdHTTPRequest.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -674,15 +696,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logPullEVSEStatusByIdHTTPResponse(DateTimeOffset  Timestamp,
-                                                                  HTTPAPI         API,
-                                                                  HTTPRequest     Request,
-                                                                  HTTPResponse    Response)
+        protected internal Task logPullEVSEStatusByIdHTTPResponse(DateTimeOffset     Timestamp,
+                                                                  HTTPAPI            API,
+                                                                  HTTPRequest        Request,
+                                                                  HTTPResponse       Response,
+                                                                  CancellationToken  CancellationToken)
 
-            => OnPullEVSEStatusByIdHTTPResponse.WhenAll(Timestamp,
-                                                        API ?? this,
-                                                        Request,
-                                                        Response);
+            => OnPullEVSEStatusByIdHTTPResponse.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   Response,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -700,13 +726,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logPullEVSEStatusByOperatorIdHTTPRequest(DateTimeOffset  Timestamp,
-                                                                         HTTPAPI         API,
-                                                                         HTTPRequest     Request)
+        protected internal Task logPullEVSEStatusByOperatorIdHTTPRequest(DateTimeOffset     Timestamp,
+                                                                         HTTPAPI            API,
+                                                                         HTTPRequest        Request,
+                                                                         CancellationToken  CancellationToken)
 
-            => OnPullEVSEStatusByOperatorIdHTTPRequest.WhenAll(Timestamp,
-                                                               API ?? this,
-                                                               Request);
+            => OnPullEVSEStatusByOperatorIdHTTPRequest.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -743,15 +773,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logPullEVSEStatusByOperatorIdHTTPResponse(DateTimeOffset  Timestamp,
-                                                                          HTTPAPI         API,
-                                                                          HTTPRequest     Request,
-                                                                          HTTPResponse    Response)
+        protected internal Task logPullEVSEStatusByOperatorIdHTTPResponse(DateTimeOffset     Timestamp,
+                                                                          HTTPAPI            API,
+                                                                          HTTPRequest        Request,
+                                                                          HTTPResponse       Response,
+                                                                          CancellationToken  CancellationToken)
 
-            => OnPullEVSEStatusByOperatorIdHTTPResponse.WhenAll(Timestamp,
-                                                                API ?? this,
-                                                                Request,
-                                                                Response);
+            => OnPullEVSEStatusByOperatorIdHTTPResponse.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   Response,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -770,13 +804,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logPullPricingProductDataHTTPRequest(DateTimeOffset  Timestamp,
-                                                                     HTTPAPI         API,
-                                                                     HTTPRequest     Request)
+        protected internal Task logPullPricingProductDataHTTPRequest(DateTimeOffset     Timestamp,
+                                                                     HTTPAPI            API,
+                                                                     HTTPRequest        Request,
+                                                                     CancellationToken  CancellationToken)
 
-            => OnPullPricingProductDataHTTPRequest.WhenAll(Timestamp,
-                                                           API ?? this,
-                                                           Request);
+            => OnPullPricingProductDataHTTPRequest.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -813,15 +851,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logPullPricingProductDataHTTPResponse(DateTimeOffset  Timestamp,
-                                                                      HTTPAPI         API,
-                                                                      HTTPRequest     Request,
-                                                                      HTTPResponse    Response)
+        protected internal Task logPullPricingProductDataHTTPResponse(DateTimeOffset     Timestamp,
+                                                                      HTTPAPI            API,
+                                                                      HTTPRequest        Request,
+                                                                      HTTPResponse       Response,
+                                                                      CancellationToken  CancellationToken)
 
-            => OnPullPricingProductDataHTTPResponse.WhenAll(Timestamp,
-                                                            API ?? this,
-                                                            Request,
-                                                            Response);
+            => OnPullPricingProductDataHTTPResponse.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   Response,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -839,13 +881,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logPullEVSEPricingHTTPRequest(DateTimeOffset  Timestamp,
-                                                              HTTPAPI         API,
-                                                              HTTPRequest     Request)
+        protected internal Task logPullEVSEPricingHTTPRequest(DateTimeOffset     Timestamp,
+                                                              HTTPAPI            API,
+                                                              HTTPRequest        Request,
+                                                              CancellationToken  CancellationToken)
 
-            => OnPullEVSEPricingHTTPRequest.WhenAll(Timestamp,
-                                                    API ?? this,
-                                                    Request);
+            => OnPullEVSEPricingHTTPRequest.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -882,15 +928,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logPullEVSEPricingHTTPResponse(DateTimeOffset  Timestamp,
-                                                               HTTPAPI         API,
-                                                               HTTPRequest     Request,
-                                                               HTTPResponse    Response)
+        protected internal Task logPullEVSEPricingHTTPResponse(DateTimeOffset     Timestamp,
+                                                               HTTPAPI            API,
+                                                               HTTPRequest        Request,
+                                                               HTTPResponse       Response,
+                                                               CancellationToken  CancellationToken)
 
-            => OnPullEVSEPricingHTTPResponse.WhenAll(Timestamp,
-                                                     API ?? this,
-                                                     Request,
-                                                     Response);
+            => OnPullEVSEPricingHTTPResponse.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   Response,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -909,13 +959,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logPushAuthenticationDataHTTPRequest(DateTimeOffset  Timestamp,
-                                                                     HTTPAPI         API,
-                                                                     HTTPRequest     Request)
+        protected internal Task logPushAuthenticationDataHTTPRequest(DateTimeOffset     Timestamp,
+                                                                     HTTPAPI            API,
+                                                                     HTTPRequest        Request,
+                                                                     CancellationToken  CancellationToken)
 
-            => OnPushAuthenticationDataHTTPRequest.WhenAll(Timestamp,
-                                                           API ?? this,
-                                                           Request);
+            => OnPushAuthenticationDataHTTPRequest.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -952,15 +1006,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logPushAuthenticationDataHTTPResponse(DateTimeOffset  Timestamp,
-                                                                      HTTPAPI         API,
-                                                                      HTTPRequest     Request,
-                                                                      HTTPResponse    Response)
+        protected internal Task logPushAuthenticationDataHTTPResponse(DateTimeOffset     Timestamp,
+                                                                      HTTPAPI            API,
+                                                                      HTTPRequest        Request,
+                                                                      HTTPResponse       Response,
+                                                                      CancellationToken  CancellationToken)
 
-            => OnPushAuthenticationDataHTTPResponse.WhenAll(Timestamp,
-                                                            API ?? this,
-                                                            Request,
-                                                            Response);
+            => OnPushAuthenticationDataHTTPResponse.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   Response,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -979,13 +1037,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logAuthorizeRemoteReservationStartHTTPRequest(DateTimeOffset  Timestamp,
-                                                                              HTTPAPI         API,
-                                                                              HTTPRequest     Request)
+        protected internal Task logAuthorizeRemoteReservationStartHTTPRequest(DateTimeOffset     Timestamp,
+                                                                              HTTPAPI            API,
+                                                                              HTTPRequest        Request,
+                                                                              CancellationToken  CancellationToken)
 
-            => OnAuthorizeRemoteReservationStartHTTPRequest.WhenAll(Timestamp,
-                                                                    API ?? this,
-                                                                    Request);
+            => OnAuthorizeRemoteReservationStartHTTPRequest.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -1022,15 +1084,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logAuthorizeRemoteReservationStartHTTPResponse(DateTimeOffset  Timestamp,
-                                                                               HTTPAPI         API,
-                                                                               HTTPRequest     Request,
-                                                                               HTTPResponse    Response)
+        protected internal Task logAuthorizeRemoteReservationStartHTTPResponse(DateTimeOffset     Timestamp,
+                                                                               HTTPAPI            API,
+                                                                               HTTPRequest        Request,
+                                                                               HTTPResponse       Response,
+                                                                               CancellationToken  CancellationToken)
 
-            => OnAuthorizeRemoteReservationStartHTTPResponse.WhenAll(Timestamp,
-                                                                     API ?? this,
-                                                                     Request,
-                                                                     Response);
+            => OnAuthorizeRemoteReservationStartHTTPResponse.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   Response,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -1048,13 +1114,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logAuthorizeRemoteReservationStopHTTPRequest(DateTimeOffset  Timestamp,
-                                                                             HTTPAPI         API,
-                                                                             HTTPRequest     Request)
+        protected internal Task logAuthorizeRemoteReservationStopHTTPRequest(DateTimeOffset     Timestamp,
+                                                                             HTTPAPI            API,
+                                                                             HTTPRequest        Request,
+                                                                             CancellationToken  CancellationToken)
 
-            => OnAuthorizeRemoteReservationStopHTTPRequest.WhenAll(Timestamp,
-                                                                   API ?? this,
-                                                                   Request);
+            => OnAuthorizeRemoteReservationStopHTTPRequest.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -1091,15 +1161,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logAuthorizeRemoteReservationStopHTTPResponse(DateTimeOffset  Timestamp,
-                                                                              HTTPAPI         API,
-                                                                              HTTPRequest     Request,
-                                                                              HTTPResponse    Response)
+        protected internal Task logAuthorizeRemoteReservationStopHTTPResponse(DateTimeOffset     Timestamp,
+                                                                              HTTPAPI            API,
+                                                                              HTTPRequest        Request,
+                                                                              HTTPResponse       Response,
+                                                                              CancellationToken  CancellationToken)
 
-            => OnAuthorizeRemoteReservationStopHTTPResponse.WhenAll(Timestamp,
-                                                                    API ?? this,
-                                                                    Request,
-                                                                    Response);
+            => OnAuthorizeRemoteReservationStopHTTPResponse.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   Response,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -1117,13 +1191,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logAuthorizeRemoteStartHTTPRequest(DateTimeOffset  Timestamp,
-                                                                   HTTPAPI         API,
-                                                                   HTTPRequest     Request)
+        protected internal Task logAuthorizeRemoteStartHTTPRequest(DateTimeOffset     Timestamp,
+                                                                   HTTPAPI            API,
+                                                                   HTTPRequest        Request,
+                                                                   CancellationToken  CancellationToken)
 
-            => OnAuthorizeRemoteStartHTTPRequest.WhenAll(Timestamp,
-                                                         API ?? this,
-                                                         Request);
+            => OnAuthorizeRemoteStartHTTPRequest.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -1160,15 +1238,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logAuthorizeRemoteStartHTTPResponse(DateTimeOffset  Timestamp,
-                                                                    HTTPAPI         API,
-                                                                    HTTPRequest     Request,
-                                                                    HTTPResponse    Response)
+        protected internal Task logAuthorizeRemoteStartHTTPResponse(DateTimeOffset     Timestamp,
+                                                                    HTTPAPI            API,
+                                                                    HTTPRequest        Request,
+                                                                    HTTPResponse       Response,
+                                                                    CancellationToken  CancellationToken)
 
-            => OnAuthorizeRemoteStartHTTPResponse.WhenAll(Timestamp,
-                                                          API ?? this,
-                                                          Request,
-                                                          Response);
+            => OnAuthorizeRemoteStartHTTPResponse.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   Response,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -1186,13 +1268,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logAuthorizeRemoteStopHTTPRequest(DateTimeOffset  Timestamp,
-                                                                  HTTPAPI         API,
-                                                                  HTTPRequest     Request)
+        protected internal Task logAuthorizeRemoteStopHTTPRequest(DateTimeOffset     Timestamp,
+                                                                  HTTPAPI            API,
+                                                                  HTTPRequest        Request,
+                                                                  CancellationToken  CancellationToken)
 
-            => OnAuthorizeRemoteStopHTTPRequest.WhenAll(Timestamp,
-                                                        API ?? this,
-                                                        Request);
+            => OnAuthorizeRemoteStopHTTPRequest.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -1229,15 +1315,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logAuthorizeRemoteStopHTTPResponse(DateTimeOffset  Timestamp,
-                                                                   HTTPAPI         API,
-                                                                   HTTPRequest     Request,
-                                                                   HTTPResponse    Response)
+        protected internal Task logAuthorizeRemoteStopHTTPResponse(DateTimeOffset     Timestamp,
+                                                                   HTTPAPI            API,
+                                                                   HTTPRequest        Request,
+                                                                   HTTPResponse       Response,
+                                                                   CancellationToken  CancellationToken)
 
-            => OnAuthorizeRemoteStopHTTPResponse.WhenAll(Timestamp,
-                                                         API ?? this,
-                                                         Request,
-                                                         Response);
+            => OnAuthorizeRemoteStopHTTPResponse.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   Response,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -1256,13 +1346,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logGetChargeDetailRecordsHTTPRequest(DateTimeOffset  Timestamp,
-                                                                     HTTPAPI         API,
-                                                                     HTTPRequest     Request)
+        protected internal Task logGetChargeDetailRecordsHTTPRequest(DateTimeOffset     Timestamp,
+                                                                     HTTPAPI            API,
+                                                                     HTTPRequest        Request,
+                                                                     CancellationToken  CancellationToken)
 
-            => OnGetChargeDetailRecordsHTTPRequest.WhenAll(Timestamp,
-                                                           API ?? this,
-                                                           Request);
+            => OnGetChargeDetailRecordsHTTPRequest.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -1299,15 +1393,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logGetChargeDetailRecordsHTTPResponse(DateTimeOffset  Timestamp,
-                                                                      HTTPAPI         API,
-                                                                      HTTPRequest     Request,
-                                                                      HTTPResponse    Response)
+        protected internal Task logGetChargeDetailRecordsHTTPResponse(DateTimeOffset     Timestamp,
+                                                                      HTTPAPI            API,
+                                                                      HTTPRequest        Request,
+                                                                      HTTPResponse       Response,
+                                                                      CancellationToken  CancellationToken)
 
-            => OnGetChargeDetailRecordsHTTPResponse.WhenAll(Timestamp,
-                                                            API ?? this,
-                                                            Request,
-                                                            Response);
+            => OnGetChargeDetailRecordsHTTPResponse.WhenAll(
+                   Timestamp,
+                   API,
+                   Request,
+                   Response,
+                   CancellationToken
+               );
 
         #endregion
 
@@ -1315,189 +1413,88 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region Constructor(s)
 
-        #region EMPClientAPI(HTTPAPI, ...)
+        public EMPClientAPI(HTTPExtAPI                     HTTPAPI,
 
-        public EMPClientAPI(HTTPAPI                  HTTPAPI,
-                            HTTPPath?                URLPathPrefix    = null,
+                            IEnumerable<HTTPHostname>?     Hostnames                 = null,
+                            HTTPPath?                      RootPath                  = null,
+                            IEnumerable<HTTPContentType>?  HTTPContentTypes          = null,
+                            I18NString?                    Description               = null,
 
-                            String                   LoggingPath      = DefaultHTTPAPI_LoggingPath,
-                            String                   LoggingContext   = DefaultLoggingContext,
-                            LogfileCreatorDelegate?  LogfileCreator   = null)
+                            HTTPPath?                      BasePath                  = null,  // For URL prefixes in HTML!
 
-            : base(HTTPAPI)
+                            String?                        ExternalDNSName           = null,
+                            String?                        HTTPServerName            = DefaultHTTPServerName,
+                            String?                        HTTPServiceName           = DefaultHTTPServiceName,
+                            String?                        APIVersionHash            = null,
+                            JObject?                       APIVersionHashes          = null,
 
-        {
+                            EMailAddress?                  APIRobotEMailAddress      = null,
+                            String?                        APIRobotGPGPassphrase     = null,
+                            ISMTPClient?                   SMTPClient                = null,
 
-            this.URLPathPrefix   = base.URLPathPrefix + (URLPathPrefix ?? HTTPPath.Root);
+                            HTTPPath?                      AdditionalURLPathPrefix   = null,
+                            Boolean?                       LocationsAsOpenData       = null,
+                            Boolean?                       TariffsAsOpenData         = null,
+                            Boolean?                       AllowDowngrades           = null,
 
-            this.Counters        = new APICounters();
+                            String?                        RemotePartyDBFileName     = null,
 
-            this.JSONFormatting  = Newtonsoft.Json.Formatting.None;
+                            Boolean?                       IsDevelopment             = null,
+                            IEnumerable<String>?           DevelopmentServers        = null,
+                            //Boolean?                       SkipURLTemplates          = false,
+                            String?                        DatabaseFileName          = "DefaultAssetsDBFileName",
+                            Boolean?                       DisableNotifications      = false,
 
-            base.HTTPLogger      = this.DisableLogging == false
-                                       ? new HTTP_Logger(this,
-                                                         LoggingPath,
-                                                         LoggingContext ?? DefaultLoggingContext,
-                                                         LogfileCreator)
-                                       : null;
+                            Boolean?                       DisableLogging            = null,
+                            String?                        LoggingContext            = null,
+                            String?                        LoggingPath               = null,
+                            String?                        LogfileName               = null,
+                            LogfileCreatorDelegate?        LogfileCreator            = null)
 
-            this.Logger          = this.DisableLogging == false
-                                       ? new EMPClientAPILogger(this,
-                                                                LoggingPath,
-                                                                LoggingContext ?? DefaultLoggingContext,
-                                                                LogfileCreator)
-                                       : null;
-
-            RegisterURLTemplates(false);
-
-        }
-
-        #endregion
-
-        #region EMPClientAPI(HTTPHostname, ...)
-
-        /// <summary>
-        /// Create a new EMP HTTP Client API.
-        /// </summary>
-        /// <param name="HTTPHostname">The HTTP hostname for all URLs within this API.</param>
-        /// <param name="ExternalDNSName">The official URL/DNS name of this service, e.g. for sending e-mails.</param>
-        /// <param name="HTTPServerPort">A TCP port to listen on.</param>
-        /// <param name="BasePath">When the API is served from an optional subdirectory path.</param>
-        /// <param name="HTTPServerName">The default HTTP server name, used whenever no HTTP Host-header has been given.</param>
-        /// 
-        /// <param name="URLPathPrefix">A common prefix for all URLs.</param>
-        /// <param name="HTTPServiceName">The name of the HTTP service.</param>
-        /// <param name="APIVersionHashes">The API version hashes (git commit hash values).</param>
-        /// 
-        /// <param name="ServerCertificateSelector">An optional delegate to select a TLS server certificate.</param>
-        /// <param name="ClientCertificateValidator">An optional delegate to verify the TLS client certificate used for authentication.</param>
-        /// <param name="ClientCertificateSelector">An optional delegate to select the TLS client certificate used for authentication.</param>
-        /// <param name="AllowedTLSProtocols">The TLS protocol(s) allowed for this connection.</param>
-        /// 
-        /// <param name="ServerThreadName">The optional name of the TCP server thread.</param>
-        /// <param name="ServerThreadPriority">The optional priority of the TCP server thread.</param>
-        /// <param name="ServerThreadIsBackground">Whether the TCP server thread is a background thread or not.</param>
-        /// <param name="ConnectionIdBuilder">An optional delegate to build a connection identification based on IP socket information.</param>
-        /// <param name="ConnectionTimeout">The TCP client timeout for all incoming client connections in seconds (default: 30 sec).</param>
-        /// <param name="MaxClientConnections">The maximum number of concurrent TCP client connections (default: 4096).</param>
-        /// 
-        /// <param name="DisableMaintenanceTasks">Disable all maintenance tasks.</param>
-        /// <param name="MaintenanceInitialDelay">The initial delay of the maintenance tasks.</param>
-        /// <param name="MaintenanceEvery">The maintenance interval.</param>
-        /// 
-        /// <param name="DisableWardenTasks">Disable all warden tasks.</param>
-        /// <param name="WardenInitialDelay">The initial delay of the warden tasks.</param>
-        /// <param name="WardenCheckEvery">The warden interval.</param>
-        /// 
-        /// <param name="IsDevelopment">This HTTP API runs in development mode.</param>
-        /// <param name="DevelopmentServers">An enumeration of server names which will imply to run this service in development mode.</param>
-        /// <param name="DisableLogging">Disable the log file.</param>
-        /// <param name="LoggingPath">The path for all logfiles.</param>
-        /// <param name="LoggingContext">The context of all logfiles.</param>
-        /// <param name="LogfileCreator">A delegate for creating the name of the logfile for this API.</param>
-        /// <param name="DNSClient">The DNS client of the API.</param>
-        /// <param name="AutoStart">Whether to start the API automatically.</param>
-        public EMPClientAPI(HTTPHostname?                                              HTTPHostname                 = null,
-                            String?                                                    ExternalDNSName              = null,
-                            IPPort?                                                    HTTPServerPort               = null,
-                            HTTPPath?                                                  BasePath                     = null,
-                            String                                                     HTTPServerName               = DefaultHTTPServerName,
-
-                            HTTPPath?                                                  URLPathPrefix                = null,
-                            String                                                     HTTPServiceName              = DefaultHTTPServiceName,
-                            Boolean                                                    RegisterRootService          = true,
-                            JObject?                                                   APIVersionHashes             = null,
-
-                            ServerCertificateSelectorDelegate?                         ServerCertificateSelector    = null,
-                            RemoteTLSClientCertificateValidationHandler<IHTTPServer>?  ClientCertificateValidator   = null,
-                            LocalCertificateSelectionHandler?                          ClientCertificateSelector    = null,
-                            SslProtocols?                                              AllowedTLSProtocols          = null,
-                            Boolean?                                                   ClientCertificateRequired    = null,
-                            Boolean?                                                   CheckCertificateRevocation   = null,
-
-                            ServerThreadNameCreatorDelegate?                           ServerThreadNameCreator      = null,
-                            ServerThreadPriorityDelegate?                              ServerThreadPrioritySetter   = null,
-                            Boolean?                                                   ServerThreadIsBackground     = null,
-                            ConnectionIdBuilder?                                       ConnectionIdBuilder          = null,
-                            TimeSpan?                                                  ConnectionTimeout            = null,
-                            UInt32?                                                    MaxClientConnections         = null,
-
-                            Boolean?                                                   DisableMaintenanceTasks      = false,
-                            TimeSpan?                                                  MaintenanceInitialDelay      = null,
-                            TimeSpan?                                                  MaintenanceEvery             = null,
-
-                            Boolean?                                                   DisableWardenTasks           = false,
-                            TimeSpan?                                                  WardenInitialDelay           = null,
-                            TimeSpan?                                                  WardenCheckEvery             = null,
-
-                            Boolean?                                                   IsDevelopment                = null,
-                            IEnumerable<String>?                                       DevelopmentServers           = null,
-                            Boolean                                                    DisableLogging               = false,
-                            String                                                     LoggingPath                  = DefaultHTTPAPI_LoggingPath,
-                            String                                                     LoggingContext               = DefaultLoggingContext,
-                            String                                                     LogfileName                  = DefaultHTTPAPI_LogfileName,
-                            LogfileCreatorDelegate?                                    LogfileCreator               = null,
-                            DNSClient?                                                 DNSClient                    = null,
-                            String?                                                    Description                  = null,
-                            Boolean                                                    AutoStart                    = false)
-
-            : base(HTTPHostname,
-                   ExternalDNSName,
-                   HTTPServerPort,
+            : base(Description ?? I18NString.Create("EMP Client API"),
+                   HTTPAPI,
+                   RootPath,
                    BasePath,
+
+                   ExternalDNSName,
                    HTTPServerName,
-
-                   URLPathPrefix,
                    HTTPServiceName,
-                   null, //HTMLTemplate,
+                   APIVersionHash,
                    APIVersionHashes,
-
-                   ServerCertificateSelector,
-                   ClientCertificateValidator,
-                   ClientCertificateSelector,
-                   AllowedTLSProtocols,
-                   ClientCertificateRequired,
-                   CheckCertificateRevocation,
-
-                   ServerThreadNameCreator,
-                   ServerThreadPrioritySetter,
-                   ServerThreadIsBackground,
-                   ConnectionIdBuilder,
-                   ConnectionTimeout,
-                   MaxClientConnections,
-
-                   DisableMaintenanceTasks,
-                   MaintenanceInitialDelay,
-                   MaintenanceEvery,
-
-                   DisableWardenTasks,
-                   WardenInitialDelay,
-                   WardenCheckEvery,
 
                    IsDevelopment,
                    DevelopmentServers,
                    DisableLogging,
                    LoggingPath,
                    LogfileName,
-                   LogfileCreator,
-                   DNSClient,
-                   Description,
-                   false) //AutoStart)
+                   LogfileCreator is not null
+                       ? (loggingPath, context, logfileName) => LogfileCreator(loggingPath, context, logfileName)
+                       : (loggingPath, context, logfileName) => String.Concat(
+                                                                    loggingPath + Path.DirectorySeparatorChar,
+                                                                 //   remoteParty is not null
+                                                                 //       ? remoteParty.Id.ToString() + Path.DirectorySeparatorChar
+                                                                 //       : null,
+                                                                    context is not null ? context + "_" : "",
+                                                                    logfileName, "_",
+                                                                    Timestamp.Now.Year, "-",
+                                                                    Timestamp.Now.Month.ToString("D2"),
+                                                                    ".log"
+                                                                ))
 
         {
 
-            this.URLPathPrefix   =  base.URLPathPrefix + (URLPathPrefix ?? HTTPPath.Root);
+            this.URLPathPrefix   = base.URLPathPrefix + URLPathPrefix;
 
             this.Counters        = new APICounters();
 
             this.JSONFormatting  = Newtonsoft.Json.Formatting.None;
 
-            base.HTTPLogger      = this.DisableLogging == false
-                                       ? new HTTP_Logger(this,
-                                                         LoggingPath,
-                                                         LoggingContext ?? DefaultLoggingContext,
-                                                         LogfileCreator)
-                                       : null;
+            //base.HTTPLogger      = this.DisableLogging == false
+            //                           ? new HTTP_Logger(this,
+            //                                             LoggingPath,
+            //                                             LoggingContext ?? DefaultLoggingContext,
+            //                                             LogfileCreator)
+            //                           : null;
 
             this.Logger          = this.DisableLogging == false
                                        ? new EMPClientAPILogger(this,
@@ -1506,14 +1503,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                 LogfileCreator)
                                        : null;
 
-            RegisterURLTemplates(RegisterRootService);
-
-            if (AutoStart)
-                Start();
+            RegisterURLTemplates(RegisterRootService: true);
 
         }
-
-        #endregion
 
         #endregion
 
@@ -1526,17 +1518,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             #region ~/ (HTTPRoot)
 
             if (RegisterRootService)
-                AddMethodCallback(HTTPHostname.Any,
+                HTTPBaseAPI.AddHandler(
                                   HTTPMethod.GET,
-                                  new HTTPPath[] {
-                                      URLPathPrefix + "/",
-                                      URLPathPrefix + "/{FileName}"
-                                  },
+                                  URLPathPrefix + "/",
                                   HTTPDelegate: Request => {
                                       return Task.FromResult(
                                           new HTTPResponse.Builder(Request) {
                                               HTTPStatusCode  = HTTPStatusCode.OK,
-                                              Server          = HTTPServer.DefaultServerName,
+                                              Server          = HTTPServerName,
                                               Date            = Timestamp.Now,
                                               ContentType     = HTTPContentType.Text.PLAIN,
                                               Content         = "This is an OICP v2.3 EMP Client HTTP/JSON endpoint!".ToUTF8Bytes(),
@@ -1554,7 +1543,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             // -----------------------------------------------------------------------------------------------------------------------------------
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/evsepull/v23/providers/DE-GDF/data-records
             // -----------------------------------------------------------------------------------------------------------------------------------
-            AddMethodCallback(HTTPHostname.Any,
+            HTTPBaseAPI.AddHandler(
                               HTTPMethod.POST,
                               URLPathPrefix + "/api/oicp/evsepull/v23/providers/{providerId}/data-records",
                               HTTPContentType.Application.JSON_UTF8,
@@ -1781,7 +1770,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                   return new HTTPResponse.Builder(Request) {
                                              HTTPStatusCode             = HTTPStatusCode.OK,
-                                             Server                     = HTTPServer.DefaultServerName,
+                                             Server                     = HTTPServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = [ "POST" ],
@@ -1815,7 +1804,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             // -------------------------------------------------------------------------------------------------------------------------------------
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/evsepull/v21/providers/DE-GDF/status-records
             // -------------------------------------------------------------------------------------------------------------------------------------
-            AddMethodCallback(HTTPHostname.Any,
+            HTTPBaseAPI.AddHandler(
                               HTTPMethod.POST,
                               URLPathPrefix + "/api/oicp/evsepull/v21/providers/{providerId}/status-records",
                               HTTPContentType.Application.JSON_UTF8,
@@ -2036,7 +2025,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                   return new HTTPResponse.Builder(Request) {
                                              HTTPStatusCode             = HTTPStatusCode.OK,
-                                             Server                     = HTTPServer.DefaultServerName,
+                                             Server                     = HTTPServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = [ "POST" ],
@@ -2062,7 +2051,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             // -------------------------------------------------------------------------------------------------------------------------------------------
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/evsepull/v21/providers/DE-GDF/status-records-by-id
             // -------------------------------------------------------------------------------------------------------------------------------------------
-            AddMethodCallback(HTTPHostname.Any,
+            HTTPBaseAPI.AddHandler(
                               HTTPMethod.POST,
                               URLPathPrefix + "/api/oicp/evsepull/v21/providers/{providerId}/status-records-by-id",
                               HTTPContentType.Application.JSON_UTF8,
@@ -2283,7 +2272,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                   return new HTTPResponse.Builder(Request) {
                                              HTTPStatusCode             = HTTPStatusCode.OK,
-                                             Server                     = HTTPServer.DefaultServerName,
+                                             Server                     = HTTPServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = [ "POST" ],
@@ -2308,7 +2297,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             // ----------------------------------------------------------------------------------------------------------------------------------------------------
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/evsepull/v21/providers/DE-GDF/status-records-by-operator-id
             // ----------------------------------------------------------------------------------------------------------------------------------------------------
-            AddMethodCallback(HTTPHostname.Any,
+            HTTPBaseAPI.AddHandler(
                               HTTPMethod.POST,
                               URLPathPrefix + "/api/oicp/evsepull/v21/providers/{providerId}/status-records-by-operator-id",
                               HTTPContentType.Application.JSON_UTF8,
@@ -2529,7 +2518,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                   return new HTTPResponse.Builder(Request) {
                                              HTTPStatusCode             = HTTPStatusCode.OK,
-                                             Server                     = HTTPServer.DefaultServerName,
+                                             Server                     = HTTPServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = [ "POST" ],
@@ -2556,7 +2545,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             // ---------------------------------------------------------------------------------------------------------------------------------------------
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/dynamicpricing/v10/providers/DE-GDF/pricing-products
             // ---------------------------------------------------------------------------------------------------------------------------------------------
-            AddMethodCallback(HTTPHostname.Any,
+            HTTPBaseAPI.AddHandler(
                               HTTPMethod.POST,
                               URLPathPrefix + "/api/oicp/dynamicpricing/v10/providers/{providerId}/pricing-products",
                               HTTPContentType.Application.JSON_UTF8,
@@ -2783,7 +2772,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                   return new HTTPResponse.Builder(Request) {
                                              HTTPStatusCode             = HTTPStatusCode.OK,
-                                             Server                     = HTTPServer.DefaultServerName,
+                                             Server                     = HTTPServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = [ "POST" ],
@@ -2809,7 +2798,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             // -----------------------------------------------------------------------------------------------------------------------------------------
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/dynamicpricing/v10/providers/DE-GDF/evse-pricing
             // -----------------------------------------------------------------------------------------------------------------------------------------
-            AddMethodCallback(HTTPHostname.Any,
+            HTTPBaseAPI.AddHandler(
                               HTTPMethod.POST,
                               URLPathPrefix + "/api/oicp/dynamicpricing/v10/providers/{providerId}/evse-pricing",
                               HTTPContentType.Application.JSON_UTF8,
@@ -3036,7 +3025,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                   return new HTTPResponse.Builder(Request) {
                                              HTTPStatusCode             = HTTPStatusCode.OK,
-                                             Server                     = HTTPServer.DefaultServerName,
+                                             Server                     = HTTPServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = [ "POST" ],
@@ -3063,7 +3052,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             // -----------------------------------------------------------------------------------------------------------------------------------
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/evsepull/v23/providers/DE-GDF/push-request
             // -----------------------------------------------------------------------------------------------------------------------------------
-            AddMethodCallback(HTTPHostname.Any,
+            HTTPBaseAPI.AddHandler(
                               HTTPMethod.POST,
                               URLPathPrefix + "/api/oicp/authdata/v21/providers/{providerId}/push-request",
                               HTTPContentType.Application.JSON_UTF8,
@@ -3273,7 +3262,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                   return new HTTPResponse.Builder(Request) {
                                              HTTPStatusCode             = HTTPStatusCode.OK,
-                                             Server                     = HTTPServer.DefaultServerName,
+                                             Server                     = HTTPServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = [ "POST" ],
@@ -3298,7 +3287,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             // ---------------------------------------------------------------------------------------------------------------------------------------------------------
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/charging/v21/providers/DE-GDF/authorize-remote-reservation/start
             // ---------------------------------------------------------------------------------------------------------------------------------------------------------
-            AddMethodCallback(HTTPHostname.Any,
+            HTTPBaseAPI.AddHandler(
                               HTTPMethod.POST,
                               URLPathPrefix + "/api/oicp/charging/v21/providers/{providerId}/authorize-remote-reservation/start",
                               HTTPContentType.Application.JSON_UTF8,
@@ -3511,7 +3500,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                   return new HTTPResponse.Builder(Request) {
                                              HTTPStatusCode             = HTTPStatusCode.OK,
-                                             Server                     = HTTPServer.DefaultServerName,
+                                             Server                     = HTTPServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = [ "POST" ],
@@ -3535,7 +3524,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             // --------------------------------------------------------------------------------------------------------------------------------------------------------
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/charging/v21/providers/DE-GDF/authorize-remote-reservation/stop
             // --------------------------------------------------------------------------------------------------------------------------------------------------------
-            AddMethodCallback(HTTPHostname.Any,
+            HTTPBaseAPI.AddHandler(
                               HTTPMethod.POST,
                               URLPathPrefix + "/api/oicp/charging/v21/providers/{providerId}/authorize-remote-reservation/stop",
                               HTTPContentType.Application.JSON_UTF8,
@@ -3748,7 +3737,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                   return new HTTPResponse.Builder(Request) {
                                              HTTPStatusCode             = HTTPStatusCode.OK,
-                                             Server                     = HTTPServer.DefaultServerName,
+                                             Server                     = HTTPServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = [ "POST" ],
@@ -3772,7 +3761,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             // ---------------------------------------------------------------------------------------------------------------------------------------------------------
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/charging/v21/providers/DE-GDF/authorize-remote/start
             // ---------------------------------------------------------------------------------------------------------------------------------------------------------
-            AddMethodCallback(HTTPHostname.Any,
+            HTTPBaseAPI.AddHandler(
                               HTTPMethod.POST,
                               URLPathPrefix + "/api/oicp/charging/v21/providers/{providerId}/authorize-remote/start",
                               HTTPContentType.Application.JSON_UTF8,
@@ -3985,7 +3974,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                   return new HTTPResponse.Builder(Request) {
                                              HTTPStatusCode             = HTTPStatusCode.OK,
-                                             Server                     = HTTPServer.DefaultServerName,
+                                             Server                     = HTTPServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = [ "POST" ],
@@ -4009,7 +3998,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             // --------------------------------------------------------------------------------------------------------------------------------------------------------
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/charging/v21/providers/DE-GDF/authorize-remote/stop
             // --------------------------------------------------------------------------------------------------------------------------------------------------------
-            AddMethodCallback(HTTPHostname.Any,
+            HTTPBaseAPI.AddHandler(
                               HTTPMethod.POST,
                               URLPathPrefix + "/api/oicp/charging/v21/providers/{providerId}/authorize-remote/stop",
                               HTTPContentType.Application.JSON_UTF8,
@@ -4222,7 +4211,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                   return new HTTPResponse.Builder(Request) {
                                              HTTPStatusCode             = HTTPStatusCode.OK,
-                                             Server                     = HTTPServer.DefaultServerName,
+                                             Server                     = HTTPServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = [ "POST" ],
@@ -4247,7 +4236,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             // -------------------------------------------------------------------------------------------------------------------------------------------------------
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/cdrmgmt/v22/providers/DE-GDF/get-charge-detail-records-request
             // -------------------------------------------------------------------------------------------------------------------------------------------------------
-            AddMethodCallback(HTTPHostname.Any,
+            HTTPBaseAPI.AddHandler(
                               HTTPMethod.POST,
                               URLPathPrefix + "/api/oicp/cdrmgmt/v22/providers/{providerId}/get-charge-detail-records-request",
                               HTTPContentType.Application.JSON_UTF8,
@@ -4474,7 +4463,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                   return new HTTPResponse.Builder(Request) {
                                              HTTPStatusCode             = HTTPStatusCode.OK,
-                                             Server                     = HTTPServer.DefaultServerName,
+                                             Server                     = HTTPServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = [ "POST" ],
@@ -4502,16 +4491,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #endregion
 
-
-        #region Dispose()
-
-        /// <summary>
-        /// Dispose this object.
-        /// </summary>
-        public override void Dispose()
-        { }
-
-        #endregion
 
     }
 
