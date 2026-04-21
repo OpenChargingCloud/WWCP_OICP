@@ -25,10 +25,10 @@ using Newtonsoft.Json.Linq;
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
+using org.GraphDefined.Vanaheimr.Hermod.TCP;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
-using org.GraphDefined.Vanaheimr.Hermod.Logging;
 using org.GraphDefined.Vanaheimr.Hermod.Sockets;
-using org.GraphDefined.Vanaheimr.Hermod.Sockets.TCP;
+using org.GraphDefined.Vanaheimr.Hermod.Logging;
 
 #endregion
 
@@ -1527,58 +1527,58 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         public static async Task<CPOServerAPI>
 
-            CreateServer(IIPAddress?                                               IPAddress                    = null,
-                         IPPort?                                                   HTTPServerPort               = null,
-                         HTTPHostname?                                             HTTPHostname                 = null,
+            CreateServer(IIPAddress?                                                    IPAddress                    = null,
+                         IPPort?                                                        HTTPServerPort               = null,
+                         HTTPHostname?                                                  HTTPHostname                 = null,
 
-                         String?                                                   ExternalDNSName              = null,
-                         HTTPPath?                                                 BasePath                     = null,
+                         String?                                                        ExternalDNSName              = null,
+                         HTTPPath?                                                      BasePath                     = null,
 
-                         String?                                                   HTTPServerName               = DefaultHTTPServerName,
-                         String?                                                   HTTPServiceName              = DefaultHTTPServiceName,
-                         String?                                                   APIVersionHash               = null,
-                         JObject?                                                  APIVersionHashes             = null,
+                         String?                                                        HTTPServerName               = DefaultHTTPServerName,
+                         String?                                                        HTTPServiceName              = DefaultHTTPServiceName,
+                         String?                                                        APIVersionHash               = null,
+                         JObject?                                                       APIVersionHashes             = null,
 
-                         ServerCertificateSelectorDelegate?                        ServerCertificateSelector    = null,
-                         RemoteTLSClientCertificateValidationHandler<ITCPServer>?  ClientCertificateValidator   = null,
-                         LocalCertificateSelectionHandler?                         LocalCertificateSelector     = null,
-                         SslProtocols?                                             AllowedTLSProtocols          = null,
-                         Boolean?                                                  ClientCertificateRequired    = null,
-                         Boolean?                                                  CheckCertificateRevocation   = null,
+                         ServerCertificateSelectorDelegate?                             ServerCertificateSelector    = null,
+                         RemoteTLSClientCertificateValidationHandler<HTTPTestServerX>?  ClientCertificateValidator   = null,
+                         LocalCertificateSelectionHandler?                              LocalCertificateSelector     = null,
+                         SslProtocols?                                                  AllowedTLSProtocols          = null,
+                         Boolean?                                                       ClientCertificateRequired    = null,
+                         Boolean?                                                       CheckCertificateRevocation   = null,
 
-                         ConnectionIdBuilder?                                      ConnectionIdBuilder          = null,
-                         TimeSpan?                                                 ConnectionTimeout            = null,
-                         UInt32?                                                   MaxClientConnections         = null,
+                         ConnectionIdBuilder?                                           ConnectionIdBuilder          = null,
+                         TimeSpan?                                                      ConnectionTimeout            = null,
+                         UInt32?                                                        MaxClientConnections         = null,
 
-                         Boolean?                                                  DisableMaintenanceTasks      = false,
-                         TimeSpan?                                                 MaintenanceInitialDelay      = null,
-                         TimeSpan?                                                 MaintenanceEvery             = null,
+                         Boolean?                                                       DisableMaintenanceTasks      = false,
+                         TimeSpan?                                                      MaintenanceInitialDelay      = null,
+                         TimeSpan?                                                      MaintenanceEvery             = null,
 
-                         Boolean?                                                  DisableWardenTasks           = false,
-                         TimeSpan?                                                 WardenInitialDelay           = null,
-                         TimeSpan?                                                 WardenCheckEvery             = null,
+                         Boolean?                                                       DisableWardenTasks           = false,
+                         TimeSpan?                                                      WardenInitialDelay           = null,
+                         TimeSpan?                                                      WardenCheckEvery             = null,
 
-                         ServiceCheckKeys?                                         ServiceCheckKeys             = null,
+                         ServiceCheckKeys?                                              ServiceCheckKeys             = null,
 
-                         Boolean?                                                  IsDevelopment                = null,
-                         IEnumerable<String>?                                      DevelopmentServers           = null,
-                         Boolean                                                   DisableLogging               = false,
-                         String                                                    LoggingPath                  = DefaultHTTPAPI_LoggingPath,
-                         String                                                    LoggingContext               = DefaultLoggingContext,
-                         String                                                    LogfileName                  = DefaultHTTPAPI_LogfileName,
-                         LogfileCreatorDelegate?                                   LogfileCreator               = null,
-                         IDNSClient?                                               DNSClient                    = null,
-                         Boolean                                                   AutoStart                    = false,
+                         Boolean?                                                       IsDevelopment                = null,
+                         IEnumerable<String>?                                           DevelopmentServers           = null,
+                         Boolean                                                        DisableLogging               = false,
+                         String                                                         LoggingPath                  = DefaultHTTPAPI_LoggingPath,
+                         String                                                         LoggingContext               = DefaultLoggingContext,
+                         String                                                         LogfileName                  = DefaultHTTPAPI_LogfileName,
+                         LogfileCreatorDelegate?                                        LogfileCreator               = null,
+                         IDNSClient?                                                    DNSClient                    = null,
+                         Boolean                                                        AutoStart                    = false,
 
-                         IEnumerable<HTTPHostname>?                                Hostnames                    = null,
-                         HTTPPath?                                                 RootPath                     = null,
-                         IEnumerable<HTTPContentType>?                             HTTPContentTypes             = null,
-                         I18NString?                                               Description                  = null,
+                         IEnumerable<HTTPHostname>?                                     Hostnames                    = null,
+                         HTTPPath?                                                      RootPath                     = null,
+                         IEnumerable<HTTPContentType>?                                  HTTPContentTypes             = null,
+                         I18NString?                                                    Description                  = null,
 
-                         Boolean                                                   RegisterRootService          = true,
-                         HTTPPath?                                                 URLPathPrefix                = null,
-                         Formatting?                                               JSONFormatting               = null,
-                         ConnectionType?                                           Connection                   = null)
+                         Boolean                                                        RegisterRootService          = true,
+                         HTTPPath?                                                      URLPathPrefix                = null,
+                         Formatting?                                                    JSONFormatting               = null,
+                         ConnectionType?                                                Connection                   = null)
 
         {
 
@@ -1593,7 +1593,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                               LoggingHandler:               null,
 
                               ServerCertificateSelector:    ServerCertificateSelector,
-                              ClientCertificateValidator:   ClientCertificateValidator,
+                              ClientCertificateValidator:   ClientCertificateValidator is not null
+                                                                ? (sender,
+                                                                   certificate,
+                                                                   certificateChain,
+                                                                   tlsServer,
+                                                                   policyErrors) => ClientCertificateValidator.Invoke(
+                                                                                        sender,
+                                                                                        certificate,
+                                                                                        certificateChain,
+                                                                                        tlsServer, //tlsServer as CPOServerAPI,
+                                                                                        policyErrors
+                                                                                    )
+                                                                : null,
                               LocalCertificateSelector:     LocalCertificateSelector,
                               AllowedTLSProtocols:          AllowedTLSProtocols,
                               ClientCertificateRequired:    ClientCertificateRequired,
