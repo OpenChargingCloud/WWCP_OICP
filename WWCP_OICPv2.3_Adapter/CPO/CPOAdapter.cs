@@ -3378,18 +3378,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             TimeSpan               runtime;
             WWCP.AuthStartResult?  authStartResult   = null;
 
-            var operatorId      = (ChargingLocation?.ChargingStationOperatorId ?? DefaultOperator.Id).ToOICP(DefaultOperatorIdFormat);
-            var evseId          =  ChargingLocation?.EVSEId?.                                         ToOICP(CustomEVSEIdConverter);
-            var identification  =  LocalAuthentication.                                               ToOICP();
+            //var operatorId      = (ChargingLocation?.ChargingStationOperatorId ?? DefaultOperator.Id).ToOICP(DefaultOperatorIdFormat);
+            // The OICP operator is always the default operator owning the Hubject account!
+            var operatorId      =  DefaultOperator.Id.       ToOICP(DefaultOperatorIdFormat);
+            var evseId          =  ChargingLocation?.EVSEId?.ToOICP(CustomEVSEIdConverter);
+            var identification  =  LocalAuthentication.      ToOICP();
 
             if (!operatorId.HasValue)
             {
                 endtime          = Timestamp.Now;
                 runtime          = endtime - startTime;
-                authStartResult  = WWCP.AuthStartResult.AdminDown(Id,
-                                                                  this,
-                                                                  SessionId:  SessionId,
-                                                                  Runtime:    runtime);
+                authStartResult  = WWCP.AuthStartResult.AdminDown(
+                                       Id,
+                                       this,
+                                       SessionId:  SessionId,
+                                       Runtime:    runtime
+                                   );
             }
 
             // An optional EVSE Id is given, but it is invalid!
@@ -3633,10 +3637,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             TimeSpan              runtime;
             WWCP.AuthStopResult?  authStopResult   = null;
 
-            var operatorId      = (ChargingLocation?.ChargingStationOperatorId ?? DefaultOperator.Id).ToOICP(DefaultOperatorIdFormat);
-            var sessionId       = SessionId.                                                          ToOICP();
-            var evseId          = ChargingLocation?.EVSEId?.                                          ToOICP(CustomEVSEIdConverter);
-            var identification  = LocalAuthentication.                                                ToOICP();
+            //var operatorId      = (ChargingLocation?.ChargingStationOperatorId ?? DefaultOperator.Id).ToOICP(DefaultOperatorIdFormat);
+            // The OICP operator is always the default operator owning the Hubject account!
+            var operatorId      = DefaultOperator.Id.       ToOICP(DefaultOperatorIdFormat);
+            var sessionId       = SessionId.                ToOICP();
+            var evseId          = ChargingLocation?.EVSEId?.ToOICP(CustomEVSEIdConverter);
+            var identification  = LocalAuthentication.      ToOICP();
 
             if (!operatorId.HasValue)
             {
