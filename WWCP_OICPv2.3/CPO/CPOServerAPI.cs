@@ -1663,6 +1663,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                           );
 
+            if (AutoStart)
+                await server.Start().
+                             ConfigureAwait(false);
+
             return api;
 
         }
