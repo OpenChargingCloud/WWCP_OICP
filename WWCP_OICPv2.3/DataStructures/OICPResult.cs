@@ -53,7 +53,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
     /// <typeparam name="T">The type of the result.</typeparam>
     public class OICPResult<T>
         where T : IResponse
-
     {
 
         #region Properties
@@ -132,7 +131,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
-        #region Success   (Request, Result, ProcessId = null)
+        #region Success    (Request, Result, ProcessId = null)
 
         /// <summary>
         /// The request succeed.
@@ -152,7 +151,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region Failed    (Request, Result, ProcessId = null)
+        #region Failed     (Request, Result, ProcessId = null)
 
         /// <summary>
         /// The request failed.
@@ -172,7 +171,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region Canceled  (Request, Result, ProcessId = null)
+        #region Canceled   (Request, Result, ProcessId = null)
 
         /// <summary>
         /// The request failed.
@@ -192,7 +191,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region BadRequest(Request, ValidationErrors = null, ProcessId = null)
+        #region BadRequest (Request, ValidationErrors = null, ProcessId = null)
 
         /// <summary>
         /// The request had some data validation errors.

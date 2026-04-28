@@ -4654,47 +4654,38 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                               ).ConfigureAwait(false);
 
                         if (response.IsSuccess())
-                        {
+                            result = response.Response?.Result == true
 
-                            if (response.Response?.Result == true)
-                            {
+                                         ? WWCP.SendCDRResult.Success(
+                                               Timestamp.Now,
+                                               Id,
+                                               wwcpCDR,
+                                               Runtime: response.Response.Runtime
+                                           )
 
-                                result = WWCP.SendCDRResult.Success(
-                                             Timestamp.Now,
-                                             Id,
-                                             wwcpCDR,
-                                             Runtime: response.Response.Runtime
-                                         );
-
-                            }
-
-                            else
-                            {
-
-                                result = WWCP.SendCDRResult.Error(
-                                             Timestamp.Now,
-                                             Id,
-                                             wwcpCDR,
-                                             //I18NString.Create(response.HTTPBodyAsUTF8String),
-                                             Runtime: response.Response?.Runtime
-                                         );
-
-                            }
-
-                        }
+                                         : WWCP.SendCDRResult.Error(
+                                               Timestamp.Now,
+                                               Id,
+                                               wwcpCDR,
+                                               response.ValidationErrors is not null
+                                                   ? I18NString.Create(response.ValidationErrors.Message)
+                                                   : null,
+                                               Runtime: response.Response?.Runtime
+                                           );
 
                         else
                             result = WWCP.SendCDRResult.Error(
                                          Timestamp.Now,
                                          Id,
                                          wwcpCDR,
-                                         //I18NString.Create(response.HTTPBodyAsUTF8String),
+                                         response.ValidationErrors is not null
+                                             ? I18NString.Create(response.ValidationErrors.Message)
+                                             : null,
                                          Runtime: response.Response?.Runtime
                                      );
 
                     }
                     else
-                    {
                         result = WWCP.SendCDRResult.Error(
                                      Timestamp.Now,
                                      Id,
@@ -4702,8 +4693,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                      Warnings: Warnings.Create($"The DefaultOperatorId '{DefaultOperator.Id}' can not be converted to OICP!"),
                                      Runtime:  TimeSpan.Zero
                                  );
-
-                    }
 
                 }
                 catch (Exception e)
