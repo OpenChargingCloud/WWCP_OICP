@@ -4667,22 +4667,38 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                Timestamp.Now,
                                                Id,
                                                wwcpCDR,
-                                               response.ValidationErrors is not null
-                                                   ? I18NString.Create(response.ValidationErrors.Message)
+                                               response.Response?.StatusCode.Description is not null
+                                                   ? I18NString.Create(response.Response.StatusCode.Description)
                                                    : null,
                                                Runtime: response.Response?.Runtime
                                            );
 
                         else
-                            result = WWCP.SendCDRResult.Error(
-                                         Timestamp.Now,
-                                         Id,
-                                         wwcpCDR,
-                                         response.ValidationErrors is not null
-                                             ? I18NString.Create(response.ValidationErrors.Message)
-                                             : null,
-                                         Runtime: response.Response?.Runtime
-                                     );
+                        {
+
+                            if (response.Response?.StatusCode.Code == StatusCodes.SessionIsInvalid)
+                                result = WWCP.SendCDRResult.InvalidSessionId(
+                                             Timestamp.Now,
+                                             Id,
+                                             wwcpCDR,
+                                             response.Response?.StatusCode.Description is not null
+                                                 ? I18NString.Create(response.Response.StatusCode.Description)
+                                                 : null,
+                                             Runtime: response.Response?.Runtime
+                                         );
+
+                            else
+                                result = WWCP.SendCDRResult.Error(
+                                             Timestamp.Now,
+                                             Id,
+                                             wwcpCDR,
+                                             response.Response?.StatusCode.Description is not null
+                                                 ? I18NString.Create(response.Response.StatusCode.Description)
+                                                 : null,
+                                             Runtime: response.Response?.Runtime
+                                         );
+
+                        }
 
                     }
                     else
