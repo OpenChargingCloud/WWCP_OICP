@@ -17,7 +17,9 @@
 
 #region Usings
 
+using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.Runtime.CompilerServices;
 
 using Newtonsoft.Json.Linq;
 
@@ -27,8 +29,6 @@ using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.Logging;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
 
 #endregion
 
@@ -133,6 +133,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// An optional default charging station operator.
         /// </summary>
         public WWCP.IChargingStationOperator                       DefaultOperator                                  { get; }
+
+        public Operator_Id                                         DefaultOICPOperatorId                            { get; }
+
 
         public WWCP.OperatorIdFormats                              DefaultOperatorIdFormat                          { get; }
 
@@ -368,12 +371,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             this.DefaultOperator                                = DefaultOperator ?? throw new ArgumentNullException(nameof(DefaultOperator),  "The given charging station operator must not be null!");
             this.DefaultOperatorIdFormat                        = DefaultOperatorIdFormat;
             this.OperatorNameSelector                           = OperatorNameSelector;
-            DefaultOperatorName = (this.OperatorNameSelector is not null
+            DefaultOperatorName                                 = (this.OperatorNameSelector is not null
                                                                        ? this.OperatorNameSelector  (DefaultOperator.Name)
                                                                        : DefaultOperatorNameSelector(DefaultOperator.Name)).Trim();
 
+
             if (DefaultOperatorName.IsNullOrEmpty())
                 throw new ArgumentNullException(nameof(DefaultOperator), "The given default charging station operator name must not be null!");
+
+
+            // The OICP operator is always the default operator owning the Hubject account!
+            var defaultOICPOperatorId = DefaultOperator.Id.ToOICP(DefaultOperatorIdFormat);
+
+            if (!defaultOICPOperatorId.HasValue)
+                throw new ArgumentNullException(nameof(DefaultOperator),  "The given charging station operator could not be converted into a valid OICP operator identification!");
+            else
+                this.DefaultOICPOperatorId = defaultOICPOperatorId.Value;
 
 
             // Link incoming OICP events...
@@ -1034,7 +1047,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="EVSEs">An enumeration of EVSEs.</param>
         /// <param name="ServerAction">The server-side data management operation.</param>
         /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="RequestTimestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         /// <param name="CancellationToken">A cancellation token to cancel the operation.</param>
@@ -1058,10 +1071,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             RequestTimeout   ??= CPOClient?.RequestTimeout;
 
             PushEVSEDataRecordResult? result = null;
-
-            var defaultOperatorId = DefaultOperator.Id.ToOICP(DefaultOperatorIdFormat);
-            if (!defaultOperatorId.HasValue)
-                throw new ArgumentException($"The default OperatorId '{DefaultOperator.Id}' could not be converted to OICP!");
 
             if (DefaultOperatorName.IsNullOrEmpty())
                 throw new ArgumentException($"The default OperatorName must not be null or empty!");
@@ -1154,7 +1163,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                          new PushEVSEDataRequest(
                                              new OperatorEVSEData(
                                                  evseDataRecords,
-                                                 defaultOperatorId.Value,
+                                                 DefaultOICPOperatorId,
                                                  DefaultOperatorName
                                              ),
                                              ServerAction,
@@ -1256,7 +1265,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                              new PushEVSEDataRequest(
                                                                  new OperatorEVSEData(
                                                                      fullLoadEVSEs,
-                                                                     defaultOperatorId.Value,
+                                                                     DefaultOICPOperatorId,
                                                                      DefaultOperatorName
                                                                  ),
                                                                  ActionTypes.FullLoad,
@@ -1397,7 +1406,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="EVSEStatusUpdates">An enumeration of EVSE status updates.</param>
         /// <param name="ServerAction">The server-side data management operation.</param>
         /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="RequestTimestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         /// <param name="CancellationToken">A cancellation token to cancel the operation.</param>
@@ -1421,10 +1430,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             RequestTimeout   ??= CPOClient?.RequestTimeout;
 
             WWCP.PushEVSEStatusResult? result = null;
-
-            var defaultOperatorId = DefaultOperator.Id.ToOICP(DefaultOperatorIdFormat);
-            if (!defaultOperatorId.HasValue)
-                throw new ArgumentException($"The default OperatorId '{DefaultOperator.Id}' could not be converted to OICP!");
 
             if (DefaultOperatorName.IsNullOrEmpty())
                 throw new ArgumentException($"The default OperatorName must not be null or empty!");
@@ -1510,7 +1515,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                          new PushEVSEStatusRequest(
                                              new OperatorEVSEStatus(
                                                  evseStatusRecords,
-                                                 defaultOperatorId.Value,
+                                                 DefaultOICPOperatorId,
                                                  DefaultOperatorName
                                              ),
                                              ServerAction,
@@ -1624,7 +1629,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="EVSE">An EVSE to upload.</param>
         /// <param name="TransmissionType">Whether to send the EVSE directly or enqueue it for a while.</param>
         /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="RequestTimestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         /// <param name="CancellationToken">A cancellation token to cancel the operation.</param>
@@ -1734,7 +1739,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="EVSE">An EVSE to upload.</param>
         /// <param name="TransmissionType">Whether to send the EVSE directly or enqueue it for a while.</param>
         /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="RequestTimestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         /// <param name="CancellationToken">A cancellation token to cancel the operation.</param>
@@ -1844,7 +1849,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="EVSE">An EVSE to upload.</param>
         /// <param name="TransmissionType">Whether to send the EVSE directly or enqueue it for a while.</param>
         /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="RequestTimestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         /// <param name="CancellationToken">A cancellation token to cancel the operation.</param>
@@ -1959,7 +1964,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="DataSource">An optional data source or context for the EVSE property update.</param>
         /// <param name="TransmissionType">Whether to send the charging pool update directly or enqueue it for a while.</param>
         /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="RequestTimestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">A cancellation token to cancel the operation.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
@@ -2088,7 +2093,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="EVSE">An EVSE to delete.</param>
         /// <param name="TransmissionType">Whether to send the EVSE deletion directly or enqueue it for a while.</param>
         /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="RequestTimestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         /// <param name="CancellationToken">A cancellation token to cancel the operation.</param>
@@ -2198,7 +2203,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="EVSEs">An enumeration of EVSEs to add.</param>
         /// <param name="TransmissionType">Whether to send the EVSE directly or enqueue it for a while.</param>
         /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="RequestTimestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         /// <param name="CancellationToken">A cancellation token to cancel the operation.</param>
@@ -2359,7 +2364,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="EVSEs">An enumeration of EVSEs to add, if they do not already exist.</param>
         /// <param name="TransmissionType">Whether to send the EVSE directly or enqueue it for a while.</param>
         /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="RequestTimestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         /// <param name="CancellationToken">A cancellation token to cancel the operation.</param>
@@ -2520,7 +2525,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="EVSEs">An enumeration of EVSEs to add or update.</param>
         /// <param name="TransmissionType">Whether to send the EVSE directly or enqueue it for a while.</param>
         /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="RequestTimestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         /// <param name="CancellationToken">A cancellation token to cancel the operation.</param>
@@ -2681,7 +2686,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="EVSEs">An enumeration of EVSEs to update.</param>
         /// <param name="TransmissionType">Whether to send the EVSE directly or enqueue it for a while.</param>
         /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="RequestTimestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         /// <param name="CancellationToken">A cancellation token to cancel the operation.</param>
@@ -2842,7 +2847,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="EVSEs">An enumeration of EVSEs to replace.</param>
         /// <param name="TransmissionType">Whether to send the EVSE directly or enqueue it for a while.</param>
         /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="RequestTimestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         /// <param name="CancellationToken">A cancellation token to cancel the operation.</param>
@@ -3003,7 +3008,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="EVSEs">An enumeration of EVSEs.</param>
         /// <param name="TransmissionType">Whether to send the EVSE directly or enqueue it for a while.</param>
         /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="RequestTimestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         /// <param name="CancellationToken">A cancellation token to cancel the operation.</param>
@@ -3165,7 +3170,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="EVSEStatusUpdates">An enumeration of EVSE status updates.</param>
         /// <param name="TransmissionType">Whether to send the EVSE status updates directly or enqueue it for a while.</param>
         /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="RequestTimestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         /// <param name="CancellationToken">A cancellation token to cancel the operation.</param>
@@ -3300,7 +3305,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         // PushEVSEPricing
 
 
-        #region AuthorizeStart(           LocalAuthentication, ChargingLocation = null, ChargingProduct = null, SessionId = null, OperatorId = null, ...)
+        #region AuthorizeStart(           LocalAuthentication, ChargingLocation = null, ChargingProduct = null, SessionId = null, ...)
 
         /// <summary>
         /// Create an authorize start request at the given charging location.
@@ -3310,26 +3315,24 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="ChargingProduct">An optional charging product.</param>
         /// <param name="SessionId">An optional session identification.</param>
         /// <param name="CPOPartnerSessionId">An optional session identification of the CPO.</param>
-        /// <param name="OperatorId">An optional charging station operator identification.</param>
         /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="RequestTimestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         /// <param name="CancellationToken">A cancellation token to cancel the operation.</param>
         public async Task<WWCP.AuthStartResult>
 
-            AuthorizeStart(WWCP.LocalAuthentication          LocalAuthentication,
-                           WWCP.ChargingLocation?            ChargingLocation      = null,
-                           WWCP.ChargingProduct?             ChargingProduct       = null,   // [maxlength: 100]
-                           WWCP.ChargingSession_Id?          SessionId             = null,
-                           WWCP.ChargingSession_Id?          CPOPartnerSessionId   = null,
-                           //WWCP.ChargingStationOperator_Id?  OperatorId            = null,
-                           WWCP.EMobilityProvider_Id?        EMobilityProviderId   = null,
+            AuthorizeStart(WWCP.LocalAuthentication    LocalAuthentication,
+                           WWCP.ChargingLocation?      ChargingLocation      = null,
+                           WWCP.ChargingProduct?       ChargingProduct       = null,   // [maxlength: 100]
+                           WWCP.ChargingSession_Id?    SessionId             = null,
+                           WWCP.ChargingSession_Id?    CPOPartnerSessionId   = null,
+                           WWCP.EMobilityProvider_Id?  EMobilityProviderId   = null,
 
-                           DateTimeOffset?                   RequestTimestamp      = null,
-                           EventTracking_Id?                 EventTrackingId       = null,
-                           TimeSpan?                         RequestTimeout        = null,
-                           CancellationToken                 CancellationToken     = default)
+                           DateTimeOffset?             RequestTimestamp      = null,
+                           EventTracking_Id?           EventTrackingId       = null,
+                           TimeSpan?                   RequestTimeout        = null,
+                           CancellationToken           CancellationToken     = default)
 
         {
 
@@ -3375,61 +3378,42 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
 
             DateTimeOffset         endtime;
-            TimeSpan               runtime;
             WWCP.AuthStartResult?  authStartResult   = null;
 
-            //var operatorId      = (ChargingLocation?.ChargingStationOperatorId ?? DefaultOperator.Id).ToOICP(DefaultOperatorIdFormat);
-            // The OICP operator is always the default operator owning the Hubject account!
-            var operatorId      =  DefaultOperator.Id.       ToOICP(DefaultOperatorIdFormat);
-            var evseId          =  ChargingLocation?.EVSEId?.ToOICP(CustomEVSEIdConverter);
-            var identification  =  LocalAuthentication.      ToOICP();
-
-            if (!operatorId.HasValue)
-            {
-                endtime          = Timestamp.Now;
-                runtime          = endtime - startTime;
-                authStartResult  = WWCP.AuthStartResult.AdminDown(
-                                       Id,
-                                       this,
-                                       SessionId:  SessionId,
-                                       Runtime:    runtime
-                                   );
-            }
+            var evseId           =  ChargingLocation?.EVSEId?.ToOICP(CustomEVSEIdConverter);
+            var identification   =  LocalAuthentication.      ToOICP();
 
             // An optional EVSE Id is given, but it is invalid!
-            else if (ChargingLocation?.EVSEId.HasValue == true && !evseId.HasValue)
+            if (ChargingLocation?.EVSEId.HasValue == true && !evseId.HasValue)
             {
                 endtime          = Timestamp.Now;
-                runtime          = endtime - startTime;
                 authStartResult  = WWCP.AuthStartResult.UnknownLocation(
                                        Id,
                                        this,
                                        SessionId:  SessionId,
-                                       Runtime:    runtime
+                                       Runtime:    stopwatch.Elapsed
                                    );
             }
 
             else if (identification?.RFIDId is null && identification?.RFIDIdentification is null)
             {
                 endtime          = Timestamp.Now;
-                runtime          = endtime - startTime;
                 authStartResult  = WWCP.AuthStartResult.InvalidToken(
                                        Id,
                                        this,
                                        SessionId:  SessionId,
-                                       Runtime:    runtime
+                                       Runtime:    stopwatch.Elapsed
                                    );
             }
 
             else if (DisableAuthorization)
             {
                 endtime          = Timestamp.Now;
-                runtime          = endtime - startTime;
                 authStartResult  = WWCP.AuthStartResult.AdminDown(
                                        Id,
                                        this,
                                        SessionId:  SessionId,
-                                       Runtime:    runtime
+                                       Runtime:    stopwatch.Elapsed
                                    );
             }
 
@@ -3438,7 +3422,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                 var response  = await CPORoaming.AuthorizeStart(
                                           new AuthorizeStartRequest(
-                                              operatorId.Value,
+                                              DefaultOICPOperatorId,
                                               identification,
                                               evseId,
                                               ChargingProduct?.ToOICP(),
@@ -3459,8 +3443,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                       );
 
 
-                endtime  = Timestamp.Now;
-                runtime  = endtime - startTime;
+                endtime = Timestamp.Now;
 
                 if (response.IsSuccess()          &&
                     response.Response is not null &&
@@ -3473,7 +3456,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         authStartResult = WWCP.AuthStartResult.Authorized(
                                               Id,
                                               this,
-                                              runtime,
+                                              stopwatch.Elapsed,
                                               endtime,
                                               null,
                                               responseSessionId.Value,
@@ -3508,7 +3491,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 authStartResult ??= WWCP.AuthStartResult.NotAuthorized(
                                         Id,
                                         this,
-                                        runtime,
+                                        stopwatch.Elapsed,
                                         endtime,
                                         null,
                                         SessionId,
@@ -3564,7 +3547,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region AuthorizeStop (SessionId, LocalAuthentication, ChargingLocation = null,                                           OperatorId = null, ...)
+        #region AuthorizeStop (SessionId, LocalAuthentication, ChargingLocation = null, ...)
 
         /// <summary>
         /// Create an authorize stop request at the given charging location.
@@ -3573,25 +3556,23 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="LocalAuthentication">A local user identification.</param>
         /// <param name="ChargingLocation">The charging location.</param>
         /// <param name="CPOPartnerSessionId">An optional session identification of the CPO.</param>
-        /// <param name="OperatorId">An optional charging station operator identification.</param>
         /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="RequestTimestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         /// <param name="CancellationToken">A cancellation token to cancel the operation.</param>
         public async Task<WWCP.AuthStopResult>
 
-            AuthorizeStop(WWCP.ChargingSession_Id           SessionId,
-                          WWCP.LocalAuthentication          LocalAuthentication,
-                          WWCP.ChargingLocation?            ChargingLocation      = null,
-                          WWCP.ChargingSession_Id?          CPOPartnerSessionId   = null,
-                          //WWCP.ChargingStationOperator_Id?  OperatorId            = null,
-                          WWCP.EMobilityProvider_Id?        EMobilityProviderId   = null,
+            AuthorizeStop(WWCP.ChargingSession_Id     SessionId,
+                          WWCP.LocalAuthentication    LocalAuthentication,
+                          WWCP.ChargingLocation?      ChargingLocation      = null,
+                          WWCP.ChargingSession_Id?    CPOPartnerSessionId   = null,
+                          WWCP.EMobilityProvider_Id?  EMobilityProviderId   = null,
 
-                          DateTimeOffset?                   RequestTimestamp      = null,
-                          EventTracking_Id?                 EventTrackingId       = null,
-                          TimeSpan?                         RequestTimeout        = null,
-                          CancellationToken                 CancellationToken     = default)
+                          DateTimeOffset?             RequestTimestamp      = null,
+                          EventTracking_Id?           EventTrackingId       = null,
+                          TimeSpan?                   RequestTimeout        = null,
+                          CancellationToken           CancellationToken     = default)
         {
 
             #region Initial checks
@@ -3634,37 +3615,20 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
 
             DateTimeOffset        endtime;
-            TimeSpan              runtime;
             WWCP.AuthStopResult?  authStopResult   = null;
 
-            //var operatorId      = (ChargingLocation?.ChargingStationOperatorId ?? DefaultOperator.Id).ToOICP(DefaultOperatorIdFormat);
-            // The OICP operator is always the default operator owning the Hubject account!
-            var operatorId      = DefaultOperator.Id.       ToOICP(DefaultOperatorIdFormat);
             var sessionId       = SessionId.                ToOICP();
             var evseId          = ChargingLocation?.EVSEId?.ToOICP(CustomEVSEIdConverter);
             var identification  = LocalAuthentication.      ToOICP();
 
-            if (!operatorId.HasValue)
+            if (!sessionId.HasValue)
             {
                 endtime         = Timestamp.Now;
-                runtime         = endtime - startTime;
-                authStopResult  = WWCP.AuthStopResult.AdminDown(
-                                      Id,
-                                      this,
-                                      SessionId:  SessionId,
-                                      Runtime:    runtime
-                                  );
-            }
-
-            else if (!sessionId.HasValue)
-            {
-                endtime         = Timestamp.Now;
-                runtime         = endtime - startTime;
                 authStopResult  = WWCP.AuthStopResult.InvalidSessionId(
                                       Id,
                                       this,
                                       SessionId:  SessionId,
-                                      Runtime:    runtime
+                                      Runtime:    stopwatch.Elapsed
                                   );
             }
 
@@ -3672,36 +3636,33 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             else if (ChargingLocation?.EVSEId.HasValue == true && !evseId.HasValue)
             {
                 endtime         = Timestamp.Now;
-                runtime         = endtime - startTime;
                 authStopResult  = WWCP.AuthStopResult.UnknownLocation(
                                       Id,
                                       this,
                                       SessionId:  SessionId,
-                                      Runtime:    runtime
+                                      Runtime:    stopwatch.Elapsed
                                   );
             }
 
             else if (identification?.RFIDId is null && identification?.RFIDIdentification is null)
             {
                 endtime         = Timestamp.Now;
-                runtime         = endtime - startTime;
                 authStopResult  = WWCP.AuthStopResult.InvalidToken(
                                       Id,
                                       this,
                                       SessionId:  SessionId,
-                                      Runtime:    runtime
+                                      Runtime:    stopwatch.Elapsed
                                   );
             }
 
             else if (DisableAuthorization)
             {
                 endtime         = Timestamp.Now;
-                runtime         = endtime - startTime;
                 authStopResult  = WWCP.AuthStopResult.AdminDown(
                                       Id,
                                       this,
                                       SessionId:  SessionId,
-                                      Runtime:    runtime
+                                      Runtime:    stopwatch.Elapsed
                                   );
             }
 
@@ -3710,7 +3671,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                 var response  = await CPORoaming.AuthorizeStop(
                                           new AuthorizeStopRequest(
-                                              operatorId.Value,
+                                              DefaultOICPOperatorId,
                                               sessionId. Value,
                                               identification,
                                               evseId,
@@ -3730,8 +3691,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                       );
 
 
-                endtime  = Timestamp.Now;
-                runtime  = endtime - startTime;
+                endtime = Timestamp.Now;
 
                 if (response.IsSuccess()          &&
                     response.Response is not null &&
@@ -3826,7 +3786,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="ChargeDetailRecord">A charge detail record.</param>
         /// <param name="TransmissionType">Whether to send the CDR directly or enqueue it for a while.</param>
         /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="RequestTimestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         /// <param name="CancellationToken">A cancellation token to cancel the operation.</param>
@@ -3835,7 +3795,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             SendChargeDetailRecord(WWCP.ChargeDetailRecord  ChargeDetailRecord,
                                    WWCP.TransmissionTypes   TransmissionType,
 
-                                   DateTimeOffset?          Timestamp,
+                                   DateTimeOffset?          RequestTimestamp,
                                    EventTracking_Id?        EventTrackingId,
                                    TimeSpan?                RequestTimeout,
                                    CancellationToken        CancellationToken)
@@ -3844,7 +3804,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                    [ ChargeDetailRecord ],
                    TransmissionType,
 
-                   Timestamp,
+                   RequestTimestamp,
                    EventTrackingId,
                    RequestTimeout,
                    CancellationToken
@@ -3883,7 +3843,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             RequestTimeout   ??= CPOClient?.RequestTimeout;
 
             DateTimeOffset        endtime;
-            TimeSpan              runtime;
             WWCP.SendCDRsResult?  sendCDRsResult   = null;
 
             #endregion
@@ -3944,13 +3903,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             {
 
                 endtime         = Timestamp.Now;
-                runtime         = endtime - startTime;
                 sendCDRsResult  = WWCP.SendCDRsResult.AdminDown(
                                       Timestamp.Now,
                                       Id,
                                       this,
                                       ChargeDetailRecords,
-                                      Runtime: runtime
+                                      Runtime: stopwatch.Elapsed
                                   );
 
             }
@@ -3963,13 +3921,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             {
 
                 endtime         = Timestamp.Now;
-                runtime         = endtime - startTime;
                 sendCDRsResult  = WWCP.SendCDRsResult.NoOperation(
                                       Timestamp.Now,
                                       Id,
                                       this,
                                       ChargeDetailRecords,
-                                      Runtime: runtime
+                                      Runtime: stopwatch.Elapsed
                                   );
 
             }
@@ -4069,7 +4026,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             }
 
                             endtime         = Timestamp.Now;
-                            runtime         = endtime - startTime;
                             sendCDRsResult  = WWCP.SendCDRsResult.Enqueued(
                                                   Timestamp.Now,
                                                   Id,
@@ -4077,7 +4033,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                   ChargeDetailRecords,
                                                   I18NString.Create($"Enqueued for at least {FlushChargeDetailRecordsEvery.TotalSeconds} seconds!"),
                                                   //SendCDRsResults.SafeWhere(cdrresult => cdrresult.Result != SendCDRResultTypes.Enqueued),
-                                                  Runtime: runtime
+                                                  Runtime: stopwatch.Elapsed
                                               );
                             invokeTimer     = true;
 
@@ -4093,55 +4049,82 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             OICPResult<Acknowledgement<ChargeDetailRecordRequest>> response;
                             WWCP.SendCDRResult result;
 
-                            foreach (var chargeDetailRecord in ChargeDetailRecords)
+                            foreach (var wwcpCDR in ChargeDetailRecords)
                             {
 
                                 try
                                 {
 
-                                    response = await CPORoaming.SendChargeDetailRecord(
-                                                         chargeDetailRecord.ToOICP(WWCPChargeDetailRecord2OICPChargeDetailRecord),
-                                                         DefaultOperator.Id.ToOICP().Value,
+                                    var oicpCDR = wwcpCDR.ToOICP(WWCPChargeDetailRecord2OICPChargeDetailRecord);
 
-                                                         RequestTimestamp,
-                                                         EventTrackingId,
-                                                         RequestTimeout,
-                                                         CancellationToken
-                                                     );
+                                    if (oicpCDR is null)
+                                        result = WWCP.SendCDRResult.CouldNotConvertCDRFormat(
+                                                     Timestamp.Now,
+                                                     Id,
+                                                     wwcpCDR
+                                                 );
 
-                                    if (response.IsSuccess())
+                                    else
                                     {
 
-                                        if (response.Response.Result == true)
-                                        {
+                                        response = await CPORoaming.SendChargeDetailRecord(
+                                                             oicpCDR,
+                                                             DefaultOICPOperatorId,
 
-                                            result = WWCP.SendCDRResult.Success(
-                                                         Timestamp.Now,
-                                                         Id,
-                                                         chargeDetailRecord
-                                                     );
+                                                             RequestTimestamp,
+                                                             EventTrackingId,
+                                                             RequestTimeout,
+                                                             CancellationToken
+                                                         ).ConfigureAwait(false);
 
-                                        }
+                                        if (response.IsSuccess())
+                                            result = response.Response?.Result == true
+
+                                                         ? WWCP.SendCDRResult.Success(
+                                                               Timestamp.Now,
+                                                               Id,
+                                                               wwcpCDR,
+                                                               Runtime: response.Response.Runtime
+                                                           )
+
+                                                         : WWCP.SendCDRResult.Error(
+                                                               Timestamp.Now,
+                                                               Id,
+                                                               wwcpCDR,
+                                                               response.Response?.StatusCode.Description is not null
+                                                                   ? I18NString.Create(response.Response.StatusCode.Description)
+                                                                   : null,
+                                                               Runtime: response.Response?.Runtime
+                                                           );
 
                                         else
                                         {
 
-                                            result = WWCP.SendCDRResult.Error(
-                                                         Timestamp.Now,
-                                                         Id,
-                                                         chargeDetailRecord
-                                                     );
+                                            if (response.Response?.StatusCode.Code == StatusCodes.SessionIsInvalid)
+                                                result = WWCP.SendCDRResult.InvalidSessionId(
+                                                             Timestamp.Now,
+                                                             Id,
+                                                             wwcpCDR,
+                                                             response.Response?.StatusCode.Description is not null
+                                                                 ? I18NString.Create(response.Response.StatusCode.Description)
+                                                                 : null,
+                                                             Runtime: response.Response?.Runtime
+                                                         );
+
+                                            else
+                                                result = WWCP.SendCDRResult.Error(
+                                                             Timestamp.Now,
+                                                             Id,
+                                                             wwcpCDR,
+                                                             response.Response?.StatusCode.Description is not null
+                                                                 ? I18NString.Create(response.Response.StatusCode.Description)
+                                                                 : null,
+                                                             Runtime: response.Response?.Runtime
+                                                         );
 
                                         }
 
                                     }
-
-                                    else
-                                        result = WWCP.SendCDRResult.Error(
-                                                     Timestamp.Now,
-                                                     Id,
-                                                     chargeDetailRecord
-                                                 );
 
                                 }
                                 catch (Exception e)
@@ -4149,7 +4132,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     result = WWCP.SendCDRResult.CouldNotConvertCDRFormat(
                                                  Timestamp.Now,
                                                  Id,
-                                                 chargeDetailRecord,
+                                                 wwcpCDR,
                                                  I18NString.Create(e.Message)
                                              );
                                 }
@@ -4159,7 +4142,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             }
 
                             endtime  = Timestamp.Now;
-                            runtime  = endtime - startTime;
 
                             await RoamingNetwork.ReceiveSendChargeDetailRecordResults(sendCDRsResults);
 
@@ -4169,7 +4151,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      Id,
                                                      this,
                                                      ChargeDetailRecords,
-                                                     Runtime: runtime
+                                                     Runtime: stopwatch.Elapsed
                                                  );
 
                             else
@@ -4178,9 +4160,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      Id,
                                                      this,
                                                      sendCDRsResults.
-                                                         Where (cdrresult => cdrresult.Result != WWCP.SendCDRResultTypes.Success).
-                                                         Select(cdrresult => cdrresult.ChargeDetailRecord),
-                                                     Runtime: runtime
+                                                         Where (sendCDResult => sendCDResult.Result != WWCP.SendCDRResultTypes.Success).
+                                                         Select(sendCDResult => sendCDResult.ChargeDetailRecord).
+                                                         Where (sendCDResult => sendCDResult is not null).
+                                                         Cast<WWCP.ChargeDetailRecord>(),
+                                                     Runtime: stopwatch.Elapsed
                                                  );
 
                         }
@@ -4194,15 +4178,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     else
                     {
 
-                        endtime  = Timestamp.Now;
-                        runtime  = endtime - startTime;
-                        sendCDRsResult  = WWCP.SendCDRsResult.Timeout(Timestamp.Now,
-                                                               Id,
-                                                               this,
-                                                               ChargeDetailRecords,
-                                                               I18NString.Create("Could not " + (TransmissionType == WWCP.TransmissionTypes.Enqueue ? "enqueue" : "send") + " charge detail records!"),
-                                                               //ChargeDetailRecords.SafeSelect(cdr => new SendCDRResult(cdr, SendCDRResultTypes.Timeout)),
-                                                               Runtime: runtime);
+                        endtime         = Timestamp.Now;
+                        sendCDRsResult  = WWCP.SendCDRsResult.Timeout(
+                                              Timestamp.Now,
+                                              Id,
+                                              this,
+                                              ChargeDetailRecords,
+                                              I18NString.Create("Could not " + (TransmissionType == WWCP.TransmissionTypes.Enqueue ? "enqueue" : "send") + " charge detail records!"),
+                                              //ChargeDetailRecords.SafeSelect(cdr => new SendCDRResult(cdr, SendCDRResultTypes.Timeout)),
+                                              Runtime: stopwatch.Elapsed
+                                          );
 
                     }
 
@@ -4239,7 +4224,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                           ChargeDetailRecords,
                           RequestTimeout,
                           sendCDRsResult,
-                          runtime,
+                          stopwatch.Elapsed,
                           CancellationToken
                       )
                   );
@@ -4632,20 +4617,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             foreach (var chargeDetailRecord in ChargeDetailRecords)
             {
 
-                var wwcpCDR = chargeDetailRecord.GetInternalDataAs<WWCP.ChargeDetailRecord>(OICPMapper.WWCP_CDR);
-
                 try
                 {
 
-                    var defaultOperatorId = DefaultOperator.Id.ToOICP();
+                    var wwcpCDR = chargeDetailRecord.GetInternalDataAs<WWCP.ChargeDetailRecord>(OICPMapper.WWCP_CDR);
 
-                    if (wwcpCDR is not null &&
-                        defaultOperatorId.HasValue)
+                    if (wwcpCDR is not null)
                     {
 
                         var response  = await CPORoaming.SendChargeDetailRecord(
                                                   chargeDetailRecord,
-                                                  defaultOperatorId.Value,
+                                                  DefaultOICPOperatorId,
 
                                                   Timestamp.Now,
                                                   EventTracking_Id.New,
@@ -4704,10 +4686,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     else
                         result = WWCP.SendCDRResult.Error(
                                      Timestamp.Now,
-                                     Id,
-                                     wwcpCDR,
-                                     Warnings: Warnings.Create($"The DefaultOperatorId '{DefaultOperator.Id}' can not be converted to OICP!"),
-                                     Runtime:  TimeSpan.Zero
+                                     Id
                                  );
 
                 }
@@ -4717,9 +4696,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     result = WWCP.SendCDRResult.Error(
                                  Timestamp.Now,
                                  Id,
-                                 wwcpCDR,
-                                 Warnings: Warnings.Create(e.Message),
-                                 Runtime:  TimeSpan.Zero
+                                 Warnings:  Warnings.Create(e.Message),
+                                 Runtime:   TimeSpan.Zero
                              );
 
                 }
