@@ -121,8 +121,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// Prefer IPv4 instead of IPv6.
         /// </summary>
-        IPVersionPreference                                         IHTTPClient.PreferIPv4
-            => EMPClient.PreferIPv4;
+        IPVersionPreference                                         IHTTPClient.IPVersionPreference
+            => EMPClient.IPVersionPreference;
 
         /// <summary>
         /// The optional HTTP connection type.

@@ -169,7 +169,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                        AllowRenegotiation:               null,
                                        AllowTLSResume:                   null,
 
-                                       PreferIPv4:                       PreferIPv4,
+                                       IPVersionPreference:              IPVersionPreference,
                                        ConnectTimeout:                   null,
                                        ReceiveTimeout:                   null,
                                        SendTimeout:                      null,
@@ -218,7 +218,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                        MaxNumberOfClients:               MaxNumberOfPooledClients ?? 6,
 
-                                       PreferIPv4:                       PreferIPv4,
+                                       IPVersionPreference:              IPVersionPreference,
                                        ConnectTimeout:                   null,
                                        ReceiveTimeout:                   null,
                                        SendTimeout:                      null,

@@ -119,8 +119,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// Prefer IPv4 instead of IPv6.
         /// </summary>
-        IPVersionPreference                                         IHTTPClient.PreferIPv4
-            => CPOClient.PreferIPv4;
+        IPVersionPreference                                         IHTTPClient.IPVersionPreference
+            => CPOClient.IPVersionPreference;
 
         /// <summary>
         /// The optional HTTP connection type.
