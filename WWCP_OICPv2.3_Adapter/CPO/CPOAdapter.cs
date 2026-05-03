@@ -3626,9 +3626,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 endtime         = Timestamp.Now;
                 authStopResult  = WWCP.AuthStopResult.InvalidSessionId(
                                       Id,
+                                      stopwatch.Elapsed,
                                       this,
-                                      SessionId:  SessionId,
-                                      Runtime:    stopwatch.Elapsed
+                                      SessionId
                                   );
             }
 
@@ -3638,9 +3638,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 endtime         = Timestamp.Now;
                 authStopResult  = WWCP.AuthStopResult.UnknownLocation(
                                       Id,
+                                      stopwatch.Elapsed,
                                       this,
-                                      SessionId:  SessionId,
-                                      Runtime:    stopwatch.Elapsed
+                                      SessionId:  SessionId
                                   );
             }
 
@@ -3649,9 +3649,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 endtime         = Timestamp.Now;
                 authStopResult  = WWCP.AuthStopResult.InvalidToken(
                                       Id,
+                                      stopwatch.Elapsed,
                                       this,
-                                      SessionId:  SessionId,
-                                      Runtime:    stopwatch.Elapsed
+                                      SessionId:  SessionId
                                   );
             }
 
@@ -3660,9 +3660,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 endtime         = Timestamp.Now;
                 authStopResult  = WWCP.AuthStopResult.AdminDown(
                                       Id,
+                                      stopwatch.Elapsed,
                                       this,
-                                      SessionId:  SessionId,
-                                      Runtime:    stopwatch.Elapsed
+                                      SessionId:  SessionId
                                   );
             }
 
@@ -3700,6 +3700,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     authStopResult = WWCP.AuthStopResult.Authorized(
                                          Id,
+                                         stopwatch.Elapsed,
                                          this,
                                          null,
                                          SessionId,
@@ -3716,6 +3717,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 else
                     authStopResult = WWCP.AuthStopResult.NotAuthorized(
                                          Id,
+                                         stopwatch.Elapsed,
                                          this,
                                          null,
                                          SessionId,
