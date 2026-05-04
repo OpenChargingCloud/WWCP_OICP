@@ -3390,8 +3390,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 authStartResult  = WWCP.AuthStartResult.UnknownLocation(
                                        Id,
                                        this,
-                                       SessionId:  SessionId,
-                                       Runtime:    stopwatch.Elapsed
+                                       Timestamp.Now,
+                                       stopwatch.Elapsed,
+                                       SessionId:  SessionId
                                    );
             }
 
@@ -3401,8 +3402,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 authStartResult  = WWCP.AuthStartResult.InvalidToken(
                                        Id,
                                        this,
-                                       SessionId:  SessionId,
-                                       Runtime:    stopwatch.Elapsed
+                                       Timestamp.Now,
+                                       stopwatch.Elapsed,
+                                       SessionId:  SessionId
                                    );
             }
 
@@ -3412,8 +3414,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 authStartResult  = WWCP.AuthStartResult.AdminDown(
                                        Id,
                                        this,
-                                       SessionId:  SessionId,
-                                       Runtime:    stopwatch.Elapsed
+                                       Timestamp.Now,
+                                       stopwatch.Elapsed,
+                                       SessionId:  SessionId
                                    );
             }
 
@@ -3456,8 +3459,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         authStartResult = WWCP.AuthStartResult.Authorized(
                                               Id,
                                               this,
-                                              stopwatch.Elapsed,
                                               endtime,
+                                              stopwatch.Elapsed,
                                               null,
                                               responseSessionId.Value,
                                               response.Response.EMPPartnerSessionId.ToWWCP(),
@@ -3491,18 +3494,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 authStartResult ??= WWCP.AuthStartResult.NotAuthorized(
                                         Id,
                                         this,
-                                        stopwatch.Elapsed,
                                         endtime,
+                                        stopwatch.Elapsed,
                                         null,
                                         SessionId,
                                         response?.Response?.ProviderId.ToWWCP(),
+                                        null,
                                         response?.Response?.StatusCode?.Description is not null
                                             ? response.Response.StatusCode.Description.ToI18NString()
                                             : I18NString.Empty,
                                         response?.Response?.StatusCode?.AdditionalInfo is not null
                                             ? response.Response.StatusCode.AdditionalInfo.ToI18NString()
-                                            : I18NString.Empty,
-                                        0
+                                            : I18NString.Empty
                                     );
 
             }
@@ -3626,8 +3629,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 endtime         = Timestamp.Now;
                 authStopResult  = WWCP.AuthStopResult.InvalidSessionId(
                                       Id,
-                                      stopwatch.Elapsed,
                                       this,
+                                      Timestamp.Now,
+                                      stopwatch.Elapsed,
                                       SessionId
                                   );
             }
@@ -3638,8 +3642,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 endtime         = Timestamp.Now;
                 authStopResult  = WWCP.AuthStopResult.UnknownLocation(
                                       Id,
-                                      stopwatch.Elapsed,
                                       this,
+                                      Timestamp.Now,
+                                      stopwatch.Elapsed,
                                       SessionId:  SessionId
                                   );
             }
@@ -3649,8 +3654,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 endtime         = Timestamp.Now;
                 authStopResult  = WWCP.AuthStopResult.InvalidToken(
                                       Id,
-                                      stopwatch.Elapsed,
                                       this,
+                                      Timestamp.Now,
+                                      stopwatch.Elapsed,
                                       SessionId:  SessionId
                                   );
             }
@@ -3660,8 +3666,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 endtime         = Timestamp.Now;
                 authStopResult  = WWCP.AuthStopResult.AdminDown(
                                       Id,
-                                      stopwatch.Elapsed,
                                       this,
+                                      Timestamp.Now,
+                                      stopwatch.Elapsed,
                                       SessionId:  SessionId
                                   );
             }
@@ -3700,11 +3707,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     authStopResult = WWCP.AuthStopResult.Authorized(
                                          Id,
-                                         stopwatch.Elapsed,
                                          this,
+                                         Timestamp.Now,
+                                         stopwatch.Elapsed,
                                          null,
                                          SessionId,
                                          response.Response?.ProviderId?.ToWWCP(),
+                                         null,
                                          response.Response?.StatusCode?.Description     is not null
                                              ? response.Response.StatusCode.Description.   ToI18NString()
                                              : I18NString.Empty,
@@ -3717,11 +3726,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 else
                     authStopResult = WWCP.AuthStopResult.NotAuthorized(
                                          Id,
-                                         stopwatch.Elapsed,
                                          this,
+                                         Timestamp.Now,
+                                         stopwatch.Elapsed,
                                          null,
                                          SessionId,
                                          response?.Response?.ProviderId?.ToWWCP(),
+                                         null,
                                          response?.Response?.StatusCode?.Description    is not null
                                              ? response.Response.StatusCode.Description.   ToI18NString()
                                              : I18NString.Empty,
