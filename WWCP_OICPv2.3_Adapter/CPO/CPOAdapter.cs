@@ -491,7 +491,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     switch (response.Result)
                     {
 
-                        case WWCP.ReservationResultType.Success:
+                        case WWCP.ReservationResultTypes.Success:
                             return Acknowledgement<AuthorizeRemoteReservationStartRequest>.Success(
                                        request,
                                        response.Reservation is not null
@@ -503,26 +503,26 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                    );
 
-                        case WWCP.ReservationResultType.InvalidCredentials:
+                        case WWCP.ReservationResultTypes.InvalidCredentials:
                             return Acknowledgement<AuthorizeRemoteReservationStartRequest>.SessionIsInvalid(
                                        request,
                                        SessionId: Session_Id.Parse(response.Reservation.Id.ToString())
                                    );
 
-                        case WWCP.ReservationResultType.Timeout:
-                        case WWCP.ReservationResultType.CommunicationError:
+                        case WWCP.ReservationResultTypes.Timeout:
+                        case WWCP.ReservationResultTypes.CommunicationError:
                             return Acknowledgement<AuthorizeRemoteReservationStartRequest>.CommunicationToEVSEFailed(request);
 
-                        case WWCP.ReservationResultType.AlreadyReserved:
+                        case WWCP.ReservationResultTypes.AlreadyReserved:
                             return Acknowledgement<AuthorizeRemoteReservationStartRequest>.EVSEAlreadyReserved(request);
 
-                        case WWCP.ReservationResultType.AlreadyInUse:
+                        case WWCP.ReservationResultTypes.AlreadyInUse:
                             return Acknowledgement<AuthorizeRemoteReservationStartRequest>.EVSEAlreadyInUse_WrongToken(request);
 
-                        case WWCP.ReservationResultType.UnknownLocation:
+                        case WWCP.ReservationResultTypes.UnknownLocation:
                             return Acknowledgement<AuthorizeRemoteReservationStartRequest>.UnknownEVSEID(request);
 
-                        case WWCP.ReservationResultType.OutOfService:
+                        case WWCP.ReservationResultTypes.OutOfService:
                             return Acknowledgement<AuthorizeRemoteReservationStartRequest>.EVSEOutOfService(request);
 
                     }
