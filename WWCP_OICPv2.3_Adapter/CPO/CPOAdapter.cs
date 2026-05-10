@@ -506,7 +506,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         case WWCP.ReservationResultTypes.InvalidCredentials:
                             return Acknowledgement<AuthorizeRemoteReservationStartRequest>.SessionIsInvalid(
                                        request,
-                                       SessionId: Session_Id.Parse(response.Reservation.Id.ToString())
+                                       SessionId:  response?.Reservation is not null
+                                                       ? Session_Id.Parse(response.Reservation.Id.ToString())
+                                                       : null
                                    );
 
                         case WWCP.ReservationResultTypes.Timeout:
@@ -530,7 +532,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                 return Acknowledgement<AuthorizeRemoteReservationStartRequest>.ServiceNotAvailable(
                            request,
-                           SessionId: Session_Id.Parse(response.Reservation.Id.ToString())
+                           SessionId:  response?.Reservation is not null
+                                           ? Session_Id.Parse(response.Reservation.Id.ToString())
+                                           : null
                        );
 
                 #endregion

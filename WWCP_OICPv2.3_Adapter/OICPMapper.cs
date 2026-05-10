@@ -367,7 +367,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                          ChargingStationName:                EVSE.ChargingStation.Name.ToOICP(MaxLength: 150),
                                          Address:                            address,
                                          GeoCoordinates:                     geoLocation.Value,
-                                         PlugTypes:                          EVSE.ChargingConnectors.Select(chargingConnector => chargingConnector.Plug.ToOICP()),
+                                         PlugTypes:                          EVSE.ChargingConnectors.Select(chargingConnector => chargingConnector.Type.ToOICP(true)).
+                                                                                                     Where (plugType          => plugType.HasValue).
+                                                                                                     Cast<PlugTypes>(),
                                          ChargingFacilities:                 EVSE.AsChargingFacilities(),
                                          RenewableEnergy:                    false,
                                          CalibrationLawDataAvailability:     CalibrationLawDataAvailabilities.NotAvailable,
@@ -937,9 +939,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
 
-
-
-
         public static UID ToOICP(this WWCP.AuthenticationToken AuthToken)
 
             => UID.Parse(AuthToken.ToString().ToUpper());
@@ -1231,63 +1230,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          _                           => new ChargingModes?()
                      }
                    : default;
-
-        #endregion
-
-
-        #region ToWWCP(this PlugType)
-
-        public static WWCP.ChargingPlugTypes ToWWCP(this PlugTypes PlugType)
-
-            => PlugType switch {
-                   PlugTypes.SmallPaddleInductive          => WWCP.ChargingPlugTypes.SmallPaddleInductive,
-                   PlugTypes.LargePaddleInductive          => WWCP.ChargingPlugTypes.LargePaddleInductive,
-                   PlugTypes.AVCONConnector                => WWCP.ChargingPlugTypes.AVCONConnector,
-                   PlugTypes.TeslaConnector                => WWCP.ChargingPlugTypes.TeslaConnector,
-                   PlugTypes.NEMA5_20                      => WWCP.ChargingPlugTypes.NEMA5_20,
-                   PlugTypes.TypeEFrenchStandard           => WWCP.ChargingPlugTypes.TypeEFrenchStandard,
-                   PlugTypes.TypeFSchuko                   => WWCP.ChargingPlugTypes.TypeFSchuko,
-                   PlugTypes.TypeGBritishStandard          => WWCP.ChargingPlugTypes.TypeGBritishStandard,
-                   PlugTypes.TypeJSwissStandard            => WWCP.ChargingPlugTypes.TypeJSwissStandard,
-                   PlugTypes.Type1Connector_CableAttached  => WWCP.ChargingPlugTypes.Type1Connector_CableAttached,
-                   PlugTypes.Type2Outlet                   => WWCP.ChargingPlugTypes.Type2Outlet,
-                   PlugTypes.Type2Connector_CableAttached  => WWCP.ChargingPlugTypes.Type2Connector_CableAttached,
-                   PlugTypes.Type3Outlet                   => WWCP.ChargingPlugTypes.Type3Outlet,
-                   PlugTypes.IEC60309SinglePhase           => WWCP.ChargingPlugTypes.IEC60309SinglePhase,
-                   PlugTypes.IEC60309ThreePhase            => WWCP.ChargingPlugTypes.IEC60309ThreePhase,
-                   PlugTypes.CCSCombo2Plug_CableAttached   => WWCP.ChargingPlugTypes.CCSCombo2Plug_CableAttached,
-                   PlugTypes.CCSCombo1Plug_CableAttached   => WWCP.ChargingPlugTypes.CCSCombo1Plug_CableAttached,
-                   PlugTypes.CHAdeMO                       => WWCP.ChargingPlugTypes.CHAdeMO,
-                   _                                       => throw new ArgumentException("Invalid plug type!")
-               };
-
-        #endregion
-
-        #region ToOICP(this PlugType)
-
-        public static PlugTypes ToOICP(this WWCP.ChargingPlugTypes PlugType)
-
-            => PlugType switch {
-                   WWCP.ChargingPlugTypes.SmallPaddleInductive          => PlugTypes.SmallPaddleInductive,
-                   WWCP.ChargingPlugTypes.LargePaddleInductive          => PlugTypes.LargePaddleInductive,
-                   WWCP.ChargingPlugTypes.AVCONConnector                => PlugTypes.AVCONConnector,
-                   WWCP.ChargingPlugTypes.TeslaConnector                => PlugTypes.TeslaConnector,
-                   WWCP.ChargingPlugTypes.NEMA5_20                      => PlugTypes.NEMA5_20,
-                   WWCP.ChargingPlugTypes.TypeEFrenchStandard           => PlugTypes.TypeEFrenchStandard,
-                   WWCP.ChargingPlugTypes.TypeFSchuko                   => PlugTypes.TypeFSchuko,
-                   WWCP.ChargingPlugTypes.TypeGBritishStandard          => PlugTypes.TypeGBritishStandard,
-                   WWCP.ChargingPlugTypes.TypeJSwissStandard            => PlugTypes.TypeJSwissStandard,
-                   WWCP.ChargingPlugTypes.Type1Connector_CableAttached  => PlugTypes.Type1Connector_CableAttached,
-                   WWCP.ChargingPlugTypes.Type2Outlet                   => PlugTypes.Type2Outlet,
-                   WWCP.ChargingPlugTypes.Type2Connector_CableAttached  => PlugTypes.Type2Connector_CableAttached,
-                   WWCP.ChargingPlugTypes.Type3Outlet                   => PlugTypes.Type3Outlet,
-                   WWCP.ChargingPlugTypes.IEC60309SinglePhase           => PlugTypes.IEC60309SinglePhase,
-                   WWCP.ChargingPlugTypes.IEC60309ThreePhase            => PlugTypes.IEC60309ThreePhase,
-                   WWCP.ChargingPlugTypes.CCSCombo2Plug_CableAttached   => PlugTypes.CCSCombo2Plug_CableAttached,
-                   WWCP.ChargingPlugTypes.CCSCombo1Plug_CableAttached   => PlugTypes.CCSCombo1Plug_CableAttached,
-                   WWCP.ChargingPlugTypes.CHAdeMO                       => PlugTypes.CHAdeMO,
-                   _                                                    => throw new ArgumentException("Invalid plug type!")
-               };
 
         #endregion
 
@@ -1817,6 +1759,283 @@ namespace cloud.charging.open.protocols.OICPv2_3
             return CDR;
 
         }
+
+        #endregion
+
+
+
+        #region ToOICP(this WWCPConnectorType, CableAttached)
+
+        public static PlugTypes? ToOICP(this WWCP.ChargingConnectorType  WWCPConnectorType,
+                                        Boolean                          CableAttached)
+        {
+
+            if (WWCPConnectorType == WWCP.ChargingConnectorType.CHAdeMO)
+                return PlugTypes.CHAdeMO;
+
+            //if (WWCPConnectorType == WWCP.ChargingConnectorType.CHAOJI)
+            //    return PlugTypes.CHAOJI;
+
+            //if (WWCPConnectorType == WWCP.ChargingConnectorType.DOMESTIC_A)
+            //    return PlugTypes.DOMESTIC_A;
+
+            //if (WWCPConnectorType == WWCP.ChargingConnectorType.DOMESTIC_B)
+            //    return PlugTypes.DOMESTIC_B;
+
+            //if (WWCPConnectorType == WWCP.ChargingConnectorType.DOMESTIC_C)
+            //    return PlugTypes.DOMESTIC_C;
+
+            //if (WWCPConnectorType == WWCP.ChargingConnectorType.DOMESTIC_D)
+            //    return PlugTypes.DOMESTIC_D;
+
+            if (WWCPConnectorType == WWCP.ChargingConnectorType.DOMESTIC_E_FrenchStandard)
+                return PlugTypes.TypeEFrenchStandard;
+
+            if (WWCPConnectorType == WWCP.ChargingConnectorType.DOMESTIC_F_SchuKo)
+                return PlugTypes.TypeFSchuko;
+
+            if (WWCPConnectorType == WWCP.ChargingConnectorType.DOMESTIC_G_BritishStandard)
+                return PlugTypes.TypeGBritishStandard;
+
+            //if (WWCPConnectorType == WWCP.ChargingConnectorType.DOMESTIC_H)
+            //    return PlugTypes.DOMESTIC_H;
+
+            //if (WWCPConnectorType == WWCP.ChargingConnectorType.DOMESTIC_I)
+            //    return PlugTypes.DOMESTIC_I;
+
+            if (WWCPConnectorType == WWCP.ChargingConnectorType.DOMESTIC_J_SwissStandard)
+                return PlugTypes.TypeJSwissStandard;
+
+            //if (WWCPConnectorType == WWCP.ChargingConnectorType.DOMESTIC_K)
+            //    return PlugTypes.DOMESTIC_K;
+
+            //if (WWCPConnectorType == WWCP.ChargingConnectorType.DOMESTIC_L)
+            //    return PlugTypes.DOMESTIC_L;
+
+            //if (WWCPConnectorType == WWCP.ChargingConnectorType.DOMESTIC_M)
+            //    return PlugTypes.DOMESTIC_M;
+
+            //if (WWCPConnectorType == WWCP.ChargingConnectorType.DOMESTIC_N)
+            //    return PlugTypes.DOMESTIC_N;
+
+            //if (WWCPConnectorType == WWCP.ChargingConnectorType.DOMESTIC_O)
+            //    return PlugTypes.DOMESTIC_O;
+
+            //if (WWCPConnectorType == WWCP.ChargingConnectorType.GBT_AC)
+            //    return PlugTypes.GBT_AC;
+
+            //if (WWCPConnectorType == WWCP.ChargingConnectorType.GBT_DC)
+            //    return PlugTypes.GBT_DC;
+
+            if (WWCPConnectorType == WWCP.ChargingConnectorType.IEC_60309_2_single_16)
+                return PlugTypes.IEC60309SinglePhase;
+
+            if (WWCPConnectorType == WWCP.ChargingConnectorType.IEC_60309_2_three_16)
+                return PlugTypes.IEC60309ThreePhase;
+
+            if (WWCPConnectorType == WWCP.ChargingConnectorType.IEC_60309_2_three_32)
+                return PlugTypes.IEC60309ThreePhase;
+
+            if (WWCPConnectorType == WWCP.ChargingConnectorType.IEC_60309_2_three_64)
+                return PlugTypes.IEC60309ThreePhase;
+
+            if (WWCPConnectorType == WWCP.ChargingConnectorType.IEC_62196_T1)
+                return PlugTypes.Type1Connector_CableAttached;
+
+            if (WWCPConnectorType == WWCP.ChargingConnectorType.IEC_62196_T1_COMBO)
+                return PlugTypes.CCSCombo1Plug_CableAttached;
+
+            if (WWCPConnectorType == WWCP.ChargingConnectorType.IEC_62196_T2)
+                return PlugTypes.Type2Connector_CableAttached;
+
+            if (WWCPConnectorType == WWCP.ChargingConnectorType.IEC_62196_T2_COMBO)
+                return PlugTypes.CCSCombo2Plug_CableAttached;
+
+            if (WWCPConnectorType == WWCP.ChargingConnectorType.IEC_62196_T3A)
+                return PlugTypes.Type3Outlet;
+
+            //if (WWCPConnectorType == WWCP.ChargingConnectorType.IEC_62196_T3C)
+            //    return PlugTypes.IEC_62196_T3C;
+
+            if (WWCPConnectorType == WWCP.ChargingConnectorType.NEMA_5_20)
+                return PlugTypes.NEMA5_20;
+
+            //if (WWCPConnectorType == WWCP.ChargingConnectorType.NEMA_6_30)
+            //    return PlugTypes.NEMA_6_30;
+
+            //if (WWCPConnectorType == WWCP.ChargingConnectorType.NEMA_6_50)
+            //    return PlugTypes.NEMA_6_50;
+
+            //if (WWCPConnectorType == WWCP.ChargingConnectorType.NEMA_10_30)
+            //    return PlugTypes.NEMA_10_30;
+
+            //if (WWCPConnectorType == WWCP.ChargingConnectorType.NEMA_10_50)
+            //    return PlugTypes.NEMA_10_50;
+
+            //if (WWCPConnectorType == WWCP.ChargingConnectorType.NEMA_14_30)
+            //    return PlugTypes.NEMA_14_30;
+
+            //if (WWCPConnectorType == WWCP.ChargingConnectorType.NEMA_14_50)
+            //    return PlugTypes.NEMA_14_50;
+
+            //if (WWCPConnectorType == WWCP.ChargingConnectorType.PANTOGRAPH_BOTTOM_UP)
+            //    return PlugTypes.PANTOGRAPH_BOTTOM_UP;
+
+            //if (WWCPConnectorType == WWCP.ChargingConnectorType.PANTOGRAPH_TOP_DOWN)
+            //    return PlugTypes.PANTOGRAPH_TOP_DOWN;
+
+            if (WWCPConnectorType == WWCP.ChargingConnectorType.TESLA_Roadster)
+                return PlugTypes.TeslaConnector;
+
+            if (WWCPConnectorType == WWCP.ChargingConnectorType.TESLA_ModelS)
+                return PlugTypes.TeslaConnector;
+
+            throw new ArgumentException($"Unsupported WWCP charging connector type: {WWCPConnectorType}!", nameof(WWCPConnectorType));
+
+        }
+        public static PlugTypes? ToOICP(this WWCP.ChargingConnectorType?  ConnectorType,
+                                        Boolean                           CableAttached)
+
+            => ConnectorType.HasValue
+                   ? ConnectorType.Value.ToOICP(CableAttached)
+                   : null;
+
+        #endregion
+
+        #region ToWWCP(this ConnectorType)
+
+        public static WWCP.ChargingConnectorType? ToWWCP(this PlugTypes PlugType)
+        {
+
+            if (PlugType == PlugTypes.CHAdeMO)
+                return WWCP.ChargingConnectorType.CHAdeMO;
+
+            //if (PlugType == PlugTypes.CHAOJI)
+            //    return WWCP.ChargingConnectorType.CHAOJI;
+
+            //if (PlugType == PlugTypes.DOMESTIC_A)
+            //    return WWCP.ChargingConnectorType.DOMESTIC_A;
+
+            //if (PlugType == PlugTypes.DOMESTIC_B)
+            //    return WWCP.ChargingConnectorType.DOMESTIC_B;
+
+            //if (PlugType == PlugTypes.DOMESTIC_C)
+            //    return WWCP.ChargingConnectorType.DOMESTIC_C;
+
+            //if (PlugType == PlugTypes.DOMESTIC_D)
+            //    return WWCP.ChargingConnectorType.DOMESTIC_D;
+
+            if (PlugType == PlugTypes.TypeEFrenchStandard)
+                return WWCP.ChargingConnectorType.DOMESTIC_E_FrenchStandard;
+
+            if (PlugType == PlugTypes.TypeFSchuko)
+                return WWCP.ChargingConnectorType.DOMESTIC_F_SchuKo;
+
+            if (PlugType == PlugTypes.TypeGBritishStandard)
+                return WWCP.ChargingConnectorType.DOMESTIC_G_BritishStandard;
+
+            //if (PlugType == PlugTypes.DOMESTIC_H)
+            //    return WWCP.ChargingConnectorType.DOMESTIC_H;
+
+            //if (PlugType == PlugTypes.DOMESTIC_I)
+            //    return WWCP.ChargingConnectorType.DOMESTIC_I;
+
+            if (PlugType == PlugTypes.TypeJSwissStandard)
+                return WWCP.ChargingConnectorType.DOMESTIC_J_SwissStandard;
+
+            //if (PlugType == PlugTypes.DOMESTIC_K)
+            //    return WWCP.ChargingConnectorType.DOMESTIC_K;
+
+            //if (PlugType == PlugTypes.DOMESTIC_L)
+            //    return WWCP.ChargingConnectorType.DOMESTIC_L;
+
+            //if (PlugType == PlugTypes.DOMESTIC_M)
+            //    return WWCP.ChargingConnectorType.DOMESTIC_M;
+
+            //if (PlugType == PlugTypes.DOMESTIC_N)
+            //    return WWCP.ChargingConnectorType.DOMESTIC_N;
+
+            //if (PlugType == PlugTypes.DOMESTIC_O)
+            //    return WWCP.ChargingConnectorType.DOMESTIC_O;
+
+            //if (PlugType == PlugTypes.GBT_AC)
+            //    return WWCP.ChargingConnectorType.GBT_AC;
+
+            //if (PlugType == PlugTypes.GBT_DC)
+            //    return WWCP.ChargingConnectorType.GBT_DC;
+
+            if (PlugType == PlugTypes.IEC60309SinglePhase)
+                return WWCP.ChargingConnectorType.IEC_60309_2_single_16;
+
+            if (PlugType == PlugTypes.IEC60309ThreePhase)
+                return WWCP.ChargingConnectorType.IEC_60309_2_three_16;
+
+            //if (PlugType == PlugTypes.IEC_60309_2_three_32)
+            //    return WWCP.ChargingConnectorType.IEC_60309_2_three_32;
+
+            //if (PlugType == PlugTypes.IEC_60309_2_three_64)
+            //    return WWCP.ChargingConnectorType.IEC_60309_2_three_64;
+
+            if (PlugType == PlugTypes.Type1Connector_CableAttached)
+                return WWCP.ChargingConnectorType.IEC_62196_T1;
+
+            if (PlugType == PlugTypes.CCSCombo1Plug_CableAttached)
+                return WWCP.ChargingConnectorType.IEC_62196_T1_COMBO;
+
+            if (PlugType == PlugTypes.Type2Connector_CableAttached)
+                return WWCP.ChargingConnectorType.IEC_62196_T2;
+
+            if (PlugType == PlugTypes.CCSCombo2Plug_CableAttached)
+                return WWCP.ChargingConnectorType.IEC_62196_T2_COMBO;
+
+            //if (PlugType == PlugTypes.IEC_62196_T3A)
+            //    return WWCP.ChargingConnectorType.IEC_62196_T3A;
+
+            //if (PlugType == PlugTypes.IEC_62196_T3C)
+            //    return WWCP.ChargingConnectorType.IEC_62196_T3C;
+
+            if (PlugType == PlugTypes.NEMA5_20)
+                return WWCP.ChargingConnectorType.NEMA_5_20;
+
+            //if (PlugType == PlugTypes.NEMA_6_30)
+            //    return WWCP.ChargingConnectorType.NEMA_6_30;
+
+            //if (PlugType == PlugTypes.NEMA_6_50)
+            //    return WWCP.ChargingConnectorType.NEMA_6_50;
+
+            //if (PlugType == PlugTypes.NEMA_10_30)
+            //    return WWCP.ChargingConnectorType.NEMA_10_30;
+
+            //if (PlugType == PlugTypes.NEMA_10_50)
+            //    return WWCP.ChargingConnectorType.NEMA_10_50;
+
+            //if (PlugType == PlugTypes.NEMA_14_30)
+            //    return WWCP.ChargingConnectorType.NEMA_14_30;
+
+            //if (PlugType == PlugTypes.NEMA_14_50)
+            //    return WWCP.ChargingConnectorType.NEMA_14_50;
+
+            //if (PlugType == PlugTypes.PANTOGRAPH_BOTTOM_UP)
+            //    return WWCP.ChargingConnectorType.PANTOGRAPH_BOTTOM_UP;
+
+            //if (PlugType == PlugTypes.PANTOGRAPH_TOP_DOWN)
+            //    return WWCP.ChargingConnectorType.PANTOGRAPH_TOP_DOWN;
+
+            if (PlugType == PlugTypes.TeslaConnector)
+                return WWCP.ChargingConnectorType.TESLA_Roadster;
+
+            //if (PlugType == PlugTypes.TESLA_S)
+            //    return WWCP.ChargingConnectorType.TESLA_ModelS;
+
+            throw new ArgumentException($"Unsupported OCPI connector type: {PlugType}!", nameof(PlugType));
+
+        }
+
+        public static WWCP.ChargingConnectorType? ToWWCP(this PlugTypes? PlugType)
+
+            => PlugType.HasValue
+                   ? PlugType.Value.ToWWCP()
+                   : null;
 
         #endregion
 
