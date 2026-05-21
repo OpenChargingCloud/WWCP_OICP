@@ -793,6 +793,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                    MaxNumberOfPooledClients,
                    PreferIPv4,
 
+                   null,
                    RemoteCertificateValidator is not null
                        ? (sender,
                           certificate,

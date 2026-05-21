@@ -34,7 +34,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// A CPO HTTP Client API HTTP logger.
         /// </summary>
-        public class HTTP_Logger : HTTPServerLoggerX
+        public class HTTP_Logger : HTTPServerLogger
         {
 
             #region Data

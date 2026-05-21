@@ -61,19 +61,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// The remote URL of the OICP HTTP endpoint to connect to.
         /// </summary>
-        URL                                                         IHTTPClient.RemoteURL
+        URL                                                         IHTTPClient_Base.RemoteURL
             => EMPClient.RemoteURL;
 
         /// <summary>
         /// The virtual HTTP hostname to connect to.
         /// </summary>
-        HTTPHostname?                                               IHTTPClient.VirtualHostname
+        HTTPHostname?                                               IHTTPClient_Base.VirtualHostname
             => EMPClient.VirtualHostname;
 
         /// <summary>
         /// An optional description of this CPO client.
         /// </summary>
-        I18NString                                                  IHTTPClient.Description
+        I18NString                                                  IHTTPClient_Base.Description
         {
 
             get
@@ -97,55 +97,55 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// Multiple optional TLS client certificates to use for HTTP authentication (not a chain of certificates!).
         /// </summary>
-        IEnumerable<X509Certificate2>                               IHTTPClient.ClientCertificates
+        IEnumerable<X509Certificate2>                               IHTTPClient_Base.ClientCertificates
             => EMPClient.ClientCertificates;
 
         /// <summary>
         /// The optionalTLS client certificate context to use for HTTP authentication.
         /// </summary>
-        SslStreamCertificateContext?                                IHTTPClient.ClientCertificateContext
+        SslStreamCertificateContext?                                IHTTPClient_Base.ClientCertificateContext
             => EMPClient.ClientCertificateContext;
 
         /// <summary>
         /// The optional TLS client certificate chain to use for HTTP authentication.
         /// </summary>
-        IEnumerable<X509Certificate2>                               IHTTPClient.ClientCertificateChain
+        IEnumerable<X509Certificate2>                               IHTTPClient_Base.ClientCertificateChain
             => EMPClient.ClientCertificateChain;
 
         /// <summary>
         /// The TLS protocol to use.
         /// </summary>
-        SslProtocols                                                IHTTPClient.TLSProtocols
+        SslProtocols                                                IHTTPClient_Base.TLSProtocols
             => EMPClient.TLSProtocols;
 
         /// <summary>
         /// Prefer IPv4 instead of IPv6.
         /// </summary>
-        IPVersionPreference                                         IHTTPClient.IPVersionPreference
+        IPVersionPreference                                         IHTTPClient_Base.IPVersionPreference
             => EMPClient.IPVersionPreference;
 
         /// <summary>
         /// The optional HTTP connection type.
         /// </summary>
-        ConnectionType?                                             IHTTPClient.Connection
+        ConnectionType?                                             IHTTPClient_Base.Connection
             => EMPClient.Connection;
 
         /// <summary>
         /// The optional HTTP content type.
         /// </summary>
-        HTTPContentType?                                            IHTTPClient.ContentType
+        HTTPContentType?                                            IHTTPClient_Base.ContentType
             => EMPClient.ContentType;
 
         /// <summary>
         /// The optional HTTP accept header.
         /// </summary>
-        AcceptTypes?                                                IHTTPClient.Accept
+        AcceptTypes?                                                IHTTPClient_Base.Accept
             => EMPClient.Accept;
 
         /// <summary>
         /// The optional HTTP authentication to use.
         /// </summary>
-        IHTTPAuthentication?                                        IHTTPClient.HTTPAuthentication
+        IHTTPAuthentication?                                        IHTTPClient_Base.HTTPAuthentication
         {
             get
             {
@@ -160,13 +160,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// The HTTP user agent identification.
         /// </summary>
-        String                                                      IHTTPClient.HTTPUserAgent
+        String                                                      IHTTPClient_Base.HTTPUserAgent
             => EMPClient.HTTPUserAgent;
 
         /// <summary>
         /// The timeout for upstream requests.
         /// </summary>
-        TimeSpan                                                    IHTTPClient.RequestTimeout
+        TimeSpan                                                    IHTTPClient_Base.RequestTimeout
         {
 
             get
@@ -184,13 +184,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// The delay between transmission retries.
         /// </summary>
-        TransmissionRetryDelayDelegate                              IHTTPClient.TransmissionRetryDelay
+        TransmissionRetryDelayDelegate                              IHTTPClient_Base.TransmissionRetryDelay
             => EMPClient.TransmissionRetryDelay;
 
         /// <summary>
         /// The maximum number of retries when communicating with the remote OICP service.
         /// </summary>
-        UInt16                                                      IHTTPClient.MaxNumberOfRetries
+        UInt16                                                      IHTTPClient_Base.MaxNumberOfRetries
             => EMPClient.MaxNumberOfRetries;
 
         /// <summary>
@@ -202,30 +202,29 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// The CPO client (HTTP client) logger.
         /// </summary>
-        HTTPClientLogger?                                           IHTTPClient.HTTPLogger
+        HTTPClientLogger?                                           IHTTPClient_Base.HTTPLogger
             => EMPClient.HTTPLogger;
 
         /// <summary>
         /// The DNS client defines which DNS servers to use.
         /// </summary>
-        IDNSClient                                                  IHTTPClient.DNSClient
+        IDNSClient                                                  IHTTPClient_Base.DNSClient
             => EMPClient.DNSClient;
 
 
-        Boolean                                                     IHTTPClient.Connected
+        Boolean                                                     IHTTPClient_Base.Connected
             => EMPClient.Connected;
 
-        IIPAddress?                                                 IHTTPClient.RemoteIPAddress
+        IIPAddress?                                                 IHTTPClient_Base.RemoteIPAddress
             => EMPClient.RemoteIPAddress;
 
-        UInt64                                                      IHTTPClient.KeepAliveMessageCount
+        UInt64                                                      IHTTPClient_Base.KeepAliveMessageCount
             => EMPClient.KeepAliveMessageCount;
 
-        TOTPConfig?                                                 IHTTPClient.TOTPConfig
-        {
-            get => throw new NotImplementedException();
-            set => throw new NotImplementedException();
-        }
+        TOTPConfig?                                                 IHTTPClient_Base.TOTPConfig {
+                                                                        get => throw new NotImplementedException();
+                                                                        set => throw new NotImplementedException();
+                                                                    }
 
         #endregion
 

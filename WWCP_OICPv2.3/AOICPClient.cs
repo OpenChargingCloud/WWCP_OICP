@@ -70,6 +70,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            I18NString?                                                Description                  = null,
                            UInt16?                                                    MaxNumberOfPooledClients     = null,
                            IPVersionPreference?                                       PreferIPv4                   = null,
+
+                           String?                                                    TLSHostname                  = null,
                            RemoteTLSServerCertificateValidationHandler<IHTTPClient>?  RemoteCertificateValidator   = null,
                            LocalCertificateSelectionHandler?                          LocalCertificateSelector     = null,
                            IEnumerable<X509Certificate2>?                             ClientCertificates           = null,
@@ -95,11 +97,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             : base(RemoteURL,
                    Description,
                    HTTPUserAgent,
+                   HTTPAuthentication,
+
                    Accept,
                    ContentType,
                    Connection,
                    null, //DefaultRequestBuilder,
 
+                   TLSHostname,
                    RemoteCertificateValidator,
                    LocalCertificateSelector,
                    ClientCertificates,
@@ -113,8 +118,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                    null, //AllowRenegotiation,
                    null, //AllowTLSResume,
                    TOTPConfig,
-
-                   HTTPAuthentication,
 
                    PreferIPv4,
                    null, //ConnectTimeout,
@@ -173,7 +176,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                        ConnectTimeout:                   null,
                                        ReceiveTimeout:                   null,
                                        SendTimeout:                      null,
-                                       BufferSize:                       null,
+                                       InternalBufferSize:               null,
 
                                        DNSClient:                        DNSClient
 
