@@ -468,7 +468,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                    AdditionalReferences?.   Select(additionalReference     => additionalReference.    Clone()),
 
                    CustomData is not null
-                       ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None))
+                       ? JObject.Parse(CustomData.ToJSONString())
                        : null
 
                );

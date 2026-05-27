@@ -451,7 +451,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                    OperatorName?.              CloneString(),
 
                    CustomData   is not null
-                       ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None))
+                       ? JObject.Parse(CustomData.ToJSONString())
                        : null
 
                );
