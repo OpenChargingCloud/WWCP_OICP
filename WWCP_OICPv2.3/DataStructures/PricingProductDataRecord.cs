@@ -422,9 +422,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             var json = JSONObject.Create(
 
-                           new JProperty("ProductID",                    ProductId.               ToString()),
-                           new JProperty("ReferenceUnit",                ReferenceUnit.           ToString()),
-                           new JProperty("ProductPriceCurrency",         ProductPriceCurrency.    ToString()),
+                           new JProperty("ProductID",                    ProductId.           ToString()),
+                           new JProperty("ReferenceUnit",                ReferenceUnit.       ToString()),
+                           new JProperty("ProductPriceCurrency",         ProductPriceCurrency.ToString()),
                            new JProperty("PricePerReferenceUnit",        PricePerReferenceUnit),
                            new JProperty("MaximumProductChargingPower",  MaximumProductChargingPower),
                            new JProperty("IsValid24hours",               IsValid24hours),
@@ -435,7 +435,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                : null,
 
                            CustomData?.HasValues == true
-                               ? new JProperty("CustomData",             CustomData)
+                               ? new JProperty("CustomData",             CustomData.          ToJObject())
                                : null
 
                        );

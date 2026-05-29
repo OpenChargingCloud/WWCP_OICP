@@ -1280,24 +1280,24 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             var json = JSONObject.Create(
 
-                           new JProperty("EvseID",                                  Id.                                ToString()),
-                           new JProperty("ChargingStationNames",                    ChargingStationName.               ToJSON()),
-                           new JProperty("Address",                                 Address.                           ToJSON(CustomAddressSerializer)),
-                           new JProperty("GeoCoordinates",                          GeoCoordinates.                    ToJSON(CustomGeoCoordinatesSerializer)),
-                           new JProperty("Plugs",                                   new JArray(PlugTypes.          Select(plugType           => plugType.          AsString()))),
-                           new JProperty("ChargingFacilities",                      new JArray(ChargingFacilities. Select(chargingFacility   => chargingFacility.  ToJSON(CustomChargingFacilitySerializer)))),
-                           new JProperty("RenewableEnergy",                         RenewableEnergy),
-                           new JProperty("CalibrationLawDataAvailability",          CalibrationLawDataAvailability.    AsString()),
-                           new JProperty("AuthenticationModes",                     new JArray(AuthenticationModes.Select(authenticationMode => authenticationMode.AsString()))),
-                           new JProperty("PaymentOptions",                          new JArray(PaymentOptions.     Select(paymentOption      => paymentOption.     AsString()))),
-                           new JProperty("ValueAddedServices",                      new JArray(ValueAddedServices. Select(valueAddedService  => valueAddedService. AsString()))),
-                           new JProperty("Accessibility",                           Accessibility.                     AsString()),
-                           new JProperty("HotlinePhoneNumber",                      HotlinePhoneNumber?.               ToString()),
-                           new JProperty("IsOpen24Hours",                           IsOpen24Hours),
-                           new JProperty("IsHubjectCompatible",                     IsHubjectCompatible),
-                           new JProperty("DynamicInfoAvailable",                    DynamicInfoAvailable.              AsString()),
-                           new JProperty("OperatorID",                              OperatorId.                        ToString()),
-                           new JProperty("OperatorName",                            OperatorName),
+                                 new JProperty("EvseID",                            Id.                                ToString()),
+                                 new JProperty("ChargingStationNames",              ChargingStationName.               ToJSON()),
+                                 new JProperty("Address",                           Address.                           ToJSON(CustomAddressSerializer)),
+                                 new JProperty("GeoCoordinates",                    GeoCoordinates.                    ToJSON(CustomGeoCoordinatesSerializer)),
+                                 new JProperty("Plugs",                             new JArray(PlugTypes.          Select(plugType           => plugType.          AsString()))),
+                                 new JProperty("ChargingFacilities",                new JArray(ChargingFacilities. Select(chargingFacility   => chargingFacility.  ToJSON(CustomChargingFacilitySerializer)))),
+                                 new JProperty("RenewableEnergy",                   RenewableEnergy),
+                                 new JProperty("CalibrationLawDataAvailability",    CalibrationLawDataAvailability.    AsString()),
+                                 new JProperty("AuthenticationModes",               new JArray(AuthenticationModes.Select(authenticationMode => authenticationMode.AsString()))),
+                                 new JProperty("PaymentOptions",                    new JArray(PaymentOptions.     Select(paymentOption      => paymentOption.     AsString()))),
+                                 new JProperty("ValueAddedServices",                new JArray(ValueAddedServices. Select(valueAddedService  => valueAddedService. AsString()))),
+                                 new JProperty("Accessibility",                     Accessibility.                     AsString()),
+                                 new JProperty("HotlinePhoneNumber",                HotlinePhoneNumber?.               ToString()),
+                                 new JProperty("IsOpen24Hours",                     IsOpen24Hours),
+                                 new JProperty("IsHubjectCompatible",               IsHubjectCompatible),
+                                 new JProperty("DynamicInfoAvailable",              DynamicInfoAvailable.              AsString()),
+                                 new JProperty("OperatorID",                        OperatorId.                        ToString()),
+                                 new JProperty("OperatorName",                      OperatorName),
 
                            DeltaType.                       HasValue
                                ? new JProperty("deltaType",                         DeltaType.                   Value.ToString())
@@ -1379,7 +1379,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                : null,
 
                            CustomData?.HasValues == true
-                               ? new JProperty("CustomData",                        CustomData)
+                               ? new JProperty("CustomData",                        CustomData.                        ToJObject())
                                : null
 
                        );

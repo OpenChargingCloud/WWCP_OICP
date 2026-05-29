@@ -54,7 +54,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Optional custom data, e.g. in combination with custom parsers and serializers.
         /// </summary>
         [Optional]
-        public readonly JObject?         CustomData    { get; }
+        public readonly CustomDataNew?   CustomData    { get; }
 
         #endregion
 
@@ -68,7 +68,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         public EVSEStatusRecord(EVSE_Id          Id,
                                 EVSEStatusTypes  Status,
-                                JObject?         CustomData  = null)
+                                CustomDataNew?   CustomData  = null)
         {
 
             this.Id          = Id;
@@ -78,8 +78,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
             unchecked
             {
 
-                hashCode = Id.    GetHashCode() * 3 ^
-                           Status.GetHashCode();
+                hashCode = Id.         GetHashCode() * 5 ^
+                           Status.     GetHashCode() * 3 ^
+                           CustomData?.GetHashCode() ?? 0;
 
             }
 
@@ -237,11 +238,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             var json = JSONObject.Create(
 
-                           new JProperty("EvseID",      Id.    ToString()),
-                           new JProperty("EvseStatus",  Status.ToString()),
+                                 new JProperty("EvseID",       Id.    ToString()),
+                                 new JProperty("EvseStatus",   Status.ToString()),
 
                            CustomData?.HasValues == true
-                               ? new JProperty("CustomData",  CustomData)
+                               ? new JProperty("CustomData",   CustomData)
                                : null
 
                        );
@@ -266,9 +267,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                    Id.Clone(),
                    Status,
 
-                   CustomData is not null
-                       ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None))
-                       : null
+                   CustomData?.Clone()
 
                );
 
