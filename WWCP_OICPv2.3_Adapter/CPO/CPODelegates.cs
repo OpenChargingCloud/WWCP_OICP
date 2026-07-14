@@ -24,6 +24,13 @@ using org.GraphDefined.Vanaheimr.Illias;
 namespace cloud.charging.open.protocols.OICPv2_3
 {
 
+    /// <summary>
+    /// A delegate which allows you to customize the mapping between WWCP EVSE identifications
+    /// and OICP EVSE identifications.
+    /// </summary>
+    /// <param name="EVSEId">A WWCP EVSE identification.</param>
+    public delegate EVSE_Id?         CustomEVSEIdMapperDelegate         (WWCP.EVSE_Id?     EVSEId);
+
     ///// <summary>
     ///// A delegate which allows you to modify the conversion from WWCP EVSEs to EVSE data records.
     ///// </summary>

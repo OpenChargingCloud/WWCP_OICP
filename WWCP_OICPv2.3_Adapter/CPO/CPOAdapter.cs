@@ -56,6 +56,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         private readonly         HashSet<WWCP.EVSE_Id>                             successfullyUploadedEVSEs           = [];
 
+        private        readonly  CustomEVSEIdMapperDelegate?                       _CustomEVSEIdMapper;
+
 
         /// <summary>
         /// The default logging context.
@@ -152,6 +154,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// An optional default charging station operator name.
         /// </summary>
         public String                                              DefaultOperatorName                              { get; }
+
+
+        public delegate void EVSEStatusRefreshEventDelegate(DateTimeOffset Timestamp, CPOAdapter Sender, String Message);
+
+        public event EVSEStatusRefreshEventDelegate EVSEStatusRefreshEvent;
 
         #endregion
 
@@ -283,6 +290,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                           WWCP.OperatorIdFormats                              DefaultOperatorIdFormat                         = WWCP.OperatorIdFormats.ISO_STAR,
                           WWCP.ChargingStationOperatorNameSelectorDelegate?   OperatorNameSelector                            = null,
 
+                          CustomEVSEIdMapperDelegate?                         CustomEVSEIdMapper                              = null,
                           WWCP.IncludeEVSEIdDelegate?                         IncludeEVSEIds                                  = null,
                           WWCP.IncludeEVSEDelegate?                           IncludeEVSEs                                    = null,
                           WWCP.ChargeDetailRecordFilterDelegate?              ChargeDetailRecordFilter                        = null,
@@ -290,6 +298,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                           TimeSpan?                                           ServiceCheckEvery                               = null,
                           TimeSpan?                                           StatusCheckEvery                                = null,
                           TimeSpan?                                           CDRCheckEvery                                   = null,
+                          TimeSpan?                                           EVSEStatusRefreshEvery                          = null,
 
                           Boolean                                             DisablePushData                                 = false,
                           Boolean                                             DisablePushAdminStatus                          = true,
@@ -332,7 +341,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                    ServiceCheckEvery,
                    StatusCheckEvery,
-                   null,
+                   EVSEStatusRefreshEvery,
                    CDRCheckEvery,
 
                    DisablePushData,
@@ -374,6 +383,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             DefaultOperatorName                                 = (this.OperatorNameSelector is not null
                                                                        ? this.OperatorNameSelector  (DefaultOperator.Name)
                                                                        : DefaultOperatorNameSelector(DefaultOperator.Name)).Trim();
+
+            this._CustomEVSEIdMapper                            = CustomEVSEIdMapper;
 
 
             if (DefaultOperatorName.IsNullOrEmpty())
@@ -4724,6 +4735,173 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
 
             //ToDo: Re-add to queue if it could not be send...
+
+        }
+
+        #endregion
+
+
+        #region (override) RefreshEVSEStatus()
+
+        protected override async Task<WWCP.PushEVSEStatusResult> RefreshEVSEStatus()
+        {
+
+            #region Try to acquire the EVSE status refresh lock, or return...
+
+            if (!EVSEStatusRefreshLock.Wait(0))
+            {
+                DebugX.Log("Could not acquire EVSE status refresh lock!");
+                return WWCP.PushEVSEStatusResult.NoOperation(Id, this);
+            }
+
+            #endregion
+
+            #region Data
+
+            WWCP.PushEVSEStatusResult? result = null;
+
+            var sw                         = Stopwatch.StartNew();
+            var startTime                  = Timestamp.Now;
+            var warnings                   = new List<Warning>();
+            var allEVSEStatusRefreshments  = new List<EVSEStatusRecord>();
+            var cancellationTokenSource    = new CancellationTokenSource();
+
+            #endregion
+
+            #region Log EVSE status refresh event
+
+            EVSEStatusRefreshEvent?.Invoke(
+                startTime,
+                this,
+                $"EVSE status refresh, as every {EVSEStatusRefreshEvery?.TotalHours} hours!"
+            );
+
+            #endregion
+
+            var allEVSEStatus = RoamingNetwork.EVSEStatus();
+
+            try
+            {
+
+                #region Fetch EVSE status
+
+                foreach (var evsestatus in allEVSEStatus)
+                {
+
+                    try
+                    {
+
+                        if (IncludeEVSEIds(evsestatus.Id))
+                        {
+
+                            var evseId      = _CustomEVSEIdMapper is not null
+                                                  ? _CustomEVSEIdMapper(evsestatus.Id)
+                                                  : evsestatus.Id.ToOICP();
+
+                            var evseStatus  = evsestatus.Status.ToOICP();
+
+                            if (evseId.HasValue && evseStatus.HasValue)
+                                allEVSEStatusRefreshments.Add(
+                                    new EVSEStatusRecord(
+                                        evseId.Value,
+                                        evseStatus.Value
+                                    )
+                                );
+
+                        }
+
+                    }
+                    catch (Exception e)
+                    {
+                        DebugX.Log(e.Message);
+                        warnings.Add(Warning.Create(e.Message, evsestatus));
+                    }
+
+                }
+
+                #endregion
+
+                #region Upload EVSE status
+
+                if (allEVSEStatusRefreshments.Count > 0)
+                {
+
+                    var response = await CPORoaming.PushEVSEStatus(
+                                             OperatorEVSEStatus:   new OperatorEVSEStatus(
+                                                                       allEVSEStatusRefreshments,
+                                                                       DefaultOICPOperatorId,
+                                                                       DefaultOperatorName
+                                                                   ),
+                                             Action:               ActionTypes.FullLoad,
+                                             //DefaultTTL:       startTime + EVSEStatusRefreshEvery + EVSEStatusRefreshEvery,  // TTL => 2x refresh interval
+                                             //IncludeEVSEIds:   null,
+                                             CustomData:           null,
+
+                                             Timestamp:            null,
+                                             EventTrackingId:      null,
+                                             RequestTimeout:       null,
+                                             cancellationTokenSource.Token
+                                         );
+
+
+                    if (response?.IsSuccess() ?? false)
+                        result = WWCP.PushEVSEStatusResult.Success(
+                                     Id,
+                                     this,
+                                     response.Response?.StatusCode.ToString(),
+                                     warnings,
+                                     sw.Elapsed
+                                 );
+
+                    else
+                        result = WWCP.PushEVSEStatusResult.Error(
+                                     Id,
+                                     this,
+                                     [.. allEVSEStatus.Select(evseStatus => new WWCP.EVSEStatusUpdate(evseStatus.Id, evseStatus.Status))],
+                                     response?.Response?.StatusCode.ToString(),
+                                     null,//response.HTTPBody is not null
+                                          //    ? warnings.AddAndReturnList(I18NString.Create(response.HTTPBody.ToUTF8String()))
+                                          //    : warnings.AddAndReturnList(I18NString.Create("No HTTP body received!")),
+                                     sw.Elapsed
+                                 );
+
+                }
+
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+
+                while (e.InnerException is not null)
+                    e = e.InnerException;
+
+                DebugX.LogT($"{nameof(CPOAdapter)} '{Id}' led to an exception: {e.Message}{Environment.NewLine}{e.StackTrace}");
+
+                result = WWCP.PushEVSEStatusResult.Error(
+                             Id,
+                             this,
+                             [.. allEVSEStatus.Select(evseStatus => new WWCP.EVSEStatusUpdate(evseStatus.Id, evseStatus.Status))],
+                             e.Message,
+                             warnings,
+                             sw.Elapsed
+                         );
+
+            }
+
+            finally
+            {
+                EVSEStatusRefreshLock.Release();
+            }
+
+            return result ?? WWCP.PushEVSEStatusResult.Error(
+                                 Id,
+                                 this,
+                                 [.. allEVSEStatus.Select(evseStatus => new WWCP.EVSEStatusUpdate(evseStatus.Id, evseStatus.Status))],
+                                 "General error during EVSE status refresh!",
+                                 warnings,
+                                 sw.Elapsed
+                             );
 
         }
 

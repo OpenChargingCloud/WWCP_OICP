@@ -76,6 +76,7 @@ namespace cloud.charging.open.protocols.WWCP
                                       OperatorIdFormats                                            DefaultOperatorIdFormat                         = OperatorIdFormats.ISO_STAR,
                                       ChargingStationOperatorNameSelectorDelegate?                 OperatorNameSelector                            = null,
 
+                                      OICPv2_3.CustomEVSEIdMapperDelegate?                         CustomEVSEIdMapper                              = null,
                                       IncludeEVSEIdDelegate?                                       IncludeEVSEIds                                  = null,
                                       IncludeEVSEDelegate?                                         IncludeEVSEs                                    = null,
                                       ChargeDetailRecordFilterDelegate?                            ChargeDetailRecordFilter                        = null,
@@ -83,6 +84,7 @@ namespace cloud.charging.open.protocols.WWCP
                                       TimeSpan?                                                    ServiceCheckEvery                               = null,
                                       TimeSpan?                                                    StatusCheckEvery                                = null,
                                       TimeSpan?                                                    CDRCheckEvery                                   = null,
+                                      TimeSpan?                                                    EVSEStatusRefreshEvery                          = null,
 
                                       Boolean                                                      DisablePushData                                 = false,
                                       Boolean                                                      DisablePushAdminStatus                          = true,
@@ -137,6 +139,7 @@ namespace cloud.charging.open.protocols.WWCP
                                          DefaultOperatorIdFormat,
                                          OperatorNameSelector,
 
+                                         CustomEVSEIdMapper,
                                          IncludeEVSEIds,
                                          IncludeEVSEs,
                                          ChargeDetailRecordFilter,
@@ -144,6 +147,7 @@ namespace cloud.charging.open.protocols.WWCP
                                          ServiceCheckEvery,
                                          StatusCheckEvery,
                                          CDRCheckEvery,
+                                         EVSEStatusRefreshEvery,
 
                                          DisablePushData,
                                          DisablePushAdminStatus,
