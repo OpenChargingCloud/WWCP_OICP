@@ -298,6 +298,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                           TimeSpan?                                           ServiceCheckEvery                               = null,
                           TimeSpan?                                           StatusCheckEvery                                = null,
                           TimeSpan?                                           CDRCheckEvery                                   = null,
+
                           TimeSpan?                                           EVSEStatusRefreshEvery                          = null,
 
                           Boolean                                             DisablePushData                                 = false,
@@ -337,12 +338,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                    null,
                    null,
                    null,
+                   null,
+                   null,
                    ChargeDetailRecordFilter,
 
                    ServiceCheckEvery,
                    StatusCheckEvery,
-                   EVSEStatusRefreshEvery,
                    CDRCheckEvery,
+
+                   EVSEStatusRefreshEvery,
 
                    DisablePushData,
                    DisablePushAdminStatus,
