@@ -4830,44 +4830,89 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 if (allEVSEStatusRefreshments.Count > 0)
                 {
 
-                    var response = await CPORoaming.PushEVSEStatus(
-                                             OperatorEVSEStatus:   new OperatorEVSEStatus(
-                                                                       allEVSEStatusRefreshments,
-                                                                       DefaultOICPOperatorId,
-                                                                       DefaultOperatorName
-                                                                   ),
-                                             Action:               ActionTypes.FullLoad,
-                                             //DefaultTTL:       startTime + EVSEStatusRefreshEvery + EVSEStatusRefreshEvery,  // TTL => 2x refresh interval
-                                             //IncludeEVSEIds:   null,
-                                             CustomData:           null,
+                    var oicpResponse = await CPORoaming.PushEVSEStatus(
+                                                 OperatorEVSEStatus:   new OperatorEVSEStatus(
+                                                                           allEVSEStatusRefreshments,
+                                                                           DefaultOICPOperatorId,
+                                                                           DefaultOperatorName
+                                                                       ),
+                                                 Action:               ActionTypes.Update,
+                                                 //DefaultTTL:           startTime + EVSEStatusRefreshEvery + EVSEStatusRefreshEvery,  // TTL => 2x refresh interval
+                                                 //IncludeEVSEIds:       null,
+                                                 CustomData:           null,
 
-                                             Timestamp:            null,
-                                             EventTrackingId:      null,
-                                             RequestTimeout:       null,
-                                             cancellationTokenSource.Token
-                                         );
+                                                 Timestamp:            null,
+                                                 EventTrackingId:      null,
+                                                 RequestTimeout:       null,
+                                                 cancellationTokenSource.Token
+                                             );
 
 
-                    if (response?.IsSuccess() ?? false)
-                        result = WWCP.PushEVSEStatusResult.Success(
-                                     Id,
-                                     this,
-                                     response.Response?.StatusCode.ToString(),
-                                     warnings,
-                                     sw.Elapsed
-                                 );
+                    if (oicpResponse?.IsSuccess() ?? false)
+                    {
 
-                    else
-                        result = WWCP.PushEVSEStatusResult.Error(
-                                     Id,
-                                     this,
-                                     [.. allEVSEStatus.Select(evseStatus => new WWCP.EVSEStatusUpdate(evseStatus.Id, evseStatus.Status))],
-                                     response?.Response?.StatusCode.ToString(),
-                                     null,//response.HTTPBody is not null
-                                          //    ? warnings.AddAndReturnList(I18NString.Create(response.HTTPBody.ToUTF8String()))
-                                          //    : warnings.AddAndReturnList(I18NString.Create("No HTTP body received!")),
-                                     sw.Elapsed
-                                 );
+                        var acknowledgement = oicpResponse.Response;
+
+                        if (acknowledgement is not null)
+                        {
+
+                            // {
+                            //     "Result":                false,
+                            //     "StatusCode": {
+                            //         "Code":             "603",
+                            //         "Description":      "One or more EVSE data record not found!",
+                            //         "AdditionalInfo":   "EVSE data records missing for EvseIDs: DE811E288B04491002"
+                            //     },
+                            //     "SessionID":             null,
+                            //     "CPOPartnerSessionID":   null,
+                            //     "EMPPartnerSessionID":   null
+                            // }
+
+                            if (acknowledgement.Result == false)
+                            {
+
+                                if (acknowledgement.StatusCode.Code == StatusCodes.UnknownEVSEID) // 603
+                                {
+
+                                    var unknownEVSEIds = (acknowledgement.StatusCode.AdditionalInfo ?? "").Replace("EVSE data records missing for EvseIDs: ", "").Split(",");
+
+                                }
+
+                                result ??= WWCP.PushEVSEStatusResult.Error(
+                                               Id,
+                                               this,
+                                               [.. allEVSEStatus.Select(evseStatus => new WWCP.EVSEStatusUpdate(evseStatus.Id, evseStatus.Status))],
+                                               oicpResponse?.Response?.StatusCode.ToString(),
+                                               null,//response.HTTPBody is not null
+                                                    //    ? warnings.AddAndReturnList(I18NString.Create(response.HTTPBody.ToUTF8String()))
+                                                    //    : warnings.AddAndReturnList(I18NString.Create("No HTTP body received!")),
+                                               sw.Elapsed
+                                           );
+
+                            }
+
+                            result ??= WWCP.PushEVSEStatusResult.Success(
+                                       Id,
+                                       this,
+                                       oicpResponse?.Response?.StatusCode.ToString(),
+                                       warnings,
+                                       sw.Elapsed
+                                   );
+
+                        }
+
+                    }
+
+                    result ??= WWCP.PushEVSEStatusResult.Error(
+                                   Id,
+                                   this,
+                                   [.. allEVSEStatus.Select(evseStatus => new WWCP.EVSEStatusUpdate(evseStatus.Id, evseStatus.Status))],
+                                   oicpResponse?.Response?.StatusCode.ToString(),
+                                   null,//response.HTTPBody is not null
+                                        //    ? warnings.AddAndReturnList(I18NString.Create(response.HTTPBody.ToUTF8String()))
+                                        //    : warnings.AddAndReturnList(I18NString.Create("No HTTP body received!")),
+                                   sw.Elapsed
+                               );
 
                 }
 
